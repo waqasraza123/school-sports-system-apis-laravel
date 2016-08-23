@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="googlebot" content="noindex, nofollow">
+
+
+
+
+
+
+
+
+
+
+  <script type="text/javascript"
+src="http://code.jquery.com/jquery-1.11.0.js"></script>
+
+
+
+
+
+
+
+
+    <link rel="stylesheet" type="text/css" href="/css/result-light.css">
+
+
+
+
+  <style type="text/css">
+
+  </style>
+
+  <title></title>
+
+
+
+
+
+
+
+<script type='text/javascript'>//<![CDATA[
+$(window).load(function(){
+$(".use-address").click(function() {
+    var $row = $(this).closest("tr");    // Find the row
+    var text = $row.find("td img").attr("id");
+    alert(text);
+    var $pic = $row.find(".hot").text()
+    var $text2 = $row.find(".ns").text(); // Find the text
+    document.getElementById('idx').value=$text2 ;
+    // Let's test it out
+    alert($text+ ' ' +$text2);
+});
+});//]]>
+
+</script>
+
+
+</head>
+
+<body>
+  <table id="choose-address-table" class="ui-widget ui-widget-content">
+    <thead>
+        <tr class="ui-widget-header ">
+            <th>Name/Nr.</th>
+            <th>Street</th>
+            <th>Town</th>
+            <th>Postcode</th>
+            <th>Country</th>
+            <th>Options</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="nr"><span>50</span>
+            </td>
+            <td class="ns">Some Street 1</td>
+            <td><img id="hot" height="42"
+src="http://image.brazilianbikinishop.com/images/products/RedMicro1_BikiniRiodesol.jpg"></td>
+            <td>G0 0XX</td>
+            <td>United Kingdom</td>
+            <td>
+                <button type="button" class="use-address" value="Click" />
+            </td>
+        </tr>
+        <tr>
+            <td class="nr">49</td>
+            <td class="ns">Some Street 2</td>
+            <td><img id="hot" height="42"
+src="http://media1.popsugar-assets.com/files/2015/06/24/033/n/1922398/94ddc8882fdec7a0_INFphoto_3388207byXQFp_wm.xxxlarge/i/Pictures-Celebrities-Bikinis.jpg"</td>
+            <td>G0 0XX</td>
+            <td>United Kingdom</td>
+            <td>
+                <button type="button" class="use-address" value="Click" />
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<input type="text" id="idx">
+
+<img id="foo" height="45"
+src="http://images5.fanpop.com/image/photos/28100000/david-david-hasselhoff-28104576-400-300.jpg">
+
+</body>
+
+</html>

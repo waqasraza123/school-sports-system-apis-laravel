@@ -1,0 +1,11 @@
+/vendor
+/node_modules
+/storage/*
+/public/uploads/*
+Homestead.yaml
+Homestead.json
+.env
+.env.behat
+behat.yml
+/.idea/*
+!/storage/imports
