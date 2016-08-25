@@ -14,7 +14,7 @@ class CreateYearTable extends Migration {
 	{
 		Schema::create('years', function(Blueprint $table)
 		{
-			$table->integer('id', true);
+			$table->increments('id');
 			$table->string('name', 50)->nullable();
 			$table->timestamps();
 		});

@@ -16,4 +16,11 @@ class School extends Model
     {
         return $this->hasMany('App\Games');
     }
+
+    /**
+     * define relationship with the users
+     */
+    public function user(){
+        return $this->belongsTo('App\User');
+    }
 }

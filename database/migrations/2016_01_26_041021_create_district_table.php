@@ -14,7 +14,7 @@ class CreateDistrictTable extends Migration {
 	{
 		Schema::create('districts', function(Blueprint $table)
 		{
-			$table->integer('id', true);
+			$table->increments('id');
 			$table->string('name', 50)->nullable();
 			$table->timestamps();
 		});

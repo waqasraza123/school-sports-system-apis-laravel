@@ -14,7 +14,7 @@ class CreateSchoolsTable extends Migration {
 	{
 		Schema::create('schools', function(Blueprint $table)
 		{
-			$table->integer('id', true);
+			$table->increments('id');
 			$table->string('name', 50)->nullable();
 			$table->string('short_name', 25)->nullable();
 			$table->string('mascot_name', 25)->nullable();
@@ -31,9 +31,9 @@ class CreateSchoolsTable extends Migration {
 			$table->string('instagram', 25)->nullable();
 			$table->string('youtube', 25)->nullable();
 			$table->string('vimeo', 25)->nullable();
-			$table->integer('league_id')->nullable()->index('league_id');
-			$table->integer('division_id')->nullable()->index('division_id');
-			$table->integer('district_id')->nullable()->index('district_id');
+			$table->unsignedInteger('league_id')->nullable()->index('league_id');
+			$table->unsignedInteger('division_id')->nullable()->index('division_id');
+			$table->unsignedInteger('district_id')->nullable()->index('district_id');
 			$table->timestamps();
 		});
 	}

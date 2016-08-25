@@ -14,7 +14,7 @@ class CreateNewsTagsTable extends Migration
     {
         Schema::create('games_news', function(Blueprint $table)
         {
-            $table->integer('games_id')
+            $table->unsignedInteger('games_id')
                 ->nullable()
                 ->index();
             $table->foreign('games_id')
@@ -22,14 +22,14 @@ class CreateNewsTagsTable extends Migration
                 ->on('games')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->integer('news_id')->nullable()->index();
+            $table->unsignedInteger('news_id')->nullable()->index();
             $table->foreign('news_id')->references('id')->on('news')->onDelete('cascade');
             $table->timestamps();
         });
 
         Schema::create('news_roster', function(Blueprint $table)
         {
-            $table->integer('roster_id')
+            $table->unsignedInteger('roster_id')
                 ->nullable()
                 ->index();
             $table->foreign('roster_id')
@@ -37,14 +37,14 @@ class CreateNewsTagsTable extends Migration
                 ->on('rosters')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->integer('news_id')->nullable()->index();
+            $table->unsignedInteger('news_id')->nullable()->index();
             $table->foreign('news_id')->references('id')->on('news')->onDelete('cascade');
             $table->timestamps();
         });
 
         Schema::create('level_news', function(Blueprint $table)
         {
-            $table->integer('level_id')
+            $table->unsignedInteger('level_id')
                 ->nullable()
                 ->index();
             $table->foreign('level_id')
@@ -52,14 +52,14 @@ class CreateNewsTagsTable extends Migration
                 ->on('levels')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->integer('news_id')->nullable()->index();
+            $table->unsignedInteger('news_id')->nullable()->index();
             $table->foreign('news_id')->references('id')->on('news')->onDelete('cascade');
             $table->timestamps();
         });
 
         Schema::create('news_sport', function(Blueprint $table)
         {
-            $table->integer('sport_id')
+            $table->unsignedInteger('sport_id')
                 ->nullable()
                 ->index();
             $table->foreign('sport_id')
@@ -67,7 +67,7 @@ class CreateNewsTagsTable extends Migration
                 ->on('sports')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->integer('news_id')->nullable()->index();
+            $table->unsignedInteger('news_id')->nullable()->index();
             $table->foreign('news_id')->references('id')->on('news')->onDelete('cascade');
             $table->timestamps();
         });

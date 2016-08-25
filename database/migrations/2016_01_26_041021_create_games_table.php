@@ -14,11 +14,11 @@ class CreateGamesTable extends Migration {
 	{
 		Schema::create('games', function(Blueprint $table)
 		{
-			$table->integer('id', true);
-			$table->integer('sport_id')->nullable()->index('sport_id');
-			$table->integer('level_id')->nullable()->index('level_id');
-			$table->integer('opponents_id')->nullable()->index('opponents_id');
-			$table->integer('locations_id')->nullable()->index('locations_id');
+			$table->increments('id');
+			$table->unsignedInteger('sport_id')->nullable()->index('sport_id');
+			$table->unsignedInteger('level_id')->nullable()->index('level_id');
+			$table->unsignedInteger('opponents_id')->nullable()->index('opponents_id');
+			$table->unsignedInteger('locations_id')->nullable()->index('locations_id');
 			$table->timestamp('game_date')->nullable();
 			$table->time('game_time')->nullable();
 			$table->string('home_away', 15)->nullable();

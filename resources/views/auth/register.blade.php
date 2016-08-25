@@ -36,6 +36,21 @@
 						</div>
 
 						<div class="form-group">
+							<label class="col-md-4 control-label">Select School</label>
+							<div class="col-md-6">
+								<select  class="selectpicker form-control" name="school-id">
+									@if($schools)
+										@foreach($schools as $school)
+											<option value="{{$school->id}}">{{$school->name}}, {{$school->city}}</option>
+										@endforeach
+									@else
+										<option>No, school added yet.</option>
+									@endif
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group">
 							<label class="col-md-4 control-label">Password</label>
 							<div class="col-md-6">
 								<input type="password" class="form-control" name="password">

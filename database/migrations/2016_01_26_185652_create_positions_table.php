@@ -14,9 +14,9 @@ class CreatePositionsTable extends Migration
     {
         Schema::create('positions', function(Blueprint $table)
         {
-            $table->integer('id', true);
+            $table->increments('id');
             $table->string('name', 10)->nullable();
-            $table->integer('sport_id')->nullable()->index('sport_id');
+            $table->unsignedInteger('sport_id')->nullable()->index('sport_id');
             $table->timestamps();
         });
     }

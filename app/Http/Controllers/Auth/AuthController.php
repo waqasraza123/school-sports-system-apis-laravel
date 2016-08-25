@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\Http\Request;
+use App\School;
 use App\User;
 use Validator;
 use App\Http\Controllers\Controller;
@@ -61,12 +63,45 @@ class AuthController extends Controller
      * @param  array  $data
      * @return User
      */
-    protected function create(array $data)
-    {
+    protected function store(Request $request)
+    {/*
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
+            'school_id' => $request->input('school-id'),
             'password' => bcrypt($data['password']),
+        ]);*/
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:255',
+            'email' => 'required|email|max:255|unique:users',
+            'password' => 'required|confirmed|min:6',
+            'school-id' => 'required',
         ]);
+
+        if ($validator->fails()) {
+            return redirect('auth/register')
+                ->withErrors($validator, 'errors')
+                ->withInput();
+        }
+        else{
+            $user = new User();
+            $user->name = $request->input('name');
+            $user->email = $request->input('email');
+            $user->school_id = $request->input('school-id');
+            $user->password = bcrypt($request->input('password'));
+            $user->save();
+
+            return redirect('/');
+        }
+    }
+
+    /**
+     * show the reigster page with schools list
+     */
+    public function show(){
+        $schools = School::all();
+
+        return view('auth.register')->withSchools($schools);
     }
 }

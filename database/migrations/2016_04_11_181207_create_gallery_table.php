@@ -14,10 +14,10 @@ class CreateGalleryTable extends Migration
     {
         Schema::create('gallery', function(Blueprint $table)
         {
-            $table->integer('id', true);
+            $table->increments('id');
             $table->string('title', 225)->nullable();
             $table->string('name', 225)->nullable();
-            $table->integer('album_id')->nullable()->index('album_id');
+            $table->unsignedInteger('album_id')->nullable()->index('album_id');
             $table->timestamps();
         });
     }
@@ -29,6 +29,11 @@ class CreateGalleryTable extends Migration
      */
     public function down()
     {
-        Schema::drop('gallery');
+        Schema::table('gallery', function(Blueprint $table){
+            $table->dropIndex('album_id');
+            $table->dropColumn('id', 'title', 'name');
+        });
+
+        //Schema::drop('gallery');
     }
 }

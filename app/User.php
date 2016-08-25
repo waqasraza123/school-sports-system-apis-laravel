@@ -23,4 +23,11 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * define relationship with the schools
+     */
+    public function school(){
+        return $this->belongsTo('App\School');
+    }
 }
