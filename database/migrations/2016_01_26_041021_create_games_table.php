@@ -29,6 +29,8 @@ class CreateGamesTable extends Migration {
 			$table->string('opponent_roster', 25)->nullable();
 			$table->integer('our_score')->nullable();
 			$table->integer('opponents_score')->nullable();
+			$table->string('result')->nullable();
+			$table->string('map_url')->nullable();
 			$table->timestamps();
 		});
 	}

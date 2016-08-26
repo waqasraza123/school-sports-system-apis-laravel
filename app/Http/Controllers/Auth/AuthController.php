@@ -64,19 +64,11 @@ class AuthController extends Controller
      * @return User
      */
     protected function store(Request $request)
-    {/*
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'school_id' => $request->input('school-id'),
-            'password' => bcrypt($data['password']),
-        ]);*/
-
+    {
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|confirmed|min:6',
-            'school-id' => 'required',
         ]);
 
         if ($validator->fails()) {

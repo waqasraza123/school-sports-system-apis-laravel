@@ -31,6 +31,7 @@ class CreateGalleryTable extends Migration
     {
         Schema::table('gallery', function(Blueprint $table){
             $table->dropIndex('album_id');
+            $table->dropForeign('gallery_games_gallery_id_foreign');
             $table->dropColumn('id', 'title', 'name');
         });
 

@@ -26,11 +26,9 @@ class CreateSchoolsTable extends Migration {
 			$table->integer('zip')->nullable();
 			$table->string('phone', 25)->nullable();
 			$table->string('website', 25)->nullable();
-			$table->string('twitter', 25)->nullable();
-			$table->string('facebook', 25)->nullable();
-			$table->string('instagram', 25)->nullable();
-			$table->string('youtube', 25)->nullable();
-			$table->string('vimeo', 25)->nullable();
+			$table->string('video')->nullable();
+			$table->string('photo')->nullable();
+			$table->string('livestream_url')->nullable();
 			$table->unsignedInteger('league_id')->nullable()->index('league_id');
 			$table->unsignedInteger('division_id')->nullable()->index('division_id');
 			$table->unsignedInteger('district_id')->nullable()->index('district_id');

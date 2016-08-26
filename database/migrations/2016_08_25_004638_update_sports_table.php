@@ -15,6 +15,9 @@ class UpdateSportsTable extends Migration
         Schema::table('sports', function (Blueprint $table) {
             $table->string('photo')->nullable();
             $table->string('record')->nullable();
+            $table->string('highlight_video');
+            $table->unsignedInteger('school_id')->nullable();
+            $table->foreign('school_id')->references('id')->on('schools');
         });
     }
 

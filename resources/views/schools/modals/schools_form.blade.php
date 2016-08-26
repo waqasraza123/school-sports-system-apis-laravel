@@ -72,6 +72,26 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group-sm">
+                            <div class="col-s-3">
+                                <label class="control-label" for="app-name">App Name:</label>
+                                <input type="text" name="app-name" class="form-control" id="app-name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group-sm">
+                            <div class="col-s-3">
+                                {!! Form::label('title', 'Bio:', ['class' => 'control-label']) !!}
+                                {!! Form::text('bio', null, ['class' => 'form-control', 'id'=> 'bio']) !!}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group-sm">
