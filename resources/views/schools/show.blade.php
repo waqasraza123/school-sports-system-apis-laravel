@@ -46,12 +46,12 @@
 
                     @foreach($schools as $school)
                         <tr>
-                            <td><img src="{{asset('uploads/schools/'.$school->athletics_logo ) }}"  height="42"></td>
+                            <td><img src="{{asset('uploads/schools/'.$school->school_logo ) }}"  height="42"></td>
                             <td class="jersey">{{ $school->name }}</td>
                             <td class="first_name">{{ $school->city }}</td>
                             <td class="position">{{ $school->state}}</td>
                             <td class="position">{{ $school->website}}</td>
-                            <td> <button type="button" class="btn btn-primary btn-sm edit_school" data-id="{{ $school->id}}" data-toggle="modal" data-target="#schoolModal">Edit</button></td>
+                            <td> <a href="{{url('schools/edit', [$school->id])}}"><button type="button" class="btn btn-primary btn-sm edit_school">Edit</button></a></td>
                             <td> {!! Form::open([    'method' => 'DELETE','route' => ['schools.destroy', $school->id]]) !!}{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}{!! Form::close() !!}</td>
                             <td class="id" style="display: none;"  />{{ $school->id}}</td>
                             <td class="name" style="display: none;"  />{{  $school->name}}</td>

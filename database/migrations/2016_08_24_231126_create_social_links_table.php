@@ -20,6 +20,10 @@ class CreateSocialLinksTable extends Migration
             $table->string('instagram');
             $table->string('vimeo');
             $table->string('gplus');
+
+            $table->unsignedInteger('socialLinks_id');
+            $table->string('socialLinks_type');
+
             $table->timestamps();
         });
     }

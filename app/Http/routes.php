@@ -49,6 +49,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('games', 'GamesController');
 
     Route::get('schools/', 'SchoolsController@show');
+    Route::get('schools/edit/{id}', 'SchoolsController@showEditForm');
+    Route::post('schools/edit/{id}', 'SchoolsController@edit');
     Route::resource('schools', 'SchoolsController');
 
     Route::post('news/{sport_id}', 'NewsController@update');
@@ -77,4 +79,10 @@ Route::controllers([
     'auth' => 'Auth\AuthController',
     'password' => 'Auth\PasswordController',
 ]);
+
+/***********************************************************************
+ * Create API routes
+ * *********************************************************************
+ */
+Route::get('?school_id={school_id}/&api_key={api_key}&action=getAppData', ['as' => 'get_app_data', 'uses' => 'APIController@getAppData']);
 
