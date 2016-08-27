@@ -17,6 +17,11 @@ class APIController extends Controller
      */
     public function handle(Request $request){
         $school_id = $request->query('school_id');
+
+        if(!($request->query('action'))){
+            return redirect('/home');
+        }
+
         $this->getAppData($school_id);
     }
 
