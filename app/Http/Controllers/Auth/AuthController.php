@@ -30,7 +30,8 @@ class AuthController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/';
+    protected $redirectTo = '/home';
+    protected $redirectAfterLogout = 'auth/login';
 
     /**
      * Create a new authentication controller instance.
@@ -84,7 +85,7 @@ class AuthController extends Controller
             $user->password = bcrypt($request->input('password'));
             $user->save();
 
-            return redirect('/');
+            return redirect('/home');
         }
     }
 

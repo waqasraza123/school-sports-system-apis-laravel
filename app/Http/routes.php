@@ -13,7 +13,7 @@
 
 Route::group(['middleware' => ['auth']], function () {
     Route::get('joe/{order_id}/{other_id}', 'RostersController@specific');
-    Route::get('/', [
+    Route::get('/home', [
         'as' => 'home',
         'uses' => 'PagesController@home'
     ]);
@@ -84,5 +84,5 @@ Route::controllers([
  * Create API routes
  * *********************************************************************
  */
-Route::get('?school_id={school_id}/&api_key={api_key}&action=getAppData', ['as' => 'get_app_data', 'uses' => 'APIController@getAppData']);
+Route::get('/', 'APIController@handle');
 

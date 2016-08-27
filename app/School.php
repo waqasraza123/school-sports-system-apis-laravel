@@ -34,4 +34,8 @@ class School extends Model
     public function social(){
         return $this->morphMany('App\Social', 'socialLinks');
     }
+
+    public function sports(){
+        return $this->hasMany('App\Sport');
+    }
 }

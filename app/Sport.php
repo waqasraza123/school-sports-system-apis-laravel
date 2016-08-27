@@ -28,4 +28,8 @@ class Sport extends Model
         return $this->belongsToMany('App\Gallery');
     }
 
+    public function school(){
+        return $this->belongsTo('App\School');
+    }
+
 }
