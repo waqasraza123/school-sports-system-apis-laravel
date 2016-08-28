@@ -1,11 +1,6 @@
 @extends('layouts.master')
 @section('content')
-    @if (session()->has('success'))
-        <div class="alert alert-success">
-            {{Session::get('success')}}
-        </div>
-        <br>
-    @endif
+    @include('partials.error-messages.success')
     {!! Form::model($schools, array('url'=>'schools/edit/'.$schools->id, 'method'=>'POST', 'files'=>true)) !!}
     <div class="container" style="width: 100% !important;">
         <h3>Update School</h3>
@@ -282,15 +277,7 @@
                             <div class="form-group-sm">
                                 <div class="col-s-3">
                                     <br>
-                                    @if ($errors->has())
-                                        <div class="alert alert-danger">
-
-
-                                            @foreach(Session::get('message') as $er)
-                                                {{ $er }} <br>
-                                            @endforeach
-                                        </div>
-                                    @endif
+                                    @include('partials.error-messages.error')
 
                                     {!! Form::submit('Update School', ['class' => 'submit_school_modal btn btn-primary']) !!}
                                 </div>
@@ -305,26 +292,6 @@
     {!! Form::close() !!}
 @endsection
 @section('footer')
-    <script src="/dist/js/sb-schools-2.js"></script>
-    @if ($errors->has())
-
-        <script>
-            //set the image when redirected back with errors
-            $('#photo').attr('src',document.getElementById('school_invisible_image').value);
-
-            //open modal when error is made
-            //display errors in modal and hid them with animation slide up in 3 sec
-            $('div.alert').delay(4000).slideUp(300);
-            {{ $errors = null }}
-        </script>
-
-    @endif
-
-    @if (session()->has('success'))
-        <script>
-            //display success message in the top when successfully updated roster
-            $('div.alert').delay(4000).slideUp(300);
-        </script>
-    @endif
+    @include('partials.error-messages.footer-script')
 @stop
 

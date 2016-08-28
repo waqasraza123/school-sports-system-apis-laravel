@@ -125,7 +125,7 @@ class SchoolsController extends Controller
                     'youtube' => $file['youtube'],
                     'vimeo' => $file['vimeo'],
                     'socialLinks_id' => $school->id,
-                    'socialLinks_type' =>'School',
+                    'socialLinks_type' =>'App\School',
                 ));
 
 
@@ -165,7 +165,7 @@ class SchoolsController extends Controller
                     'youtube' => $file['youtube'],
                     'vimeo' => $file['vimeo'],
                     'socialLinks_id' => $school->id,
-                    'socialLinks_type' =>'School',
+                    'socialLinks_type' =>'App\School',
                 ));
 
                 Session::flash('success', 'Created successfully');
@@ -252,7 +252,7 @@ class SchoolsController extends Controller
                     'youtube' => $file['youtube'],
                     'vimeo' => $file['vimeo'],
                     'socialLinks_id' => $id,
-                    'socialLinks_type' =>'School',
+                    'socialLinks_type' =>'App\School',
                 ));
 
 
@@ -294,7 +294,7 @@ class SchoolsController extends Controller
                     'youtube' => $file['youtube'],
                     'vimeo' => $file['vimeo'],
                     'socialLinks_id' => $id,
-                    'socialLinks_type' =>'School',
+                    'socialLinks_type' =>'App\School',
                 ));
                 Session::flash('success', 'Updated successfully');
                 if($GLOBALS['admin']){

@@ -32,7 +32,7 @@ Route::group(['middleware' => ['auth']], function () {
 //Route::get('rosters/{sport_id}/edit/{id}', 'RostersController@loadModal');
 
 
-Route::group(['middleware' => ['auth']], function () {
+Route::group(['middleware' => ['auth', 'web']], function () {
     Route::get('rosters/{sport_id}/filter/{level_id}', 'RostersController@filter');
     Route::post('rosters/{sport_id}', 'RostersController@update');
     Route::put('rosters/{sport_id}', 'RostersController@show');
@@ -67,7 +67,23 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('gallery', 'GalleryController');
     Route::post('image/upload', 'GalleryController@uploadImage');
 
-    //
+    Route::resource('staff', 'StaffController');
+
+
+    /***********************************************************************
+     * Create API routes
+     * *********************************************************************
+     */
+    Route::get('/', 'APIController@handle');
+
+    Route::get('test', function(){
+        $school = \App\School::find(9);
+
+        //return $school->social;
+        foreach ($school->social as $s){
+            return $s->twitter;
+        }
+    });
 });
 
 
@@ -81,9 +97,4 @@ Route::controllers([
     'password' => 'Auth\PasswordController',
 ]);
 
-/***********************************************************************
- * Create API routes
- * *********************************************************************
- */
-Route::get('/', 'APIController@handle');
 

@@ -24,12 +24,12 @@ class CreateStaffTable extends Migration {
 			$table->string('name', 50);
 			$table->string('title', 50)->nullable();
 			$table->string('photo', 50)->nullable();
-			$table->string('email', 50)->nullable();
-			$table->string('phone', 50)->nullable();
+			$table->string('email', 50)->unique();
+			$table->string('phone', 50);
 			$table->string('website', 50)->nullable();
 			$table->string('description')->nullable();
-			$table->unsignedInteger('school_id')->nullable();
-			$table->foreign('school_id')->references('id')->on('schools');
+			$table->unsignedInteger('school_id');
+			$table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade')->onUpdate('cascade');
 			$table->timestamps();
 		});
 	}

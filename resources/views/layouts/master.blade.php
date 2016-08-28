@@ -299,7 +299,7 @@
                     @endif
 
                     <li>
-                        <a href="#"><i class="fa fa-edit fa-fw"></i>
+                        <a href="/staff"><i class="fa fa-edit fa-fw"></i>
                             Staff</a>
                     </li>
                     <li>
@@ -640,8 +640,6 @@
         </div><!-- /.navbar-static-side -->
     </nav>
     <div id="page-wrapper">
-        <br><br>
-
 
         <!-- **************SAVE ME************
     <div class="container">
