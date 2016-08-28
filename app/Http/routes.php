@@ -69,13 +69,6 @@ Route::group(['middleware' => ['auth', 'web']], function () {
 
     Route::resource('staff', 'StaffController');
 
-
-    /***********************************************************************
-     * Create API routes
-     * *********************************************************************
-     */
-    Route::get('/', 'APIController@handle');
-
     Route::get('test', function(){
         $school = \App\School::find(9);
 
@@ -96,5 +89,11 @@ Route::controllers([
     'auth' => 'Auth\AuthController',
     'password' => 'Auth\PasswordController',
 ]);
+
+/***********************************************************************
+ * Create API routes
+ * *********************************************************************
+ */
+Route::get('/', 'APIController@handle');
 
 

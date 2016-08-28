@@ -15,7 +15,6 @@
 
 @if (session()->has('success'))
 <script>
-    //display success message in the top when successfully updated roster
     $('div.alert').delay(4000).slideUp(300);
 </script>
 @endif
