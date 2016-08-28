@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddPolymorphicRelationToSeasonsTable extends Migration
+class CreateSeasons extends Migration
 {
     /**
      * Run the migrations.
@@ -12,7 +12,10 @@ class AddPolymorphicRelationToSeasonsTable extends Migration
      */
     public function up()
     {
-        Schema::table('seasons', function (Blueprint $table) {
+        Schema::create('seasons', function (Blueprint $table){
+            $table->increments('id');
+            $table->timestamps();
+            $table->string('name');
             $table->unsignedInteger('season_id');
             $table->unsignedInteger('season_type');
         });
@@ -25,8 +28,6 @@ class AddPolymorphicRelationToSeasonsTable extends Migration
      */
     public function down()
     {
-        Schema::table('seasons', function (Blueprint $table) {
-            $table->dropColumn('season_id', 'season_type');
-        });
+        Schema::drop('seasons');
     }
 }

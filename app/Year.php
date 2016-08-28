@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Year extends Model
 {
-    protected $fillable = ['id', 'name', 'year_id', 'year_type'];
+    protected $fillable = ['id', 'year', 'year_id', 'year_type'];
 
-    public function yearRel(){
+    public function year(){
         return $this->morphTo();
     }
 }

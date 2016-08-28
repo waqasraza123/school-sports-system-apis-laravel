@@ -51,10 +51,6 @@ class CreateForeignKeys extends Migration
                 ->references('id')->on('positions')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->foreign('season_id')
-                ->references('id')->on('seasons')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
         });
 
         Schema::table('schools', function(Blueprint $table)

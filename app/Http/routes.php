@@ -32,7 +32,7 @@ Route::group(['middleware' => ['auth']], function () {
 //Route::get('rosters/{sport_id}/edit/{id}', 'RostersController@loadModal');
 
 
-Route::group(['middleware' => ['auth', 'web']], function () {
+Route::group(['middleware' => ['auth']], function () {
     Route::get('rosters/{sport_id}/filter/{level_id}', 'RostersController@filter');
     Route::post('rosters/{sport_id}', 'RostersController@update');
     Route::put('rosters/{sport_id}', 'RostersController@show');
@@ -67,14 +67,23 @@ Route::group(['middleware' => ['auth', 'web']], function () {
     Route::resource('gallery', 'GalleryController');
     Route::post('image/upload', 'GalleryController@uploadImage');
 
+    Route::post('staff/year', ['as' => 'year-staff', 'uses' => 'StaffController@yearStaff']);
     Route::resource('staff', 'StaffController');
 
     Route::get('test', function(){
-        $school = \App\School::find(9);
+        $year = \App\Year::find(11);
+        $staff = \App\Staff::all();
 
-        //return $school->social;
-        foreach ($school->social as $s){
-            return $s->twitter;
+        if($staff){
+            foreach($staff as $s)
+            {
+                foreach($s->years as $y){
+                    if($y->year == '2016' && $y->year_type === 'App\Staff'){
+                        echo $s->name;
+                        echo $y->year;
+                    }
+                }
+            }
         }
     });
 });

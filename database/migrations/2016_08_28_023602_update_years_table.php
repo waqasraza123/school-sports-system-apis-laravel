@@ -14,7 +14,7 @@ class UpdateYearsTable extends Migration
     {
         Schema::table('years', function (Blueprint $table) {
             $table->unsignedInteger('year_id');
-            $table->unsignedInteger('year_type');
+            $table->string('year_type');
         });
     }
 

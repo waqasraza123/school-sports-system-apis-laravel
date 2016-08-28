@@ -27,7 +27,6 @@ class UpdateSchoolsSchema extends Migration
             $table->integer('staff_id')->nullable();
             $table->string('school_tagline')->nullable();
             $table->string('school_email')->nullable();
-            $table->integer('season_id')->nullable();
             $table->integer('level_id')->nullable();
             $table->integer('news_id')->nullable();
         });
@@ -55,7 +54,6 @@ class UpdateSchoolsSchema extends Migration
             $table->dropColumn('staff_id');
             $table->dropColumn('school_tagline');
             $table->dropColumn('school_email');
-            $table->dropColumn('season_id');
             $table->dropColumn('level_id');
             $table->dropColumn('news_id');
         });

@@ -31,7 +31,6 @@ class CreateRostersTable extends Migration {
 			$table->string('food', 25)->nullable();
 			$table->string('photo', 50)->nullable();
 			$table->string('number', 50)->nullable();
-			$table->unsignedInteger('season_id')->nullable();
 			$table->timestamps();
 		});
 	}

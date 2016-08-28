@@ -13,6 +13,14 @@ class Staff extends Model
     protected $table = 'staff';
 
     public function years(){
-        return $this->morphMany('App\Year', 'yearRel');
+        return $this->morphMany('App\Year', 'year');
+    }
+
+    /**
+     * relationship with school
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function school(){
+        return $this->belongsTo('App\School', 'school_id');
     }
 }

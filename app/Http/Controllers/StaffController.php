@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Staff;
 use App\Year;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 use App\Http\Requests;
-use Symfony\Component\Console\Input\Input;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Session;
 
 class StaffController extends Controller
 {
@@ -18,7 +20,24 @@ class StaffController extends Controller
      */
     public function index()
     {
-        return view('staff.show');
+        $school_id = Auth::user()->school_id;
+        $staff = Staff::where('school_id', $school_id)->get();
+        $year = '2016';
+
+        return view('staff.show', compact('staff', 'school_id', 'year'));
+    }
+
+    /**
+     * show staff for particular year
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function yearStaff(Request $request)
+    {
+        $year = $request->input('year');
+        $school_id = Auth::user()->school_id;
+        $staff = Staff::where('school_id', $school_id)->get();
+
+        return view('staff.show', compact('staff', 'school_id', 'year'));
     }
 
     /**
@@ -39,19 +58,21 @@ class StaffController extends Controller
      */
     public function store(Request $request)
     {
+        $schoolId = Auth::user()->school_id;
+
         $this->validate($request, [
             'name' => 'required',
-            'email' => 'required|unique:staff,email',
+            'email' => 'required|email|unique:staff,email',
             'year' => 'required',
             'phone' => 'required|max:15'
         ]);
 
         $fileName = "";
-        if($request->input('photo')){
+        if(Input::file('photo') != null){
             $destinationPath = 'uploads/staff'; // upload path
             $extension = Input::file('photo')->getClientOriginalExtension();
             $fileName = rand(1111, 9999) . '.' . $extension;
-            $request->input('photo')->move($destinationPath, $fileName);
+            Input::file('photo')->move($destinationPath, $fileName);
         }
 
 
@@ -62,7 +83,8 @@ class StaffController extends Controller
             'description' => $request->input('description'),
             'title' => $request->input('title'),
             'website' => $request->input('website'),
-            'photo' => $fileName or "",
+            'school_id' => $schoolId,
+            'photo' => $fileName,
         ]);
 
         $year = Year::create([
@@ -71,7 +93,8 @@ class StaffController extends Controller
             'year_type' => 'App\Staff'
         ]);
 
-        return redirect('/staff')->with('success', 'staff added successfully');
+        Session::flash('success', 'staff added successfully');
+        return redirect('/staff');
     }
 
     /**
@@ -93,7 +116,8 @@ class StaffController extends Controller
      */
     public function edit($id)
     {
-        //
+        $staff = Staff::findOrFail($id);
+        return view('staff.update', compact('staff'));
     }
 
     /**
@@ -105,7 +129,35 @@ class StaffController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $schoolId = Auth::user()->school_id;
+
+        $this->validate($request, [
+            'name' => 'required',
+            'email' => 'required|email|unique:staff,email,'.$id,
+            'year' => 'required',
+            'phone' => 'required|max:15'
+        ]);
+
+        $fileName = "";
+        if(Input::file('photo') != null){
+            $destinationPath = 'uploads/staff'; // upload path
+            $extension = Input::file('photo')->getClientOriginalExtension();
+            $fileName = rand(1111, 9999) . '.' . $extension;
+            Input::file('photo')->move($destinationPath, $fileName);
+        }
+
+        $staff = Staff::where('id', $id)->update([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'phone' => $request->input('phone'),
+            'description' => $request->input('description'),
+            'title' => $request->input('title'),
+            'website' => $request->input('website'),
+            'school_id' => $schoolId,
+            'photo' => $fileName,
+        ]);
+        Session::flash('success', 'staff updated successfully');
+        return redirect('/staff');
     }
 
     /**
@@ -116,6 +168,9 @@ class StaffController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $staff = Staff::find($id);
+        $staff->delete();
+
+        return redirect('/staff')->with('success', 'Staff deleted successfully');
     }
 }

@@ -12,12 +12,6 @@ class CreateStaffTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('seasons', function (Blueprint $table){
-			$table->increments('id');
-			$table->timestamps();
-            $table->string('name');
-		});
-
 		Schema::create('staff', function(Blueprint $table)
 		{
 			$table->increments('id');
@@ -29,7 +23,7 @@ class CreateStaffTable extends Migration {
 			$table->string('website', 50)->nullable();
 			$table->string('description')->nullable();
 			$table->unsignedInteger('school_id');
-			$table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade')->onUpdate('cascade');
+			$table->foreign('school_id')->references('id')->on('schools');
 			$table->timestamps();
 		});
 	}
