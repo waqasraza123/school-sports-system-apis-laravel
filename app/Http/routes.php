@@ -48,7 +48,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('games/{sport_id}/filter/{level_id}', 'GamesController@filter');
     Route::resource('games', 'GamesController');
 
-    Route::get('schools/', 'SchoolsController@show');
+    //Route::get('schools/', 'SchoolsController@index');
+    Route::get('schools/add', 'SchoolsController@showForm');
     Route::get('schools/edit/{id}', 'SchoolsController@showEditForm');
     Route::post('schools/edit/{id}', 'SchoolsController@edit');
     Route::resource('schools', 'SchoolsController');

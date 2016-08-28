@@ -11,21 +11,51 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
+$GLOBALS['admin'] = false;
 class SchoolsController extends Controller
 {
+
+    //check if the user is admin
+    public function checkAdmin(){
+        if(Auth::check()){
+            if(Auth::user()->email == 'admin@gmail.com'){
+                $GLOBALS['admin'] = true;
+            }
+        }
+    }
+
     //show all schools
     public function index()
     {
-        $schools = School::all();
+        if(!($GLOBALS['admin'])){
+            if(Auth::check()){
+                $schoolId = Auth::user()->school_id;
+            }
+            $social = Social::where('socialLinks_id', $schoolId)->first();
+            $schools = School::where('school_email', '<>', 'admin@gmail.com')->get();
+            $userSchool = School::where('id', $schoolId)->first();
+            return view('pages.home', compact('schools', 'userSchool', 'social'))->with('success', 'please login as admin to add schools');
+        }
+        $schools = School::where('school_email', '<>', 'admin@gmail.com')->get();
         return view('schools.show', compact('schools'));
     }
-    //show all schools
-    public function show()
-    {
-        $schools = School::all();
-        return view('schools.show', compact('schools'));
+
+    /**
+     * generate api key
+     * @return Redirect
+     */
+    function apiKey($length = 30) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return ''.$randomString;
     }
+
     //save school to db
     public function store()
     {
@@ -45,14 +75,14 @@ class SchoolsController extends Controller
             //setting errors message
             Session::flash('message', $validator->errors()->all());
             // send back to the page with the input data and errors
-            return Redirect::back()->withInput()->withErrors($validator);
+            return redirect()->back()->withInput()->withErrors($validator);
         }
         else
         {
-            //add new school
+            //get the api key
+            $api = $this->apiKey();
 
             if (Input::file('school_logo') != null && Input::file('photo') !=null) {
-                //dd("got");
 
                 $destinationPath = 'uploads/schools'; // upload path
                 $extension = Input::file('school_logo')->getClientOriginalExtension(); // getting image extension
@@ -81,6 +111,7 @@ class SchoolsController extends Controller
                     'school_email'=>$file['school_email'],
                     'video'=>$file['video'],
                     'livestream_url'=>$file['livestream_url'],
+                    'api_key'=> $api,
                     'school_logo' => $fileName,
                     'photo' => $fileName2
                     ));
@@ -99,7 +130,12 @@ class SchoolsController extends Controller
 
 
                 Session::flash('success', 'Created successfully');
-                return Redirect::back();
+                if($GLOBALS['admin']){
+                    return redirect('/schools');
+                }
+                else{
+                    return redirect('/home');
+                }
             } else {
                 $school = School::create(array('name' => $file['name'],
                     'short_name' => $file['short_name'],
@@ -116,6 +152,7 @@ class SchoolsController extends Controller
                     'school_tagline'=>$file['school_tagline'],
                     'app_name'=>$file['app_name'],
                     'school_email'=>$file['school_email'],
+                    'api_key'=>$api,
                     'video'=>$file['video'],
                     'livestream_url'=>$file['livestream_url'],
                 ));
@@ -132,7 +169,12 @@ class SchoolsController extends Controller
                 ));
 
                 Session::flash('success', 'Created successfully');
-                return Redirect::back();
+                if($GLOBALS['admin']){
+                    return redirect('/schools');
+                }
+                else{
+                    return redirect('/home');
+                }
             }
         }
     }
@@ -164,10 +206,11 @@ class SchoolsController extends Controller
             //setting errors message
             Session::flash('message', $validator->errors()->all());
             // send back to the page with the input data and errors
-            return Redirect::back()->withInput()->withErrors($validator);
+            return redirect()->back()->withInput()->withErrors($validator);
         }
 
         else{
+            $api = $this->apiKey();
             if (Input::file('school_logo') != null && Input::file('photo') != null) {
 
                 $destinationPath = 'uploads/schools'; // upload path
@@ -196,6 +239,7 @@ class SchoolsController extends Controller
                     'app_name'=>$file['app_name'],
                     'school_email'=>$file['school_email'],
                     'video'=>$file['video'],
+                    'api_key'=>$api,
                     'livestream_url'=>$file['livestream_url'],
                     'school_logo' => $fileName,
                     'photo' => $fileName2));
@@ -213,7 +257,12 @@ class SchoolsController extends Controller
 
 
                 Session::flash('success', 'Updated successfully');
-                return Redirect::back();
+                if($GLOBALS['admin']){
+                    return redirect('/schools');
+                }
+                else{
+                    return redirect('/home');
+                }
             } else {
 
                 $school = School::where('id', '=', $id)->first()->update(array(
@@ -232,6 +281,7 @@ class SchoolsController extends Controller
                     'school_color3'=>$file['school_color3'],
                     'school_tagline'=>$file['school_tagline'],
                     'app_name'=>$file['app_name'],
+                    'api_key'=>$api,
                     'school_email'=>$file['school_email'],
                     'livestream_url'=>$file['livestream_url'],
                     'video'=>$file['video']));
@@ -247,7 +297,12 @@ class SchoolsController extends Controller
                     'socialLinks_type' =>'School',
                 ));
                 Session::flash('success', 'Updated successfully');
-                return Redirect::back();
+                if($GLOBALS['admin']){
+                    return redirect('/schools');
+                }
+                else{
+                    return redirect('/home');
+                }
             }
         }
     }
@@ -259,5 +314,10 @@ class SchoolsController extends Controller
         $roster->delete();
         Session::flash('flash_message_s', 'School successfully deleted!');
         return redirect()->back();
+    }
+
+    //add school view
+    public function showForm(){
+        return view('schools.modals.schools_form');
     }
 }

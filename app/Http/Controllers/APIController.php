@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Social;
 use Illuminate\Http\Request;
 use App\School;
 use App\Sport;
+use App\User;
 
 use App\Http\Requests;
 use Illuminate\Http\Response;
@@ -19,15 +21,58 @@ class APIController extends Controller
         $school_id = $request->query('school_id');
 
         if(!($request->query('action'))){
+            $this->createAdmin();
             return redirect('/home');
         }
 
-        $this->getAppData($school_id);
+        else{
+            return $this->getAppData($school_id);
+        }
     }
 
-    public function getAppData($school_id){
-        $school = School::find($school_id)->sports()->get();
 
-        return new Response($school);
+    /**
+     * @param $school_id
+     * @return Response
+     */
+    public function getAppData($school_id){
+        $schools = School::find($school_id);
+
+
+
+        foreach ($schools as $school)
+            return $school;
+    }
+
+    /**
+     * create the admin user
+     */
+    public function createAdmin(){
+
+        $user = User::where('email', 'admin@gmail.com')->first();
+        $school = School::where('school_email', 'admin@gmail.com')->first();
+        $social = Social::where('socialLinks_type', 'Admin')->first();
+        if($user){
+            return;
+        }
+
+        else{
+            $school = School::create(array(
+                'id' => 1,
+                'name' => 'Admin',
+                'school_email' => 'admin@gmail.com'
+            ));
+            $user = User::create(array(
+                'name' => 'Admin',
+                'email' => 'admin@gmail.com',
+                'password' => bcrypt('admin'),
+                'school_id' => $school->id
+            ));
+            
+            $social = Social::create(array(
+                'socialLinks_id' => $school->id,
+                'socialLinks_type' => 'Admin'
+            ));
+        }
     }
 }

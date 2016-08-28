@@ -7,8 +7,18 @@
 
 </head>
 <body>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/home">Sports CMS</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="active"><a href="/home">Home</a></li>
+            <li><a href="/auth/login">Login</a></li>
+            <li><a href="/auth/register">Signup</a></li>
+        </ul>
+    </div>
+</nav>
     @yield('content')
-
-
 </body>
 </html>

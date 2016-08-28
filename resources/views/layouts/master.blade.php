@@ -260,6 +260,13 @@
                 </ul><!-- /.dropdown-user -->
             </li><!-- /.dropdown -->
         </ul><!-- /.navbar-top-links -->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-4">
+
+                </div>
+            </div>
+        </div>
         <div class="navbar-default sidebar" role="navigation">
             <div class="sidebar-nav navbar-collapse">
                 <ul class="nav" id="side-menu">
@@ -277,15 +284,26 @@
                     </li>
                 -->
                     <li>
-                        <a href="#"><i class="fa fa-dashboard fa-fw"></i>
-                            Home</a>
+                        <a href="/home"><i class="fa fa-dashboard fa-fw"></i>
+                            Settings</a>
                     </li>
+                    @if(Auth::check())
+                        @if(Auth::user()->email != 'admin@gmail.com')
+
+                            @else
+                            <li>
+                                <a href="/schools"><i class="fa fa-dashboard fa-fw"></i>
+                                    Add School</a>
+                            </li>
+                        @endif
+                    @endif
+
                     <li>
                         <a href="#"><i class="fa fa-edit fa-fw"></i>
                             Staff</a>
                     </li>
                     <li>
-                        <a href="/schools"><i class="fa fa-edit fa-fw"></i>
+                        <a href="/opponents"><i class="fa fa-edit fa-fw"></i>
                             Opponents</a>
                     </li>
                     <li>
@@ -390,7 +408,7 @@
                                     </li>
                                 </ul><!-- /.nav-third-level -->
                             </li>
-          
+
                         </ul><!-- /.nav-second-level -->
                     </li>
                     <li>
@@ -473,7 +491,7 @@
                                 </ul><!-- /.nav-third-level -->
                             </li>
 
-  
+
                         </ul><!-- /.nav-second-level -->
                     </li>
                      <li>

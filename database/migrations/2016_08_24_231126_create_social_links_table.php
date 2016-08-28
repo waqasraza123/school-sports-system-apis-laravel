@@ -14,12 +14,12 @@ class CreateSocialLinksTable extends Migration
     {
         Schema::create('social', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('facebook');
-            $table->string('youtube');
-            $table->string('twitter');
-            $table->string('instagram');
-            $table->string('vimeo');
-            $table->string('gplus');
+            $table->string('facebook')->nullable();
+            $table->string('youtube')->nullable();
+            $table->string('twitter')->nullable();
+            $table->string('instagram')->nullable();
+            $table->string('vimeo')->nullable();
+            $table->string('gplus')->nullable();
 
             $table->unsignedInteger('socialLinks_id');
             $table->string('socialLinks_type');

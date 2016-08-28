@@ -28,6 +28,7 @@ class CreateSchoolsTable extends Migration {
 			$table->string('website', 25)->nullable();
 			$table->string('video')->nullable();
 			$table->string('photo')->nullable();
+			$table->text('api_key')->nullable();
 			$table->string('livestream_url')->nullable();
 			$table->unsignedInteger('league_id')->nullable()->index('league_id');
 			$table->unsignedInteger('division_id')->nullable()->index('division_id');

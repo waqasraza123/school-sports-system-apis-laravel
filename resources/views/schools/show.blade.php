@@ -4,9 +4,9 @@
 
 
 
-    <h1>Opponents</h1>
+    <h1>Schools</h1>
     <p class="lead">
-        <button type="button" id="add_new_school" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#schoolModal">Add Opponent?</button>
+        <a href="{{url('schools/add')}}"><button type="button" id="add_new_school" class="btn btn-primary btn-sm">Add School</button></a>
 
     </p>
 
@@ -37,7 +37,7 @@
                         <th>Name</th>
                         <th>City</th>
                         <th>State</th>
-                        <th>Website</th>
+                        <th>API</th>
                         <th>&nbsp;</th>
                         <th>&nbsp;</th>
                     </tr>
@@ -50,7 +50,7 @@
                             <td class="jersey">{{ $school->name }}</td>
                             <td class="first_name">{{ $school->city }}</td>
                             <td class="position">{{ $school->state}}</td>
-                            <td class="position">{{ $school->website}}</td>
+                            <td class="position">{{ $school->api_key}}</td>
                             <td> <a href="{{url('schools/edit', [$school->id])}}"><button type="button" class="btn btn-primary btn-sm edit_school">Edit</button></a></td>
                             <td> {!! Form::open([    'method' => 'DELETE','route' => ['schools.destroy', $school->id]]) !!}{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}{!! Form::close() !!}</td>
                             <td class="id" style="display: none;"  />{{ $school->id}}</td>
@@ -64,7 +64,7 @@
                             <td class="state" style="display: none;"  />{{ $school->state}}</td>
                             <td class="zip" style="display: none;"  />{{ $school->zip}}</td>
                             <td class="phone" style="display: none;"  />{{ $school->phone}}</td>
-                            <td class="website" style="display: none;"  />{{  $school->website}}</td>
+                            <td class="website" style="display: none;"  />{{  $school->api_key}}</td>
                             <td class="twitter" style="display: none;"  />{{ $school->twitter}}</td>
                             <td class="facebook" style="display: none;"  />{{ $school->facebook}}</td>
                             <td class="instagram" style="display: none;"  />{{ $school->instagram}}</td>
@@ -85,7 +85,7 @@
         </div>
 
         <!-- Modal -->
-        @include('schools.modals.schools_form')
+        {{--@include('schools.modals.schools_form')--}}
 
 
 

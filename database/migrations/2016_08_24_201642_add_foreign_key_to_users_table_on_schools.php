@@ -13,8 +13,8 @@ class AddForeignKeyToUsersTableOnSchools extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->unsignedInteger('school_id')->nullable();
-            $table->foreign('school_id')->references('id')->on('schools');
+            $table->unsignedInteger('school_id');
+            $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');
         });
     }
 
