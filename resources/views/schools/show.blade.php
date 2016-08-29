@@ -56,7 +56,7 @@
                             <td class="name" style="display: none;"  />{{  $school->name}}</td>
                             <td class="short_name" style="display: none;"  />{{ $school->short_name}}</td>
                             <td class="mascot_name" style="display: none;"  />{{ $school->mascot_name}}</td>
-                            <td class="athletics_logo" style="display: none;"  />{{asset('uploads/schools/'.$school->athletics_logo ) }}</td>
+                            <td class="athletics_logo" style="display: none;"  />{{asset('uploads/schools/'.$school->school_logo ) }}</td>
                             <td class="bio" style="display: none;"  />{{ $school->bio}}</td>
                             <td class="adress" style="display: none;"  />{{  $school->adress}}</td>
                             <td class="city" style="display: none;"  />{{ $school->city}}</td>

@@ -10,5 +10,4 @@ class Location extends Model
     protected $fillable = [
         'name', 'adress', 'city', 'state', 'zip', 'lat', 'lon'
     ];
-
 }

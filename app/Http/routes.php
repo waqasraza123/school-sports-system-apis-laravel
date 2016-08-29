@@ -70,6 +70,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('staff/year', ['as' => 'year-staff', 'uses' => 'StaffController@yearStaff']);
     Route::resource('staff', 'StaffController');
 
+    Route::post('opponents/year', ['as' => 'year-opponents', 'uses' => 'OpponentController@yearOpponents']);
+    Route::resource('opponents', 'OpponentController');
+
     Route::get('test', function(){
         $year = \App\Year::find(11);
         $staff = \App\Staff::all();

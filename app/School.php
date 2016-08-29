@@ -38,12 +38,20 @@ class School extends Model
     public function sports(){
         return $this->hasMany('App\Sport');
     }
-
     /**
      * get all staff members for that school
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function staff(){
         return $this->hasMany('App\Staff', 'school_id');
+    }
+
+    /**
+     * get opponents for the school
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     *
+     */
+    public function opponents(){
+        return $this->hasMany('App\Opponent', 'school_id');
     }
 }

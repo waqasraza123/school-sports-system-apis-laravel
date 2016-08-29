@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Opponent;
 use App\School;
 use App\Social;
 use Illuminate\Http\Request;
@@ -211,15 +212,31 @@ class SchoolsController extends Controller
 
         else{
             $api = $this->apiKey();
-            if (Input::file('school_logo') != null && Input::file('photo') != null) {
+            $fileName = "";
+            $fileName2 = "";
+
+            $image = School::find($id);
+            if($image->photo){
+                $fileName2 = $image->photo;
+            }
+            if($image->school_logo){
+                $fileName = $image->school_logo;
+            }
+
+            if (Input::file('school_logo') != null) {
 
                 $destinationPath = 'uploads/schools'; // upload path
                 $extension = Input::file('school_logo')->getClientOriginalExtension(); // getting image extension
-                $extension2 = Input::file('photo')->getClientOriginalExtension(); // getting image extension
                 $fileName = rand(1111, 9999) . '.' . $extension; // renameing image
-                $fileName2 = rand(1111, 9999) . '.' . $extension2; // renameing image
                 Input::file('school_logo')->move($destinationPath, $fileName); // uploading file to given path
+            }
+            if (Input::file('photo') != null) {
+
+                $destinationPath = 'uploads/schools'; // upload path
+                $extension2 = Input::file('photo')->getClientOriginalExtension(); // getting image extension
+                $fileName2 = rand(1111, 9999) . '.' . $extension2; // renameing image
                 Input::file('photo')->move($destinationPath, $fileName2); // uploading file to given path
+            }
 
                 $school = School::where('id', '=', $id)->first()->update(array(
 
@@ -263,54 +280,24 @@ class SchoolsController extends Controller
                 else{
                     return redirect('/home');
                 }
-            } else {
-
-                $school = School::where('id', '=', $id)->first()->update(array(
-
-                    'name' => $file['name'],
-                    'short_name' => $file['short_name'],
-                    'bio' => $file['bio'],
-                    'adress' => $file['adress'],
-                    'city' => $file['city'],
-                    'state' => $file['state'],
-                    'zip' => $file['zip'],
-                    'phone' => $file['phone'],
-                    'website' => $file['website'],
-                    'school_color'=>$file['school_color'],
-                    'school_color2'=>$file['school_color2'],
-                    'school_color3'=>$file['school_color3'],
-                    'school_tagline'=>$file['school_tagline'],
-                    'app_name'=>$file['app_name'],
-                    'api_key'=>$api,
-                    'school_email'=>$file['school_email'],
-                    'livestream_url'=>$file['livestream_url'],
-                    'video'=>$file['video']));
-
-                //save the social media links to social_links table
-                Social::where('socialLinks_id', '=', $id)->first()->update(array(
-                    'twitter' => $file['twitter'],
-                    'facebook' => $file['facebook'],
-                    'instagram' => $file['instagram'],
-                    'youtube' => $file['youtube'],
-                    'vimeo' => $file['vimeo'],
-                    'socialLinks_id' => $id,
-                    'socialLinks_type' =>'App\School',
-                ));
-                Session::flash('success', 'Updated successfully');
-                if($GLOBALS['admin']){
-                    return redirect('/schools');
-                }
-                else{
-                    return redirect('/home');
-                }
-            }
         }
     }
 
-    //delete school
+    /**
+     * delete school
+     * @param $id
+     * @return mixed
+     */
     public function destroy($id)
     {
         $roster = School::findOrFail($id);
+
+        foreach ($roster->opponents as $op){
+            $op->delete();
+        }
+        foreach ($roster->staff as $op){
+            $op->delete();
+        }
         $roster->delete();
         Session::flash('flash_message_s', 'School successfully deleted!');
         return redirect()->back();
