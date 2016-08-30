@@ -9,22 +9,24 @@ use Illuminate\Database\Eloquent\Model;
 class Roster extends Model
 
 {
-
-
     public function sport()
-{
+    {
     return $this->belongsTo('App\Sport', 'sport_id');
-}
+    }
 
-public function year()
-{
-    return $this->belongsTo('App\Year', 'year_id');
-}
+    /**
+     * polymorphic relation with years table
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function year()
+    {
+        return $this->morphMany('App\Year', 'year');
+    }
 
-public function level()
-{
-    return $this->belongsTo('App\Level', 'level_id');
-}
+    public function level()
+    {
+        return $this->belongsTo('App\Level', 'level_id');
+    }
 
     public function news()
     {
@@ -40,25 +42,20 @@ public function level()
         'sport_id',
         'level_id',
         'year_id',
-        'first_name',
-        'last_name',
-        'jersey',
+        'name',
         'position',
         'height_feet',
         'height_inches',
         'weight',
-        'hometown',
-        'years_at_sfc',
-        'verse',
-        'food',
-        'photo'
+        'academic_year',
+        'photo',
+        'pro_free',
+        'pro_flag',
+        'pro_cover_photo',
+        'pro_head_photo',
+        'school_id',
 ];
-
-
 }
-
-
-
 
 
 

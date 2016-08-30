@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAdsTable extends Migration
+class AddRostersSportsLevelsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,12 +12,14 @@ class CreateAdsTable extends Migration
      */
     public function up()
     {
-        Schema::create('ads', function (Blueprint $table) {
+        Schema::create('levels-rosters', function (Blueprint $table){
             $table->increments('id');
             $table->string('name');
-            $table->string('url');
-            $table->string('image');
-            $table->timestamps();
+        });
+
+        Schema::create('levels-sports', function (Blueprint $table){
+            $table->increments('id');
+            $table->string('name');
         });
     }
 
@@ -28,7 +30,7 @@ class CreateAdsTable extends Migration
      */
     public function down()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
-        Schema::dropIfExists('ads');
+        Schema::drop('levels-rosters');
+        Schema::drop('levels-sports');
     }
 }

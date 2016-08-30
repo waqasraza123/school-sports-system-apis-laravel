@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RostersUploadRequest;
+use App\LevelRoster;
 use App\Positions;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
@@ -41,10 +43,9 @@ class RostersController extends Controller
     public function create()
     {
         $sports = Sport::lists('name', 'id');
-        $levels = Level::lists('name', 'id');
-        $years = Year::lists('name', 'id');
+        $levels = LevelRoster::lists('name', 'id');
 
-        return View('rosters.create', compact('sports', 'levels', 'years'));
+        return View('rosters.create', compact('sports', 'levels'));
     }
 
     /**
@@ -55,10 +56,87 @@ class RostersController extends Controller
      */
     public function store(Request $request)
     {
-        $input = $request->all();
-        Roster::create($input);
+        $this->validate($request, [
+            'name' => 'required|max:255',
+            /*'sport_id' => 'required',*/
+            'level_id' => 'required',
+            'year_id' => 'required',
+            'academic_year' => 'required',
+            'pro_free' => 'required',
+        ]);
 
-        return redirect()->back();
+
+        //store images
+        $fileName = "";
+        $pro_flag = "";
+        $pro_cover_photo = "";
+        $pro_head_photo = "";
+        if($request->input('pro_free') == 0){
+
+            if(Input::file('photo') != null){
+                $destinationPath = 'uploads/rosters'; // upload path
+                $extension = Input::file('photo')->getClientOriginalExtension();
+                $fileName = rand(1111, 9999) . '.' . $extension;
+                Input::file('photo')->move($destinationPath, $fileName);
+            }
+        }
+        elseif ($request->input('pro_free') == 1){
+            if(Input::file('photo') != null){
+                $destinationPath = 'uploads/rosters'; // upload path
+                $extension = Input::file('photo')->getClientOriginalExtension();
+                $fileName = rand(1111, 9999) . '.' . $extension;
+                Input::file('photo')->move($destinationPath, $fileName);
+            }
+
+            if(Input::file('pro_flag') != null){
+                $destinationPath = 'uploads/rosters'; // upload path
+                $extension = Input::file('pro_flag')->getClientOriginalExtension();
+                $pro_flag = rand(1111, 9999) . '.' . $extension;
+                Input::file('pro_flag')->move($destinationPath, $pro_flag);
+            }
+
+            if(Input::file('pro_cover_photo') != null){
+                $destinationPath = 'uploads/rosters'; // upload path
+                $extension = Input::file('pro_cover_photo')->getClientOriginalExtension();
+                $pro_cover_photo = rand(1111, 9999) . '.' . $extension;
+                Input::file('pro_cover_photo')->move($destinationPath, $pro_cover_photo);
+            }
+
+            if(Input::file('pro_head_photo') != null){
+                $destinationPath = 'uploads/rosters'; // upload path
+                $extension = Input::file('pro_head_photo')->getClientOriginalExtension();
+                $pro_head_photo = rand(1111, 9999) . '.' . $extension;
+                Input::file('pro_head_photo')->move($destinationPath, $pro_head_photo);
+            }
+        }
+
+        $school_id = Auth::user()->school_id;
+        $roster = Roster::create([
+            'sport_id' => 1,
+            'level_id' => $request->input('level_id'),
+            'name' => $request->input('name'),
+            'photo' => $fileName,
+            'pro_flag' => $pro_flag,
+            'pro_cover_photo' => $pro_cover_photo,
+            'pro_head_photo' => $pro_head_photo,
+            'academic_year' => $request->input('academic_year'),
+            'height_feet' => $request->input('height_feet'),
+            'height_inches' => $request->input('height_inches'),
+            'weight' => $request->input('weight'),
+            'number' => $request->input('number'),
+            'pro_free' => $request->input('pro_free'),
+            'position' => 1,
+            'school_id' => $school_id
+        ]);
+
+        Year::create([
+            'name' => $request->input('year'),
+            'year_id' => $roster->id,
+            'year_type' => 'App\Roster'
+        ]);
+
+
+        return redirect('/rosters')->with('success', 'Roster created successfully');
     }
 
     /**

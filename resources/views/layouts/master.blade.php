@@ -306,6 +306,16 @@
                         <a href="/opponents"><i class="fa fa-edit fa-fw"></i>
                             Opponents</a>
                     </li>
+
+                    <li>
+                        <a href="/rosters-levels"><i class="fa fa-edit fa-fw"></i>
+                            Rosters Levels</a>
+                    </li>
+
+                    <li>
+                        <a href="/sports-levels"><i class="fa fa-edit fa-fw"></i>
+                            Sports Levels</a>
+                    </li>
                     <li>
                         <a href="/locations"><i class="fa fa-edit fa-fw"></i>
                             Schedule Locations</a>

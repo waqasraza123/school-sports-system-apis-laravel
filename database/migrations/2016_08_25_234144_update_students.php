@@ -34,11 +34,12 @@ class UpdateStudents extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::table('students', function (Blueprint $table) {
             $table->dropForeign('students_school_id_foreign');
         });
 
-        Schema::drop('students');
+        Schema::dropIfExists('students');
     }
 
 }

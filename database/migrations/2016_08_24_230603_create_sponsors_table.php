@@ -39,6 +39,7 @@ class CreateSponsorsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('sponsors');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+        Schema::dropIfExists('sponsors');
     }
 }

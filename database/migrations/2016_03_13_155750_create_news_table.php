@@ -34,6 +34,7 @@ class CreateNewsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('news');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+        Schema::dropIfExists('news');
     }
 }

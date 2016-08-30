@@ -25,6 +25,7 @@ class AddPolymorphicRelationToPhotosTable extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::table('photos', function (Blueprint $table) {
             $table->dropColumn('photos_id', 'photos_type');
         });

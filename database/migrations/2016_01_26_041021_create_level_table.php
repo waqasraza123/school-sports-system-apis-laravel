@@ -16,6 +16,8 @@ class CreateLevelTable extends Migration {
 		{
 			$table->increments('id');
 			$table->string('name', 50)->nullable();
+			$table->unsignedInteger('level_id');
+			$table->string('level_type');
 			$table->timestamps();
 		});
 	}
@@ -28,7 +30,9 @@ class CreateLevelTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('level');
+		DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+		Schema::dropIfExists('levels');
+		DB::statement('SET FOREIGN_KEY_CHECKS = 1');
 	}
 
 }

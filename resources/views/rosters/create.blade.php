@@ -1,74 +1,118 @@
 @extends('layouts.master')
-
 @section('content')
+    <div class="container-fluid">
+        <h2 style="text-align: center">Add Roster</h2>
 
-{!! Form::open([
-    'route' => 'rosters.store'
+        @include('partials.error-messages.success')
+        @include('partials.error-messages.error')
 
-]) !!}
+        {!! Form::open(['route' => 'rosters.store', 'files' =>true]) !!}
 
-<div class="form-group">
-    {!! Form::label('title', 'Sport:', ['class' => 'control-label']) !!}
-    {{ Form::select('sport_id', $sports), ['class' => 'form-control'] }}
-</div>
-<div class="form-group">
-    {!! Form::label('title', 'Level:', ['class' => 'control-label']) !!}
-     {{ Form::select('level_id', $levels), ['class' => 'form-control'] }}
-<div class="form-group">
-    {!! Form::label('title', 'Year:', ['class' => 'control-label']) !!}
-     {{ Form::select('year_id', $years), ['class' => 'form-control'] }}
-</div>
+        <div class="row">
+            <div class="col-md-6">
+                {!! Form::label('title', 'Select Sport:', ['class' => 'control-label']) !!}
+                {{ Form::select('sport_id', $sports, null, ['class' => 'form-control'] )}}
+            </div>
+            <div class="col-md-6">
+                {!! Form::label('title', 'Select Level:', ['class' => 'control-label']) !!}
+                {{ Form::select('level_id', $levels, null, ['class' => 'form-control', 'required' => 'true'] )}}
+            </div>
+        </div>
 
-<div class="form-group">
-    {!! Form::label('title', 'First Name:', ['class' => 'control-label']) !!}
-    {!! Form::text('first_name', null, ['class' => 'fn']) !!}
-</div>
-<div class="form-group">
-    {!! Form::label('title', 'Last Name:', ['class' => 'control-label']) !!}
-    {!! Form::text('last_name', null, ['class' => 'ln']) !!}
-</div>
-<div class="form-group">
-    {!! Form::label('title', 'Jersey:', ['class' => 'control-label']) !!}
-    {!! Form::text('jersey', null, ['class' => 'jersey']) !!}
-</div>
+        <div class="row">
+            <div class="col-md-6">
+                {!! Form::label('title', 'Year:', ['class' => 'control-label']) !!}
+                {!! Form::selectYear('year_id', 2005, \Carbon\Carbon::now()->year, \Carbon\Carbon::now()->year, ['class' => 'form-control', 'required' => 'true']) !!}
+            </div>
+            <div class="col-md-6">
+                {!! Form::label('title', 'Name:', ['class' => 'control-label']) !!}
+                {!! Form::text('name', null, ['class' => 'fn form-control', 'required' => 'true']) !!}
+            </div>
+        </div>
 
-<div class="form-group">
-    {!! Form::label('title', 'Position:', ['class' => 'control-label']) !!}
-    {!! Form::text('position', null, ['class' => 'form-control']) !!}
-</div>
-<div class="form-group">
-    {!! Form::label('title', 'Height:', ['class' => 'control-label']) !!}
-    {!! Form::text('height_feet', null, ['class' => 'form-control']) !!}
-    {!! Form::text('height_inches', null, ['class' => 'form-control']) !!}
-</div>
-<div class="form-group">
-    {!! Form::label('title', 'Weight:', ['class' => 'control-label']) !!}
-    {!! Form::text('weight', null, ['class' => 'form-control']) !!}
-</div>
-<div class="form-group">
-    {!! Form::label('title', 'Hometown:', ['class' => 'control-label']) !!}
-    {!! Form::text('hometown', null, ['class' => 'form-control']) !!}
-</div>
-<div class="form-group">
-    {!! Form::label('title', 'Years at SFC:', ['class' => 'control-label']) !!}
-    {!! Form::text('years_at_sfc', null, ['class' => 'form-control']) !!}
-</div>
-<div class="form-group">
-    {!! Form::label('title', 'Verse:', ['class' => 'control-label']) !!}
-    {!! Form::text('verse', null, ['class' => 'form-control']) !!}
-</div>
-<div class="form-group">
-    {!! Form::label('title', 'Food:', ['class' => 'control-label']) !!}
-    {!! Form::text('food', null, ['class' => 'form-control']) !!}
-</div>
-<div class="form-group">
-    {!! Form::label('title', 'Photo:', ['class' => 'control-label']) !!}
-    {!! Form::text('photo', null, ['class' => 'picture']) !!}
-</div>
+        <div class="row">
+            <div class="col-md-6">
+                {!! Form::label('photo', 'Photo:', ['class' => 'control-label']) !!}
+                {!! Form::file('photo', null, ['class' => 'fn form-control']) !!}
+            </div>
+            <div class="col-md-6">
+                {!! Form::label('number', 'Phone:', ['class' => 'control-label']) !!}
+                {!! Form::number('number', null, ['class' => 'form-control']) !!}
+            </div>
+        </div>
 
+        <div class="row">
+            <div class="col-md-6">
+                {!! Form::label('title', 'Position:', ['class' => 'control-label']) !!}
+                {!! Form::text('position', null, ['class' => 'form-control']) !!}
+            </div>
+            <div class="col-md-6">
+                {!! Form::label('title', 'Height:', ['class' => 'control-label']) !!}
+                <div class="row">
+                    <div class="col-md-6">
+                        {!! Form::number('height_feet', 'feet', ['class' => 'form-control']) !!}
+                    </div>
+                    <div class="col-md-6">
+                        {!! Form::number('height_inches', 'inches', ['class' => 'form-control']) !!}
+                    </div>
+                </div>
+            </div>
+        </div>
 
-{!! Form::submit('Create Player', ['class' => 'btn btn-primary']) !!}
+        <div class="row">
+            <div class="col-md-6">
+                {!! Form::label('title', 'Weight(pounds):', ['class' => 'control-label']) !!}
+                {!! Form::text('weight', null, ['class' => 'form-control']) !!}
+            </div>
+            <div class="col-md-6">
+                {!! Form::label('academic_year', 'Academic Year:', ['class' => 'control-label']) !!}
+                {!! Form::selectRange('academic_year', 1, 4, null, ['class' => 'form-control']) !!}
+            </div>
+        </div>
 
-{!! Form::close() !!}
-</div>
-@stop
+        <div class="row">
+            <div class="col-md-6">
+                {!! Form::label('pro_free', 'Pro/Free:', ['class' => 'control-label']) !!}
+                {!! Form::select('pro_free', ['' => 'Please Select', '0' => 'Free', '1' => 'Pro'],'please select',
+                 ['class' => 'fn form-control', 'id'=>'pro_free_', 'onchange' => 'return pro()', 'required' => true]) !!}
+            </div>
+            <div class="col-md-6">
+                {!! Form::label('pro_flag', 'Pro Flag:', ['class' => 'control-label hide-pro']) !!}
+                {!! Form::file('pro_flag', ['class' => 'fn form-control hide-pro']) !!}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                {!! Form::label('pro_cover_photo', 'Pro Cover Photo:', ['class' => 'control-label hide-pro']) !!}
+                {!! Form::file('pro_cover_photo', ['class' => 'fn form-control hide-pro']) !!}
+            </div>
+            <div class="col-md-6">
+                {!! Form::label('pro_head_photo', 'Pro Head Photo:', ['class' => 'control-label hide-pro']) !!}
+                {!! Form::file('pro_head_photo', ['class' => 'fn form-control hide-pro']) !!}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 col-md-offset-5" style="margin-top: 20px">
+                {!! Form::submit('Create Player', ['class' => 'btn btn-primary']) !!}
+            </div>
+        </div>
+
+        {!! Form::close() !!}
+    </div>{{--container fluid closed--}}
+@endsection
+@section('footer')
+    @include('partials.error-messages.footer-script')
+    <script>
+    function pro() {
+
+        if($("#pro_free_").val() == 0){
+            $('.hide-pro').hide('slow');
+        }
+        if($("#pro_free_").val() == 1){
+            $('.hide-pro').show('slow');
+        }
+    }
+    </script>
+@endsection

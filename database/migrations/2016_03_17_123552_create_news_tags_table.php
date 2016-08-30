@@ -42,21 +42,6 @@ class CreateNewsTagsTable extends Migration
             $table->timestamps();
         });
 
-        Schema::create('level_news', function(Blueprint $table)
-        {
-            $table->unsignedInteger('level_id')
-                ->nullable()
-                ->index();
-            $table->foreign('level_id')
-                ->references('id')
-                ->on('levels')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-            $table->unsignedInteger('news_id')->nullable()->index();
-            $table->foreign('news_id')->references('id')->on('news')->onDelete('cascade');
-            $table->timestamps();
-        });
-
         Schema::create('news_sport', function(Blueprint $table)
         {
             $table->unsignedInteger('sport_id')
@@ -80,9 +65,9 @@ class CreateNewsTagsTable extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::drop('games_news');
-        Schema::drop('news_rosters');
-        Schema::drop('levels_news');
-        Schema::drop('news_sports');
+        Schema::drop('news_roster');
+        Schema::drop('news_sport');
     }
 }

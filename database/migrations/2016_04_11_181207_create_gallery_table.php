@@ -29,12 +29,7 @@ class CreateGalleryTable extends Migration
      */
     public function down()
     {
-        Schema::table('gallery', function(Blueprint $table){
-            $table->dropIndex('album_id');
-            $table->dropForeign('gallery_games_gallery_id_foreign');
-            $table->dropColumn('id', 'title', 'name');
-        });
-
-        //Schema::drop('gallery');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+        Schema::dropIfExists('gallery');
     }
 }

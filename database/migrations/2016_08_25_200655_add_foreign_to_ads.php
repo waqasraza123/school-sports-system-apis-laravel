@@ -25,6 +25,7 @@ class AddForeignToAds extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::table('ads', function (Blueprint $table) {
             $table->dropForeign('ads_school_id_foreign');
             $table->dropColumn('school_id');

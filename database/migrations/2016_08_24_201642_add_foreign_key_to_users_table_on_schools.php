@@ -25,6 +25,7 @@ class AddForeignKeyToUsersTableOnSchools extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::table('users', function (Blueprint $table) {
             $table->dropForeign('users_school_id_foreign');
             $table->dropColumn('school_id');

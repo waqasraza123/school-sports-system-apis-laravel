@@ -13,11 +13,9 @@ class CreateSeasons extends Migration
     public function up()
     {
         Schema::create('seasons', function (Blueprint $table){
-            $table->increments('id');
             $table->timestamps();
             $table->string('name');
-            $table->unsignedInteger('season_id');
-            $table->unsignedInteger('season_type');
+            $table->increments('id');
         });
     }
 
@@ -28,6 +26,7 @@ class CreateSeasons extends Migration
      */
     public function down()
     {
-        Schema::drop('seasons');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+        Schema::dropIfExists('seasons');
     }
 }

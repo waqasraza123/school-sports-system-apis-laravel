@@ -20,16 +20,6 @@ class CreateVideosTable extends Migration
             $table->unsignedInteger('video_id');
             $table->unsignedInteger('video_type');
 
-            /*$table->unsignedInteger('school_id')->nullable();
-            $table->unsignedInteger('sport_id')->nullable();
-            $table->unsignedInteger('student_id')->nullable();
-            $table->unsignedInteger('game_id')->nullable();
-
-            $table->foreign('school_id')->references('id')->on('schools')->onDelete('cascade');
-            $table->foreign('sport_id')->references('id')->on('sports')->onDelete('cascade');
-            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
-            $table->foreign('game_id')->references('id')->on('games')->onDelete('cascade');*/
-
             $table->timestamps();
         });
     }
@@ -41,12 +31,13 @@ class CreateVideosTable extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::table('videos', function (Blueprint $table){
-            $table->dropForeign('videos_school_id_foreign', 'videos_sport_id_foreign',
+            $table->dropIfExists('videos_school_id_foreign', 'videos_sport_id_foreign',
                 '\'videos_student_id_foreign\'', 'videos_game_id_foreign');
-            $table->dropColumn('school_id', 'sport_id', 'student_id', 'game_id', 'video_id', 'video_type');
+            $table->dropIfExists('school_id', 'sport_id', 'student_id', 'game_id', 'video_id', 'video_type');
         });
 
-        Schema::drop('videos');
+        Schema::dropIfExists('videos');
     }
 }

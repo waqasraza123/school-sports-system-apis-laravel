@@ -42,21 +42,6 @@ class CreateGalleryTagsTable extends Migration
             $table->timestamps();
         });
 
-        Schema::create('gallery_level', function(Blueprint $table)
-        {
-            $table->unsignedInteger('level_id')
-                ->nullable()
-                ->index();
-            $table->foreign('level_id')
-                ->references('id')
-                ->on('levels')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-            $table->unsignedInteger('gallery_id')->nullable()->index();
-            $table->foreign('gallery_id')->references('id')->on('gallery')->onDelete('cascade');
-            $table->timestamps();
-        });
-
         Schema::create('gallery_sport', function(Blueprint $table)
         {
             $table->unsignedInteger('sport_id')
@@ -80,6 +65,9 @@ class CreateGalleryTagsTable extends Migration
      */
     public function down()
     {
-        //
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+        Schema::dropIfExists('gallery_games');
+        Schema::dropIfExists('gallery_roster');
+        Schema::dropIfExists('gallery_sport');
     }
 }

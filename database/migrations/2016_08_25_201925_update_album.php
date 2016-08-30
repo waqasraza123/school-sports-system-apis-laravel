@@ -31,9 +31,10 @@ class UpdateAlbum extends Migration
     public function down()
     {
 
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::table('album', function (Blueprint $table) {
-            $table->dropForeign('album_school_id_foreign', 'album_sport_id_foreign');
-            $table->dropColumn('url', 'date', 'school_id', 'sport_id');
+            $table->dropIfExists('album_school_id_foreign', 'album_sport_id_foreign');
+            $table->dropIfExists('url', 'date', 'school_id', 'sport_id');
         });
     }
 }

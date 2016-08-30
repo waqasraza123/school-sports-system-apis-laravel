@@ -25,6 +25,7 @@ class AddSchoolIdToCompanies extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::table('companies', function (Blueprint $table) {
             $table->dropForeign('companies_school_id_foreign');
             $table->dropColumn('school_id');

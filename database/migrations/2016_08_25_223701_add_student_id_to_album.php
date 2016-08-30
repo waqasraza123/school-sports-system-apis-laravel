@@ -30,11 +30,12 @@ class AddStudentIdToAlbum extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::table('album', function (Blueprint $table) {
-            $table->dropForeign('album_student_id_foreign');
-            $table->dropColumn('student_id');
+            $table->dropIfExists('album_student_id_foreign');
+            $table->dropIfExists('student_id');
         });
 
-        Schema::drop('students');
+        Schema::dropIfExists('students');
     }
 }

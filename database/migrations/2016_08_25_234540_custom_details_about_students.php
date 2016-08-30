@@ -29,6 +29,7 @@ class CustomDetailsAboutStudents extends Migration
      */
     public function down()
     {
-        Schema::drop('custom_students');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+        Schema::dropIfExists('custom_students');
     }
 }

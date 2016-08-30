@@ -43,10 +43,6 @@ class CreateForeignKeys extends Migration
                 ->references('id')->on('levels')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->foreign('year_id')
-                ->references('id')->on('years')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
             $table->foreign('position')
                 ->references('id')->on('positions')
                 ->onDelete('cascade')
@@ -86,6 +82,6 @@ class CreateForeignKeys extends Migration
      */
     public function down()
     {
-        //
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
     }
 }

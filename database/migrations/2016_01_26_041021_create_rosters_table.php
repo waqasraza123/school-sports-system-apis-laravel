@@ -17,33 +17,26 @@ class CreateRostersTable extends Migration {
 			$table->increments('id');
 			$table->unsignedInteger('sport_id')->nullable()->index('sport_id');
 			$table->unsignedInteger('level_id')->nullable()->index('level_id');
-			$table->unsignedInteger('year_id')->nullable()->index('year_id');
 			$table->unsignedInteger('position')->nullable()->index('position');
-			$table->string('first_name', 20)->nullable();
-			$table->string('last_name', 20)->nullable();
-			$table->string('jersey', 5)->nullable();
+			$table->string('name', 20)->nullable();
 			$table->integer('height_feet')->nullable();
 			$table->integer('height_inches')->nullable();
 			$table->integer('weight')->nullable();
-			$table->string('hometown', 50)->nullable();
-			$table->integer('years_at_sfc')->nullable();
-			$table->string('verse', 25)->nullable();
-			$table->string('food', 25)->nullable();
 			$table->string('photo', 50)->nullable();
 			$table->string('number', 50)->nullable();
+			$table->integer('academic_year')->nullable();
 			$table->timestamps();
 		});
 	}
 
 
 	/**
-	 * Reverse the migrations.
-	 *
+	 * Reverse the migrations
 	 * @return void
 	 */
 	public function down()
 	{
+		DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 		Schema::drop('rosters');
 	}
-
 }

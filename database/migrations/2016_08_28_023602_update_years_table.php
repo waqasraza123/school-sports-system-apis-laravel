@@ -25,6 +25,7 @@ class UpdateYearsTable extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::table('years', function (Blueprint $table) {
             $table->dropColumn('year_id', 'year_type');
         });

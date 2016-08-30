@@ -34,7 +34,9 @@ class CreateLocationsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('locations');
+		DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+		Schema::dropIfExists('locations');
+		DB::statement('SET FOREIGN_KEY_CHECKS = 1');
 	}
 
 }

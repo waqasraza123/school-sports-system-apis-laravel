@@ -30,11 +30,12 @@ class CreateSportsStudentsTable extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::table('sports_students', function (Blueprint $table) {
-            $table->dropForeign('sports_students_student_id_foreign', 'sports_students_sport_id_foreign');
+            $table->dropIfExists('sports_students_student_id_foreign', 'sports_students_sport_id_foreign');
         });
 
-        Schema::drop('sports_students');
+        Schema::dropIfExists('sports_students');
     }
         
 

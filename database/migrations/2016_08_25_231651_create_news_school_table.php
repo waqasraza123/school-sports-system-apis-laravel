@@ -29,9 +29,10 @@ class CreateNewsSchoolTable extends Migration
      */
     public function down()
     {
-        Schema::create('news_school', function (Blueprint $table) {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+        Schema::table('news_school', function (Blueprint $table) {
             $table->dropForeign('news_school_school_id_foreign', 'news_school_news_id_foreign');
         });
-        Schema::drop('news_school');
+        Schema::dropIfExists('news_school');
     }
 }

@@ -28,7 +28,9 @@ class CreateDivisionTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('division');
+		DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+		Schema::dropIfExists('divisions');
+		DB::statement('SET FOREIGN_KEY_CHECKS = 1');
 	}
 
 }

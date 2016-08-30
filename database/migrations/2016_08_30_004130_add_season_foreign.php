@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateSportsTable extends Migration
+class AddSeasonForeign extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,8 @@ class UpdateSportsTable extends Migration
     public function up()
     {
         Schema::table('sports', function (Blueprint $table) {
-            $table->string('photo')->nullable();
-            $table->string('record')->nullable();
-            $table->string('highlight_video');
-            $table->unsignedInteger('school_id')->nullable();
-            $table->foreign('school_id')->references('id')->on('schools');
+            $table->unsignedInteger('season_id');
+            $table->foreign('season_id')->references('id')->on('seasons');
         });
     }
 
@@ -28,9 +25,8 @@ class UpdateSportsTable extends Migration
      */
     public function down()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::table('sports', function (Blueprint $table) {
-            $table->dropColumn('photo', 'record');
+            $table->dropForeign('season_id');
         });
     }
 }

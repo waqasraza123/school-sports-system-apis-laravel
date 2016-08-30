@@ -28,7 +28,9 @@ class CreateLeagueTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('league');
+		DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+		Schema::dropIfExists('leagues');
+		DB::statement('SET FOREIGN_KEY_CHECKS = 1');
 	}
 
 }
