@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('content')
     <div class="container-fluid">
-        <h2 style="text-align: center">Add Roster</h2>
+        <h2 style="text-align: center">Update Roster</h2>
 
         @include('partials.error-messages.success')
         @include('partials.error-messages.error')
@@ -11,7 +11,7 @@
                 Please add some sports first.
             </div>
         @else
-            {!! Form::open(['route' => 'rosters.store', 'files' =>true]) !!}
+            {!! Form::model($rosters, ['method' => 'put', 'url' => 'rosters/'.$rosters->id, 'files' =>true]) !!}
 
             <div class="row">
                 <div class="col-md-6">
@@ -100,7 +100,7 @@
 
             <div class="row">
                 <div class="col-md-6 col-md-offset-5" style="margin-top: 20px">
-                    {!! Form::submit('Create Player', ['class' => 'btn btn-primary']) !!}
+                    {!! Form::submit('Update Player', ['class' => 'btn btn-primary']) !!}
                 </div>
             </div>
 
@@ -111,14 +111,14 @@
 @section('footer')
     @include('partials.error-messages.footer-script')
     <script>
-    function pro() {
-        $('.hide-pro').css('display', 'none');
-        if($("#pro_free_").val() == 0){
-            $('.hide-pro').hide('slow');
+        function pro() {
+            $('.hide-pro').css('display', 'none');
+            if($("#pro_free_").val() == 0){
+                $('.hide-pro').hide('slow');
+            }
+            if($("#pro_free_").val() == 1){
+                $('.hide-pro').show('slow');
+            }
         }
-        if($("#pro_free_").val() == 1){
-            $('.hide-pro').show('slow');
-        }
-    }
     </script>
 @endsection

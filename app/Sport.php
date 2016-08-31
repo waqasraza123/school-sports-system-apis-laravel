@@ -6,11 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Sport extends Model
 {
+
+    protected $fillable = ['name', 'highlight_video', 'school_id', 'season_id', 'record', 'photo'];
+
     protected $table = 'sports';
 
-    public function roster()
+    public function rosters()
     {
-        return $this->hasMany('Roster', 'sport_id');
+        return $this->hasMany('App\Roster', 'sport_id');
     }
 
     public function positions()
@@ -30,6 +33,14 @@ class Sport extends Model
 
     public function school(){
         return $this->belongsTo('App\School');
+    }
+
+    public function years(){
+        return $this->morphMany('App\Year', 'year');
+    }
+
+    public function season(){
+        return $this->belongsTo('App\Season', 'season_id');
     }
 
 }

@@ -11,4 +11,8 @@ class LevelRoster extends Model
     protected $fillable = ['name'];
 
     public $timestamps = false;
+
+    public function rosters(){
+        return $this->hasMany('App\Roster', 'level_id');
+    }
 }

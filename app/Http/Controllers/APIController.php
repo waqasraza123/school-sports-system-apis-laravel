@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Season;
 use App\Social;
 use Illuminate\Http\Request;
 use App\School;
 use App\Sport;
 use App\User;
+use Carbon\Carbon;
 
 use App\Http\Requests;
 use Illuminate\Http\Response;
@@ -53,7 +55,7 @@ class APIController extends Controller
         $school = School::where('school_email', 'admin@gmail.com')->first();
         $social = Social::where('socialLinks_type', 'Admin')->first();
         if($user){
-            return;
+
         }
 
         else{
@@ -74,5 +76,16 @@ class APIController extends Controller
                 'socialLinks_type' => 'Admin'
             ));
         }
+
+        $seasons = Season::where('name', 'Fall')->first();
+        $now = Carbon::now('utc')->toDateTimeString();
+        if(!($seasons)){
+            Season::insert([
+                ['name' => 'Fall', 'created_at' => $now, 'updated_at' => $now],
+                ['name' => 'Spring', 'created_at' => $now, 'updated_at' => $now],
+                ['name' => 'Winter', 'created_at' => $now, 'updated_at' => $now],
+            ]);
+        }
+
     }
 }

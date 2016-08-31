@@ -15,7 +15,7 @@
                 </div>
                 <div class="col-md-6">
                     {!!Form::label('photo', 'Image:', ['class' => 'control-label']) !!}
-                    {!! Form::file('photo', null, ['class' => 'form-control']) !!}
+                    {!! Form::file('photo', ['class' => 'form-control']) !!}
                 </div>
             </div>
 

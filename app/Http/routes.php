@@ -7,9 +7,10 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'PagesController@home'
     ]);
 
-    Route::get('rosters/{sport_id}/filter/{level_id}', 'RostersController@filter');
+    /*Route::get('rosters/{sport_id}/filter/{level_id}', 'RostersController@filter');
     Route::post('rosters/{sport_id}', 'RostersController@update');
-    Route::put('rosters/{sport_id}', 'RostersController@show');
+    Route::put('rosters/{sport_id}', 'RostersController@show');*/
+    Route::post('rosters/year', ['as' => 'year-rosters', 'uses' => 'RostersController@yearRosters']);
     Route::resource('rosters', 'RostersController');
 
 
@@ -50,15 +51,26 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('rosters-levels', 'RostersLevelsController');
     Route::resource('sports-levels', 'SportsLevelsController');
 
+    Route::post('sports/year', ['as' => 'year-sports', 'uses' => 'SportsController@yearSports']);
+    Route::resource('sports', 'SportsController');
+
     Route::get('test', function(){
         $year = \App\Year::find(11);
-        $staff = \App\Staff::all();
+        $rosters = \App\Roster::all();
 
-        if($staff){
-            foreach($staff as $s)
+        $sports = \App\Sport::all();
+        foreach ($sports as $sport){
+            foreach ($sport->rosters() as $roster){
+                echo  $roster->name;
+            }
+        }
+
+
+        if($rosters){
+            foreach($rosters as $s)
             {
                 foreach($s->years as $y){
-                    if($y->year == '2016' && $y->year_type === 'App\Staff'){
+                    if($y->year == '2016' && $y->year_type === 'App\Roster'){
                         echo $s->name;
                         echo $y->year;
                     }

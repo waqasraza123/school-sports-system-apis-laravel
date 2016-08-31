@@ -19,7 +19,6 @@
                 <br>
                 <a href="{{url('staff/create')}}"><button class="btn btn-primary">Add Staff</button></a>
                 <br>
-
                 <table class="table">
                     <thead>
                         <tr>
