@@ -6,9 +6,9 @@
         @include('partials.error-messages.success')
         @include('partials.error-messages.error')
 
-        @if($sports->isEmpty())
+        @if($sports->isEmpty() || $levels->isEmpty())
             <div class="alert alert-danger">
-                Please add some sports first.
+                Please add some <a href="/sports/create">sports</a>/<a href="/rosters/create">rosters levels</a>  first.
             </div>
         @else
             {!! Form::open(['route' => 'rosters.store', 'files' =>true]) !!}

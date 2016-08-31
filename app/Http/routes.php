@@ -7,9 +7,6 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'PagesController@home'
     ]);
 
-    /*Route::get('rosters/{sport_id}/filter/{level_id}', 'RostersController@filter');
-    Route::post('rosters/{sport_id}', 'RostersController@update');
-    Route::put('rosters/{sport_id}', 'RostersController@show');*/
     Route::post('rosters/year', ['as' => 'year-rosters', 'uses' => 'RostersController@yearRosters']);
     Route::resource('rosters', 'RostersController');
 

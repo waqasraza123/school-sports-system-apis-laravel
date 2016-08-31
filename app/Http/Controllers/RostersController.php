@@ -376,7 +376,7 @@ class RostersController extends Controller
         $roster->delete();
         Session::flash('flash_message_s', 'Player successfully deleted!');
 
-        return redirect()->back();
+        return redirect('/rosters')->with('success', 'Roster deleted successfully');
     }
 
     //get position for roster
