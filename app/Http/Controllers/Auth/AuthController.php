@@ -66,6 +66,7 @@ class AuthController extends Controller
      */
     protected function store(Request $request)
     {
+        
         $validator = Validator::make($request->all(), [
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',

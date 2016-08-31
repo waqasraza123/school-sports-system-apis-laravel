@@ -41,7 +41,7 @@
                         @foreach($seasons as $season)
                             @foreach($season->sports as $s)
                                 @foreach($s->years as $y)
-                                    @if($y->year == $year)
+                                    @if($y->year == $year && $s->school_id == $school_id)
                                         <tr>
                                             <td>{{$s->id}}</td>
                                             @if($s->photo)
