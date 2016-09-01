@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddRostersSportsLevelsTable extends Migration
+class DropLevelsSports extends Migration
 {
     /**
      * Run the migrations.
@@ -12,9 +12,17 @@ class AddRostersSportsLevelsTable extends Migration
      */
     public function up()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+        Schema::drop('levels-sports');
+
         Schema::create('levels-sports', function (Blueprint $table){
             $table->increments('id');
-            $table->string('name');
+            $table->unsignedInteger('sport_id')->nullable();
+            $table->unsignedInteger('level_id')->nullable();
+
+            $table->foreign('sport_id')->references('id')->on('sports');
+            $table->foreign('level_id')->references('id')->on('levels');
+            $table->timestamps();
         });
     }
 
@@ -25,6 +33,5 @@ class AddRostersSportsLevelsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('levels-sports');
     }
 }

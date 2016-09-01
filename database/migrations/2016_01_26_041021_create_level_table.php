@@ -16,8 +16,6 @@ class CreateLevelTable extends Migration {
 		{
 			$table->increments('id');
 			$table->string('name', 50)->nullable();
-			$table->unsignedInteger('level_id');
-			$table->string('level_type');
 			$table->timestamps();
 		});
 	}

@@ -311,12 +311,6 @@
                         <a href="/sports"><i class="fa fa-edit fa-fw"></i>
                             Sports</a>
                     </li>
-
-                    <li>
-                        <a href="/rosters-levels"><i class="fa fa-edit fa-fw"></i>
-                            Rosters Levels</a>
-                    </li>
-
                     <li>
                         <a href="/sports-levels"><i class="fa fa-edit fa-fw"></i>
                             Sports Levels</a>

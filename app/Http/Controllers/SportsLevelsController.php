@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\LevelSport;
+use App\School;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Auth;
 
 class SportsLevelsController extends Controller
 {
@@ -16,7 +18,7 @@ class SportsLevelsController extends Controller
      */
     public function index()
     {
-        $levels = LevelSport::all();
+        $levels = LevelSport::where('school_id', $this->schoolId)->get();
 
         return view('levels.sports-levels.show', compact('levels'));
     }
@@ -44,7 +46,8 @@ class SportsLevelsController extends Controller
         ]);
 
         $rosterLevel = LevelSport::create([
-            'name' => $request->input('name')
+            'name' => $request->input('name'),
+            'school_id' => $this->schoolId,
         ]);
 
         return redirect('sports-levels')->with('Level Added Successfully');
@@ -84,7 +87,8 @@ class SportsLevelsController extends Controller
     public function update(Request $request, $id)
     {
         LevelSport::find($id)->update([
-            'name' => $request->input('name')
+            'name' => $request->input('name'),
+            'school_id' => $this->schoolId
         ]);
 
         return redirect('sports-levels')->with('success', 'Level Deleted Successfully');

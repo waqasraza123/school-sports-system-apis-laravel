@@ -14,7 +14,7 @@
                     {!! Form::text('name', null, ['class' => 'form-control', 'required' =>true]) !!}
                 </div>
                 <div class="col-md-6">
-                    {!! Form::label('photo', 'Photo', ['class' => 'control-label']) !!}
+                    {!! Form::label('photo', 'Icon', ['class' => 'control-label']) !!}
                     {!! Form::file('photo', ['class' => 'form-control']) !!}
                 </div>
             </div>
@@ -42,7 +42,27 @@
             </div>
 
             <div class="row">
+
+                <div class="col-md-3">
+                    {!! Form::label('level_id', 'Levels:', ['class' => 'control-label']) !!}
+                    {!! Form::select('level_id[]', $levels,
+                    \Illuminate\Support\Facades\Request::old('targets') ? \Illuminate\Support\Facades\Request::old('targets') : $levels,
+                     ['class' => 'form-control', 'required' => true, 'multiple' => true, 'id' => 'level_id']) !!}
+                </div>
+
+                <div class="col-md-3">
+                    {!! Form::label('', '', ['class' => 'control-label']) !!}
+                    {!! Form::text('add_new_sport_level', null, ['class' => 'form-control', 'id' => 'add_new_sport_level']) !!}<br>
+                    {!! Form::button('Add Level?', ['class'=> 'btn btn-primary btn-sm', 'id' => 'add_new_sport_level_btn']) !!}
+                </div>
+
                 <div class="col-md-6" style="margin-top: 25px">
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3 col-md-offset-6">
                     {!! Form::submit('Add Sport', ['class' => 'btn btn-primary']) !!}
                 </div>
             </div>
@@ -50,6 +70,7 @@
     </div>
 @endsection
 @section('footer')
+    @include('partials.add_new_sport_level_script')
     @include('partials.error-messages.footer-script')
 @stop
 

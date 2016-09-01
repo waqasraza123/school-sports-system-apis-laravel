@@ -42,5 +42,9 @@ class Sport extends Model
     public function season(){
         return $this->belongsTo('App\Season', 'season_id');
     }
+    
+    public function levels(){
+        return $this->belongsToMany('App\LevelSport', 'levels-sports', 'sport_id', 'level_id');
+    }
 
 }

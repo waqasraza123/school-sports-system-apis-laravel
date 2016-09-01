@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\LevelSport;
 use App\Season;
 use App\Sport;
 use App\Year;
@@ -67,7 +68,9 @@ class SportsController extends Controller
         $seasons = Season::lists('name', 'id');
         $seasons->prepend('Please Select');
 
-        return view('sports.add', compact('seasons'));
+        $levels = LevelSport::where('school_id', $this->schoolId)->lists('name', 'name');
+
+        return view('sports.add', compact('seasons', 'levels'));
     }
     /**
      * Store a newly created resource in storage.
@@ -77,6 +80,29 @@ class SportsController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'name' => 'required|max:255',
+            'season_id' => 'required',
+            'year' => 'required',
+            'level_id' => 'required'
+        ]);
+
+        $levels = $request->input('level_id');
+        $levelsArray = array();
+        foreach ($levels as $level){
+            $exist = LevelSport::where('name', $level)->first();
+            if(!($exist)) {
+                $levelsSports = LevelSport::create([
+                    'name' => $level,
+                    'school_id' => $this->schoolId
+                ]);
+                array_push($levelsArray, $levelsSports->id);
+            }
+            else{
+                array_push($levelsArray, $exist->id);
+            }
+        }
+
         $photo = "";
         if(Input::file('photo') != null){
             $uploadPath = 'uploads/sports';
@@ -85,21 +111,13 @@ class SportsController extends Controller
             Input::file('photo')->move($uploadPath, $photo);
         }
 
-        $schoolId = Auth::user()->school_id;
-
-        $this->validate($request, [
-            'name' => 'required|max:255',
-            'season_id' => 'required',
-            'year' => 'required'
-        ]);
-
         $sport = Sport::create([
             'name' => $request->input('name'),
             'photo' => $photo,
             'highlight_video' => $request->input('highlight_video'),
             'record' => $request->input('record'),
             'season_id' => $request->input('season_id'),
-            'school_id' => $schoolId,
+            'school_id' => $this->schoolId,
         ]);
 
         Year::create([
@@ -107,6 +125,8 @@ class SportsController extends Controller
             'year_id' => $sport->id,
             'year_type' => 'App\Sport'
         ]);
+
+        $sport->levels()->sync($levelsArray);
 
         return redirect('/sports')->with('success', 'Sport Added Successfully');
     }

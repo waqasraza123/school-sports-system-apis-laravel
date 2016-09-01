@@ -8,7 +8,7 @@ class LevelRoster extends Model
 {
     protected $table = 'levels-rosters';
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'school_id'];
 
     public $timestamps = false;
 

@@ -27,7 +27,7 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Photo</th>
+                            <th>Icon</th>
                             <th>Name</th>
                             <th>Season</th>
                             <th>School</th>

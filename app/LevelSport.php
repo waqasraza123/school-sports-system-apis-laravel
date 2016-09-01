@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class LevelSport extends Model
 {
-    protected $table = 'levels-sports';
+    protected $table = 'levels';
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'id', 'school_id'];
 
-    public $timestamps = false;
+    public function sports(){
+        return $this->belongsToMany('App\Sport', 'levels-sports','level_id', 'sport_id');
+    }
 }

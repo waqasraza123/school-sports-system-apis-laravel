@@ -7,6 +7,7 @@ use App\LevelRoster;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use Illuminate\Support\Facades\Auth;
 
 class RostersLevelsController extends Controller
 {
@@ -44,8 +45,11 @@ class RostersLevelsController extends Controller
             'name' => 'required'
         ]);
 
+        $schoolId = Auth::user()->school_id;
         $rosterLevel = LevelRoster::create([
-            'name' => $request->input('name')
+            'name' => $request->input('name'),
+            'school_id' => $schoolId,
+
         ]);
 
         return redirect('rosters-levels')->with('Level Added Successfully');

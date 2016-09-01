@@ -103,7 +103,8 @@ class RostersController extends Controller
      */
     public function create()
     {
-        $sports = Sport::lists('name', 'id');
+        $school_id = Auth::user()->school_id;
+        $sports = Sport::where('school_id', $school_id)->lists('name', 'id');
         $levels = LevelRoster::lists('name', 'id');
 
         return View('rosters.create', compact('sports', 'levels'));
