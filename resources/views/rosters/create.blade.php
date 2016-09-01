@@ -6,9 +6,9 @@
         @include('partials.error-messages.success')
         @include('partials.error-messages.error')
 
-        @if($sports->isEmpty() || $levels->isEmpty())
+        @if($sports->isEmpty())
             <div class="alert alert-danger">
-                Please add some <a href="/sports/create">sports</a>/<a href="/rosters/create">rosters levels</a>  first.
+                Please add some <a href="/sports/create">sports</a> first.
             </div>
         @else
             {!! Form::open(['route' => 'rosters.store', 'files' =>true]) !!}
@@ -19,19 +19,8 @@
                     {{ Form::select('sport_id', $sports, null, ['class' => 'form-control'] )}}
                 </div>
                 <div class="col-md-6">
-                    {!! Form::label('title', 'Select Level:', ['class' => 'control-label']) !!}
-                    {{ Form::select('level_id', $levels, null, ['class' => 'form-control', 'required' => 'true'] )}}
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6">
                     {!! Form::label('year_id', 'Year:', ['class' => 'control-label']) !!}
                     {!! Form::selectYear('year_id', 2005, \Carbon\Carbon::now()->year, \Carbon\Carbon::now()->year, ['class' => 'form-control', 'required' => 'true']) !!}
-                </div>
-                <div class="col-md-6">
-                    {!! Form::label('title', 'Name:', ['class' => 'control-label']) !!}
-                    {!! Form::text('name', null, ['class' => 'fn form-control', 'required' => 'true']) !!}
                 </div>
             </div>
 
@@ -41,8 +30,8 @@
                     {!! Form::file('photo', null, ['class' => 'fn form-control']) !!}
                 </div>
                 <div class="col-md-6">
-                    {!! Form::label('number', 'Phone:', ['class' => 'control-label']) !!}
-                    {!! Form::number('number', null, ['class' => 'form-control']) !!}
+                    {!! Form::label('title', 'Name:', ['class' => 'control-label']) !!}
+                    {!! Form::text('name', null, ['class' => 'fn form-control', 'required' => 'true']) !!}
                 </div>
             </div>
 
@@ -51,6 +40,13 @@
                     {!! Form::label('title', 'Position:', ['class' => 'control-label']) !!}
                     {!! Form::text('position', null, ['class' => 'form-control']) !!}
                 </div>
+                <div class="col-md-6">
+                    {!! Form::label('number', 'Phone:', ['class' => 'control-label']) !!}
+                    {!! Form::number('number', null, ['class' => 'form-control']) !!}
+                </div>
+            </div>
+
+            <div class="row">
                 <div class="col-md-6">
                     {!! Form::label('title', 'Height:', ['class' => 'control-label']) !!}
                     <div class="row">
@@ -62,13 +58,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6">
-                    {!! Form::label('title', 'Weight(pounds):', ['class' => 'control-label']) !!}
-                    {!! Form::text('weight', null, ['class' => 'form-control']) !!}
-                </div>
                 <div class="col-md-6">
                     {!! Form::label('academic_year', 'Academic Year:', ['class' => 'control-label']) !!}
                     {!! Form::selectRange('academic_year', 1, 4, null, ['class' => 'form-control']) !!}
@@ -77,9 +66,19 @@
 
             <div class="row">
                 <div class="col-md-6">
+                    {!! Form::label('title', 'Weight(pounds):', ['class' => 'control-label']) !!}
+                    {!! Form::text('weight', null, ['class' => 'form-control']) !!}
+                </div>
+                <div class="col-md-6">
                     {!! Form::label('pro_free', 'Pro/Free:', ['class' => 'control-label']) !!}
                     {!! Form::select('pro_free', ['' => 'Please Select', '0' => 'Free', '1' => 'Pro'],'please select',
                      ['class' => 'fn form-control', 'id'=>'pro_free_', 'onchange' => 'return pro()', 'required' => true]) !!}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+
                 </div>
                 <div class="col-md-6">
                     {!! Form::label('pro_flag', 'Pro Flag:', ['class' => 'control-label hide-pro']) !!}

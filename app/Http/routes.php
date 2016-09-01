@@ -51,7 +51,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('sports/year', ['as' => 'year-sports', 'uses' => 'SportsController@yearSports']);
     Route::resource('sports', 'SportsController');
 
+
+    //testing purposes
     Route::get('test', function(){
+        return \Illuminate\Support\Facades\Auth::user()->school_id;
         $year = \App\Year::find(11);
         $rosters = \App\Roster::all();
 

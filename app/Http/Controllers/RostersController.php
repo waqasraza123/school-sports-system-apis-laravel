@@ -36,9 +36,6 @@ class RostersController extends Controller
 
         $sportsList = Sport::lists('name', 'id');
         $sportsList->prepend('Sport');
-        $levels = LevelRoster::all();
-        $levelsList = LevelRoster::lists('name', 'id');
-        $levelsList->prepend('Roster Level');
 
         return view('rosters.show',
             compact('sports', 'school_id', 'year', 'rosters', 'sportsList', 'levels', 'levelsList'));
@@ -55,29 +52,12 @@ class RostersController extends Controller
         $year = $request->input('year');
 
         $sportId = $request->input('sport_id');
-        $levelId = $request->input('level_id');
 
         if($sportId){
             $rosters = Roster::where('school_id', $school_id)->where('sport_id', $sportId)->get();
             $sports = Sport::where('school_id', $school_id)->where('id', $sportId)->get();
             $sportsList = Sport::lists('name', 'id');
             $sportsList->prepend('Sport');
-            $levels = LevelRoster::all();
-            $levelsList = LevelRoster::lists('name', 'id');
-            $levelsList->prepend('Roster Level');
-
-            return view('rosters.show',
-                compact('sports', 'school_id', 'year', 'rosters', 'sportsList', 'levels', 'levelsList'));
-        }
-        if($levelId){
-            $rosters = Roster::where('school_id', $school_id)->get();
-            $sports = Sport::where('school_id', $school_id)->get();
-
-            $sportsList = Sport::lists('name', 'id');
-            $sportsList->prepend('Sport');
-            $levels = LevelRoster::where('id', $levelId)->get();
-            $levelsList = LevelRoster::lists('name', 'id');
-            $levelsList->prepend('Roster Level');
 
             return view('rosters.show',
                 compact('sports', 'school_id', 'year', 'rosters', 'sportsList', 'levels', 'levelsList'));
@@ -87,9 +67,6 @@ class RostersController extends Controller
         $sports = Sport::where('school_id', $school_id)->get();
         $sportsList = Sport::lists('name', 'id');
         $sportsList->prepend('Sport');
-        $levels = LevelRoster::all();
-        $levelsList = LevelRoster::lists('name', 'id');
-        $levelsList->prepend('Roster Level');
 
         return view('rosters.show',
             compact('sports', 'school_id', 'year', 'rosters', 'sportsList', 'levels', 'levelsList'));
@@ -105,7 +82,6 @@ class RostersController extends Controller
     {
         $school_id = Auth::user()->school_id;
         $sports = Sport::where('school_id', $school_id)->lists('name', 'id');
-        $levels = LevelRoster::lists('name', 'id');
 
         return View('rosters.create', compact('sports', 'levels'));
     }
@@ -121,7 +97,6 @@ class RostersController extends Controller
         $this->validate($request, [
             'name' => 'required|max:255',
             'sport_id' => 'required',
-            'level_id' => 'required',
             'year_id' => 'required',
             'academic_year' => 'required',
             'pro_free' => 'required',
@@ -182,7 +157,6 @@ class RostersController extends Controller
 
         $roster = Roster::create([
             'sport_id' => $request->input('sport_id'),
-            'level_id' => $request->input('level_id'),
             'name' => $request->input('name'),
             'photo' => $fileName,
             'pro_flag' => $pro_flag,
@@ -262,7 +236,6 @@ class RostersController extends Controller
     {
         $rosters = Roster::find($id);
         $sports = Sport::lists('name', 'id');
-        $levels = LevelRoster::lists('name', 'id');
 
         return view('rosters.update', compact('sports', 'levels'))->withRosters($rosters);
     }
@@ -279,7 +252,6 @@ class RostersController extends Controller
         $this->validate($request, [
             'name' => 'required|max:255',
             'sport_id' => 'required',
-            'level_id' => 'required',
             'year_id' => 'required',
             'academic_year' => 'required',
             'pro_free' => 'required',
@@ -339,7 +311,6 @@ class RostersController extends Controller
 
         $roster = Roster::find($id)->update([
             'sport_id' => $request->input('sport_id'),
-            'level_id' => $request->input('level_id'),
             'name' => $request->input('name'),
             'photo' => $fileName,
             'pro_flag' => $pro_flag,

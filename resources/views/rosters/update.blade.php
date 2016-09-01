@@ -18,10 +18,10 @@
                     {!! Form::label('title', 'Select Sport:', ['class' => 'control-label']) !!}
                     {{ Form::select('sport_id', $sports, null, ['class' => 'form-control'] )}}
                 </div>
-                <div class="col-md-6">
+                {{--<div class="col-md-6">
                     {!! Form::label('title', 'Select Level:', ['class' => 'control-label']) !!}
                     {{ Form::select('level_id', $levels, null, ['class' => 'form-control', 'required' => 'true'] )}}
-                </div>
+                </div>--}}
             </div>
 
             <div class="row">
