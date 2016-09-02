@@ -15,16 +15,7 @@ class CreateRostersTable extends Migration {
 		Schema::create('rosters', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->unsignedInteger('sport_id')->nullable()->index('sport_id');
-			$table->unsignedInteger('level_id')->nullable()->index('level_id');
-			$table->unsignedInteger('position')->nullable()->index('position');
-			$table->string('name', 20)->nullable();
-			$table->integer('height_feet')->nullable();
-			$table->integer('height_inches')->nullable();
-			$table->integer('weight')->nullable();
-			$table->string('photo', 50)->nullable();
-			$table->string('number', 50)->nullable();
-			$table->integer('academic_year')->nullable();
+			$table->string('name', 20);
 			$table->timestamps();
 		});
 	}

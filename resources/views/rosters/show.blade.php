@@ -11,9 +11,9 @@
                 \Carbon\Carbon::now()->year, [
                'class' => 'form-control', 'id' => 'select_year_id', 'required' => true, 'onchange' => 'this.form.submit()']) !!}
             </div>
-            {{--<div class="col-md-3">
+            <div class="col-md-3">
                 {!! Form::select('level_id', $levelsList, null, ['id' => 'select_level_id', 'class' => 'form-control', 'onchange' => 'this.form.submit()']) !!}
-            </div>--}}
+            </div>
 
             <div class="col-md-3">
                 {!! Form::select('sport_id', $sportsList, null, ['id' => 'select_sport_id', 'class' => 'form-control', 'onchange' => 'this.form.submit()']) !!}
@@ -31,10 +31,8 @@
                     <thead>
                     <tr>
                         <th>#</th>
-                        <th>Photo</th>
+                        <th></th>
                         <th>Name</th>
-                        <th>Height</th>
-                        <th>Academic Year</th>
                         <th>&nbsp;</th>
                         <th>&nbsp;</th>
                     </tr>
@@ -45,31 +43,32 @@
 
                             @foreach($rosters as $r)
 
-                                @if($r->sport_id == $s->id)
-                                    @if($r->years)
-                                        @foreach($r->years as $y)
+                                @foreach($levels as $level)
 
-                                            @if($y->year == $year)
+                                    @if($r->sport_id == $s->id && $level->id == $r->level_id)
+                                        @if($r->years)
+                                            @foreach($r->years as $y)
 
-                                                <tr>
-                                                    <td>{{$r->id}}</td>
-                                                    @if($r->photo)
-                                                        <td><img src="{{asset('uploads/rosters/'.$r->photo)}}" height="50px" width="50px" alt="image"></td>
-                                                    @else
-                                                        <td><img src="{{asset('uploads/def.png')}}" height="50px" width="50px" alt="image"></td>
-                                                    @endif
-                                                    <td>{{$r->name}}</td>
-                                                    <td>{{$r->height_feet.'\' '. $r->height_inches.'\'\''}}</td>
-                                                    <td>{{$r->academic_year}}</td>
-                                                    <td><a href="{{url('rosters/'. $r->id. '/edit')}}" class="btn btn-primary btn-sm">Edit</a></td>
-                                                    <td>{!! Form::open([    'method' => 'DELETE','url' => ['/rosters', $r->id]]) !!}{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}{!! Form::close() !!}</td>
-                                                </tr>
-                                            @else
+                                                @if($y->year == $year)
 
-                                            @endif
-                                        @endforeach
+                                                    <tr>
+                                                        <td>{{$r->id}}</td>
+                                                        @if($r->photo)
+                                                            <td><img src="{{asset('uploads/rosters/'.$r->photo)}}" height="50px" width="50px" alt="image"></td>
+                                                        @else
+                                                            <td><img src="{{asset('uploads/def.png')}}" height="50px" width="50px" alt="image"></td>
+                                                        @endif
+                                                        <td>{{$r->name}}</td>
+                                                        <td><a href="{{url('rosters/'. $r->id. '/edit')}}" class="btn btn-primary btn-sm">Edit</a></td>
+                                                        <td>{!! Form::open([    'method' => 'DELETE','url' => ['/rosters', $r->id]]) !!}{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}{!! Form::close() !!}</td>
+                                                    </tr>
+                                                @else
+
+                                                @endif
+                                            @endforeach
+                                        @endif
                                     @endif
-                                @endif
+                                @endforeach
                             @endforeach
                         @endforeach
                     @else

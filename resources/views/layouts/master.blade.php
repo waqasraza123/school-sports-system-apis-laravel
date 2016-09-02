@@ -320,6 +320,11 @@
                         <a href="/rosters"><i class="fa fa-edit fa-fw"></i>
                             Rosters</a>
                     </li>
+
+                    <li>
+                        <a href="/students"><i class="fa fa-edit fa-fw"></i>
+                            Students</a>
+                    </li>
                     <li>
                         <a href="/locations"><i class="fa fa-edit fa-fw"></i>
                             Schedule Locations</a>

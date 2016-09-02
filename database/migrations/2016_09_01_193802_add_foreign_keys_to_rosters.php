@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateRostersTable extends Migration
+class AddForeignKeysToRosters extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class UpdateRostersTable extends Migration
     public function up()
     {
         Schema::table('rosters', function (Blueprint $table) {
-            $table->integer('pro_free');
-            $table->string('pro_flag');
-            $table->string('pro_cover_photo');
-            $table->string('pro_head_photo');
+            $table->unsignedInteger('sport_id');
             $table->unsignedInteger('school_id');
+            $table->unsignedInteger('season_id');
+
+            $table->foreign('sport_id')->references('id')->on('sports');
             $table->foreign('school_id')->references('id')->on('schools');
+            $table->foreign('season_id')->references('id')->on('seasons');
         });
     }
 
@@ -29,10 +30,8 @@ class UpdateRostersTable extends Migration
      */
     public function down()
     {
-
         Schema::table('rosters', function (Blueprint $table) {
-            $table->dropForeign('rosters_school_id_foreign');
-            $table->dropColumn('pro_free', 'pro_flag', 'pro_cover_photo', 'pro_head_photo', 'school_id');
+            //
         });
     }
 }

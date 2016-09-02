@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\LevelSport;
+use App\Roster;
 use App\Season;
 use App\Sport;
 use App\Year;
@@ -11,13 +12,11 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\DB;
 
 class SportsController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
      * @return \Illuminate\Http\Response
      */
     public function index()
@@ -150,7 +149,11 @@ class SportsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $sports = Sport::where('school_id', $this->schoolId)->where('id', $id)->first();
+        $levels = LevelSport::where('school_id', $this->schoolId)->lists('name', 'id');
+        $seasons = Season::lists('name', 'id');
+
+        return view('sports.update', compact('sports', 'levels', 'seasons'));
     }
 
     /**
@@ -162,7 +165,56 @@ class SportsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|max:255',
+            'season_id' => 'required',
+            'year' => 'required',
+            'level_id' => 'required'
+        ]);
+
+        $levels = $request->input('level_id');
+        $levelsArray = array();
+        foreach ($levels as $level){
+            $exist = LevelSport::where('name', $level)->first();
+            if(!($exist)) {
+                $levelsSports = LevelSport::create([
+                    'name' => $level,
+                    'school_id' => $this->schoolId
+                ]);
+                array_push($levelsArray, $levelsSports->id);
+            }
+            else{
+                array_push($levelsArray, $exist->id);
+            }
+        }
+
+        $photo = "";
+        if(Input::file('photo') != null){
+            $uploadPath = 'uploads/sports';
+            $extension = Input::file('photo')->getClientOriginalExtension();
+            $photo = rand(1111, 9999) . '.' . $extension;
+            Input::file('photo')->move($uploadPath, $photo);
+        }
+
+        $sport = Sport::find($id)->update([
+            'name' => $request->input('name'),
+            'photo' => $photo,
+            'highlight_video' => $request->input('highlight_video'),
+            'record' => $request->input('record'),
+            'season_id' => $request->input('season_id'),
+            'school_id' => $this->schoolId,
+        ]);
+
+        Year::create([
+            'year' => $request->input('year'),
+            'year_id' => $id,
+            'year_type' => 'App\Sport'
+        ]);
+
+        $sport = Sport::find($id);
+        $sport->levels()->sync($levelsArray);
+
+        return redirect('/sports')->with('success', 'Sport Updated Successfully');
     }
 
     /**
@@ -174,6 +226,10 @@ class SportsController extends Controller
     public function destroy($id)
     {
         $sport = Sport::find($id);
+        $sport->levels()->detach();
+
+        
+
         foreach ($sport->years as $y){
             $y->delete();
         }

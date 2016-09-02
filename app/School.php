@@ -14,8 +14,6 @@ class School extends Model
 
     ];
 
-    protected $with = 'social';
-
     public function games()
     {
         return $this->hasMany('App\Games');
@@ -53,5 +51,19 @@ class School extends Model
      */
     public function opponents(){
         return $this->hasMany('App\Opponent', 'school_id');
+    }
+
+    //sports levels
+    public function levels(){
+        return $this->hasMany('App\LevelSport');
+    }
+
+    //get school's rosters
+    public function rosters(){
+        return $this->hasMany('App\Roster');
+    }
+
+    public function students(){
+        return $this->hasMany('App\Student');
     }
 }

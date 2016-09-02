@@ -33,22 +33,6 @@ class CreateForeignKeys extends Migration
                 ->onUpdate('cascade');
         });
 
-        Schema::table('rosters', function(Blueprint $table)
-        {
-            $table->foreign('sport_id')
-                ->references('id')->on('sports')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-            $table->foreign('level_id')
-                ->references('id')->on('levels')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-            $table->foreign('position')
-                ->references('id')->on('positions')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-        });
-
         Schema::table('schools', function(Blueprint $table)
         {
             $table->foreign('league_id')
@@ -64,15 +48,6 @@ class CreateForeignKeys extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
         });
-
-        Schema::table('positions', function(Blueprint $table)
-        {
-            $table->foreign('sport_id')
-                ->references('id')->on('sports')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-        });
-
     }
 
     /**

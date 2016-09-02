@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddSportIdToRosters extends Migration
+class AddLevelIdToRosters extends Migration
 {
     /**
      * Run the migrations.
@@ -12,9 +12,10 @@ class AddSportIdToRosters extends Migration
      */
     public function up()
     {
+        Schema::disableForeignKeyConstraints();
         Schema::table('rosters', function (Blueprint $table) {
-            $table->dropForeign('rosters_sport_id_foreign');
-            $table->foreign('sport_id')->references('id')->on('sports');
+            $table->unsignedInteger('level_id')->default(1);
+            $table->foreign('level_id')->references('id')->on('levels');
         });
     }
 
@@ -26,7 +27,7 @@ class AddSportIdToRosters extends Migration
     public function down()
     {
         Schema::table('rosters', function (Blueprint $table) {
-            $table->dropForeign('rosters_sport_id_foreign');
+            //
         });
     }
 }

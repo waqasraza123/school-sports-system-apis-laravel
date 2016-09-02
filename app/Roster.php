@@ -9,19 +9,9 @@ class Roster extends Model
     protected $fillable = [
         'sport_id',
         'level_id',
-        'year_id',
         'name',
-        'position',
-        'height_feet',
-        'height_inches',
-        'weight',
-        'academic_year',
-        'photo',
-        'pro_free',
-        'pro_flag',
-        'pro_cover_photo',
-        'pro_head_photo',
         'school_id',
+        'season_id',
     ];
 
     public function sport()
@@ -51,6 +41,14 @@ class Roster extends Model
     public function galleries()
     {
         return $this->belongsToMany('App\Gallery');
+    }
+
+    /**
+     * a roster can belong to multiple students
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function students(){
+        return $this->belongsToMany('App\Student', 'rosters_students');
     }
 }
 

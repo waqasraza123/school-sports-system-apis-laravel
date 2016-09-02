@@ -51,31 +51,22 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('sports/year', ['as' => 'year-sports', 'uses' => 'SportsController@yearSports']);
     Route::resource('sports', 'SportsController');
 
+    Route::post('students/filter', 'StudentsController@filterStudents');
+    Route::resource('students', 'StudentsController');
+
 
     //testing purposes
-    Route::get('test', function(){
-        return \Illuminate\Support\Facades\Auth::user()->school_id;
-        $year = \App\Year::find(11);
-        $rosters = \App\Roster::all();
-
-        $sports = \App\Sport::all();
-        foreach ($sports as $sport){
-            foreach ($sport->rosters() as $roster){
-                echo  $roster->name;
-            }
+    Route::get('test', function() {
+        $data = App\School::where('id', 2)->with('sports', 'levels')->get();
+        foreach ($data as $d){
+            $sports = $d->sports;
+            $levels = $d->levels;
+            $rosters = $d->rosters;
+            $students = $d->students;
         }
 
-
-        if($rosters){
-            foreach($rosters as $s)
-            {
-                foreach($s->years as $y){
-                    if($y->year == '2016' && $y->year_type === 'App\Roster'){
-                        echo $s->name;
-                        echo $y->year;
-                    }
-                }
-            }
+        foreach ($levels as $level){
+            dd($level->sports);
         }
     });
 });

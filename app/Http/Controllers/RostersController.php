@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RostersUploadRequest;
 use App\LevelRoster;
+use App\LevelSport;
 use App\Positions;
+use App\School;
+use App\Season;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
@@ -28,14 +31,16 @@ class RostersController extends Controller
      */
     public function index()
     {
-        $school_id = Auth::user()->school_id;
         $year = '2016';
 
-        $sports = Sport::where('school_id', $school_id)->get();
-        $rosters = Roster::where('school_id', $school_id)->get();
+        $sports = Sport::where('school_id', $this->schoolId)->get();
+        $rosters = Roster::where('school_id', $this->schoolId)->get();
+        $levels = LevelSport::where('school_id', $this->schoolId)->get();
 
         $sportsList = Sport::lists('name', 'id');
         $sportsList->prepend('Sport');
+        $levelsList = LevelSport::lists('name', 'id');
+        $levelsList->prepend('Level');
 
         return view('rosters.show',
             compact('sports', 'school_id', 'year', 'rosters', 'sportsList', 'levels', 'levelsList'));
@@ -48,25 +53,44 @@ class RostersController extends Controller
      */
     public function yearRosters(Request $request){
 
-        $school_id = Auth::user()->school_id;
         $year = $request->input('year');
 
         $sportId = $request->input('sport_id');
+        $levelId = $request->input('level_id');
 
         if($sportId){
-            $rosters = Roster::where('school_id', $school_id)->where('sport_id', $sportId)->get();
-            $sports = Sport::where('school_id', $school_id)->where('id', $sportId)->get();
+            $rosters = Roster::where('school_id', $this->schoolId)->where('sport_id', $sportId)->get();
+            $sports = Sport::where('school_id', $this->schoolId)->where('id', $sportId)->get();
+            $levels = LevelSport::where('school_id', $this->schoolId)->get();
             $sportsList = Sport::lists('name', 'id');
             $sportsList->prepend('Sport');
+            $levelsList = LevelSport::lists('name', 'id');
+            $levelsList->prepend('Level');
 
             return view('rosters.show',
                 compact('sports', 'school_id', 'year', 'rosters', 'sportsList', 'levels', 'levelsList'));
         }
 
-        $rosters = Roster::where('school_id', $school_id)->get();
-        $sports = Sport::where('school_id', $school_id)->get();
+        if($levelId){
+            $rosters = Roster::where('school_id', $this->schoolId)->where('level_id', $levelId)->get();
+            $sports = Sport::where('school_id', $this->schoolId)->get();
+            $levels = LevelSport::where('school_id', $this->schoolId)->where('id', $levelId)->get();
+            $sportsList = Sport::lists('name', 'id');
+            $sportsList->prepend('Sport');
+            $levelsList = LevelSport::lists('name', 'id');
+            $levelsList->prepend('Level');
+
+            return view('rosters.show',
+                compact('sports', 'school_id', 'year', 'rosters', 'sportsList', 'levels', 'levelsList'));
+        }
+
+        $rosters = Roster::where('school_id', $this->schoolId)->get();
+        $sports = Sport::where('school_id', $this->schoolId)->get();
+        $levels = LevelSport::where('school_id', $this->schoolId)->get();
         $sportsList = Sport::lists('name', 'id');
         $sportsList->prepend('Sport');
+        $levelsList = LevelSport::lists('name', 'id');
+        $levelsList->prepend('Level');
 
         return view('rosters.show',
             compact('sports', 'school_id', 'year', 'rosters', 'sportsList', 'levels', 'levelsList'));
@@ -80,10 +104,11 @@ class RostersController extends Controller
      */
     public function create()
     {
-        $school_id = Auth::user()->school_id;
-        $sports = Sport::where('school_id', $school_id)->lists('name', 'id');
+        $sports = Sport::where('school_id', $this->schoolId)->lists('name', 'id');
+        $levels = LevelSport::where('school_id', $this->schoolId)->lists('name', 'id');
+        $seasons = Season::lists('name', 'id');
 
-        return View('rosters.create', compact('sports', 'levels'));
+        return View('rosters.create', compact('sports', 'levels', 'seasons'));
     }
 
     /**
@@ -98,78 +123,16 @@ class RostersController extends Controller
             'name' => 'required|max:255',
             'sport_id' => 'required',
             'year_id' => 'required',
-            'academic_year' => 'required',
-            'pro_free' => 'required',
+            'level_id' => 'required',
+            'season_id' => 'required',
         ]);
-
-
-        //store images
-        $fileName = "";
-        $pro_flag = "";
-        $pro_cover_photo = "";
-        $pro_head_photo = "";
-        if($request->input('pro_free') == 0){
-
-            if(Input::file('photo') != null){
-                $destinationPath = 'uploads/rosters'; // upload path
-                $extension = Input::file('photo')->getClientOriginalExtension();
-                $fileName = rand(1111, 9999) . '.' . $extension;
-                Input::file('photo')->move($destinationPath, $fileName);
-            }
-        }
-        elseif ($request->input('pro_free') == 1){
-            if(Input::file('photo') != null){
-                $destinationPath = 'uploads/rosters'; // upload path
-                $extension = Input::file('photo')->getClientOriginalExtension();
-                $fileName = rand(1111, 9999) . '.' . $extension;
-                Input::file('photo')->move($destinationPath, $fileName);
-            }
-
-            if(Input::file('pro_flag') != null){
-                $destinationPath = 'uploads/rosters'; // upload path
-                $extension = Input::file('pro_flag')->getClientOriginalExtension();
-                $pro_flag = rand(1111, 9999) . '.' . $extension;
-                Input::file('pro_flag')->move($destinationPath, $pro_flag);
-            }
-
-            if(Input::file('pro_cover_photo') != null){
-                $destinationPath = 'uploads/rosters'; // upload path
-                $extension = Input::file('pro_cover_photo')->getClientOriginalExtension();
-                $pro_cover_photo = rand(1111, 9999) . '.' . $extension;
-                Input::file('pro_cover_photo')->move($destinationPath, $pro_cover_photo);
-            }
-
-            if(Input::file('pro_head_photo') != null){
-                $destinationPath = 'uploads/rosters'; // upload path
-                $extension = Input::file('pro_head_photo')->getClientOriginalExtension();
-                $pro_head_photo = rand(1111, 9999) . '.' . $extension;
-                Input::file('pro_head_photo')->move($destinationPath, $pro_head_photo);
-            }
-        }
-
-        $school_id = Auth::user()->school_id;
-
-        $position = Positions::create([
-            'name' => $request->input('name'),
-            'sport_id' => $request->input('sport_id')
-        ]);
-
 
         $roster = Roster::create([
-            'sport_id' => $request->input('sport_id'),
             'name' => $request->input('name'),
-            'photo' => $fileName,
-            'pro_flag' => $pro_flag,
-            'pro_cover_photo' => $pro_cover_photo,
-            'pro_head_photo' => $pro_head_photo,
-            'academic_year' => $request->input('academic_year'),
-            'height_feet' => $request->input('height_feet'),
-            'height_inches' => $request->input('height_inches'),
-            'weight' => $request->input('weight'),
-            'number' => $request->input('number'),
-            'pro_free' => $request->input('pro_free'),
-            'position' => $position->id,
-            'school_id' => $school_id
+            'sport_id' => $request->input('sport_id'),
+            'school_id' => $this->schoolId,
+            'season_id' => $request->input('season_id'),
+            'level_id' => $request->input('level_id'),
         ]);
 
         Year::create([
@@ -220,7 +183,7 @@ class RostersController extends Controller
         $levelcreate = Level::lists('name', 'id');
         $positions = Positions::where('sport_id', '=', $sport_id)->lists('name', 'id');
         $sports = Sport::lists('name', 'id');
-        $levels = Level::all();
+        $levels = LevelSport::all();
         $years = Year::lists('name', 'id');
         $id_sport = $sport_id;
         return view('rosters.filter', compact('sports', 'levels', 'years','positions', 'weight_options', 'lev', 'levelcreate', 'id_sport'))->withRosters($rosters)->with('type', $type);
@@ -236,8 +199,10 @@ class RostersController extends Controller
     {
         $rosters = Roster::find($id);
         $sports = Sport::lists('name', 'id');
+        $levels = LevelSport::lists('name', 'id');
+        $seasons = Season::lists('name', 'id');
 
-        return view('rosters.update', compact('sports', 'levels'))->withRosters($rosters);
+        return view('rosters.update', compact('sports', 'levels', 'seasons', 'rosters'));
     }
 
     /**
@@ -253,87 +218,26 @@ class RostersController extends Controller
             'name' => 'required|max:255',
             'sport_id' => 'required',
             'year_id' => 'required',
-            'academic_year' => 'required',
-            'pro_free' => 'required',
+            'level_id' => 'required',
+            'season_id' => 'required',
         ]);
 
-
-        //store images
-        $roster = Roster::find($id);
-        $fileName = $roster->photo;
-        $pro_flag = $roster->pro_flag;
-        $pro_cover_photo = $roster->pro_cover_photo;
-        $pro_head_photo = $roster->pro_head_photo;
-        if($request->input('pro_free') == 0){
-
-            if(Input::file('photo') != null){
-                $destinationPath = 'uploads/rosters'; // upload path
-                $extension = Input::file('photo')->getClientOriginalExtension();
-                $fileName = rand(1111, 9999) . '.' . $extension;
-                Input::file('photo')->move($destinationPath, $fileName);
-            }
-        }
-        elseif ($request->input('pro_free') == 1){
-            if(Input::file('photo') != null){
-                $destinationPath = 'uploads/rosters'; // upload path
-                $extension = Input::file('photo')->getClientOriginalExtension();
-                $fileName = rand(1111, 9999) . '.' . $extension;
-                Input::file('photo')->move($destinationPath, $fileName);
-            }
-
-            if(Input::file('pro_flag') != null){
-                $destinationPath = 'uploads/rosters'; // upload path
-                $extension = Input::file('pro_flag')->getClientOriginalExtension();
-                $pro_flag = rand(1111, 9999) . '.' . $extension;
-                Input::file('pro_flag')->move($destinationPath, $pro_flag);
-            }
-
-            if(Input::file('pro_cover_photo') != null){
-                $destinationPath = 'uploads/rosters'; // upload path
-                $extension = Input::file('pro_cover_photo')->getClientOriginalExtension();
-                $pro_cover_photo = rand(1111, 9999) . '.' . $extension;
-                Input::file('pro_cover_photo')->move($destinationPath, $pro_cover_photo);
-            }
-
-            if(Input::file('pro_head_photo') != null){
-                $destinationPath = 'uploads/rosters'; // upload path
-                $extension = Input::file('pro_head_photo')->getClientOriginalExtension();
-                $pro_head_photo = rand(1111, 9999) . '.' . $extension;
-                Input::file('pro_head_photo')->move($destinationPath, $pro_head_photo);
-            }
-        }
-
-        $school_id = Auth::user()->school_id;
-        $currentRoster = Roster::find($id);
-        $position = Positions::where('id', $currentRoster->position)->update([
-            'name' => $request->input('name')
-        ]);
-
-        $roster = Roster::find($id)->update([
-            'sport_id' => $request->input('sport_id'),
+        Roster::find($id)->update([
             'name' => $request->input('name'),
-            'photo' => $fileName,
-            'pro_flag' => $pro_flag,
-            'pro_cover_photo' => $pro_cover_photo,
-            'pro_head_photo' => $pro_head_photo,
-            'academic_year' => $request->input('academic_year'),
-            'height_feet' => $request->input('height_feet'),
-            'height_inches' => $request->input('height_inches'),
-            'weight' => $request->input('weight'),
-            'number' => $request->input('number'),
-            'pro_free' => $request->input('pro_free'),
-            'position' => $currentRoster->position,
-            'school_id' => $school_id
+            'sport_id' => $request->input('sport_id'),
+            'school_id' => $this->schoolId,
+            'season_id' => $request->input('season_id'),
+            'level_id' => $request->input('level_id'),
         ]);
 
-        Year::where('year_id', $id)->update([
+        Year::create([
             'year' => $request->input('year_id'),
             'year_id' => $id,
             'year_type' => 'App\Roster'
         ]);
 
 
-        return redirect('/rosters')->with('success', 'Roster updated successfully');
+        return redirect('/rosters')->with('success', 'Roster created successfully');
     }
 
     /**
@@ -346,7 +250,6 @@ class RostersController extends Controller
     {
         $roster = Roster::findOrFail($id);
         $roster->delete();
-        Session::flash('flash_message_s', 'Player successfully deleted!');
 
         return redirect('/rosters')->with('success', 'Roster deleted successfully');
     }
