@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Games;
-use App\Level;
+use App\LevelSport;
 use App\News;
 use App\Roster;
 use App\School;
@@ -26,9 +26,9 @@ class NewsController extends Controller
         //Lists for Schools, Sports, Years and Levels with key = id and value = name
         $schools = School::lists('name', 'id');
         $sports = Sport::lists('name', 'id');
-        $levelcreate = Level::lists('name', 'id');
-        $years = Year::lists('name', 'id');
-        //making list od all games where key=game_id and value= opponent name and date of the game
+        $levelcreate = LevelSport::lists('name', 'id');
+        $years = Year::lists('year', 'id');
+        //making list of all games where key=game_id and value= opponent name and date of the game
         $games_all = Games::all();
         $games = [];
         foreach ($games_all as $game)
@@ -40,7 +40,7 @@ class NewsController extends Controller
         $rosters = [];
         foreach ($rosters_all as $roster)
         {
-            $rosters[$roster->id] = $roster->first_name." ".$roster->last_name;
+            $rosters[$roster->id] = $roster->name;
         }
 
         $news = News::orderBy('news_date', 'DESC')->get();
@@ -54,8 +54,8 @@ class NewsController extends Controller
         $schools = School::lists('name', 'id');
         $type = Sport::where('id', $sport_id)->first();
         $sports = Sport::lists('name', 'id');
-        $levelcreate = Level::lists('name', 'id');
-        $years = Year::lists('name', 'id');
+        $levelcreate = LevelSport::lists('name', 'id');
+        $years = Year::lists('year', 'id');
         //making list od all games where key=game_id and value= opponent name and date of the game
         $games_all = Games::all();
         $games = [];
@@ -280,6 +280,7 @@ class NewsController extends Controller
     public function destroy($id)
     {
         $news = News::findOrFail($id);
+        $news->levels()->detach();
         $news->delete();
         Session::flash('flash_message_s', 'News successfully deleted!');
         return redirect()->back();

@@ -23,7 +23,7 @@ class Sport extends Model
 
     public function news()
     {
-        return $this->belongsToMany('App\News');
+        return $this->belongsToMany('App\News', 'news_sport', 'sport_id', 'news_id');
     }
 
     public function galleries()

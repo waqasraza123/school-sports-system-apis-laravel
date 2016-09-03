@@ -17,4 +17,8 @@ class LevelSport extends Model
     public function rosters(){
         return $this->hasMany('App\Roster', 'level_id');
     }
+
+    public function news(){
+        return $this->belongsToMany('App\News', 'levels_news', 'level_id', 'news_id');
+    }
 }

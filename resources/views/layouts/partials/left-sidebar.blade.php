@@ -400,3 +400,10 @@
         </ul>
     </div>
 </div>
+<style>
+    .active-menu {
+        color: #fff;
+        background: #00a65a;
+        border-left-color: #00a65a;
+    }
+</style>

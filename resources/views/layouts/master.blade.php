@@ -19,6 +19,8 @@
     <!-- lte Skins. Choose a skin from the css/skins
          folder instead of downloading all of them to reduce the load. -->
     <link rel="stylesheet" href="/lte/dist/css/skins/skin-green.min.css">
+    {{--Select2.js fancy select look js--}}
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -56,6 +58,8 @@
     <script src="/lte/dist/js/app.min.js"></script>
 
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2-rc.1/js/select2.min.js"></script>
+    <script src="{{asset('js.js')}}"></script>
     @yield('footer')
 </div>
 </body>

@@ -20,12 +20,12 @@ class News extends Model
 
     public function sports()
     {
-        return $this->belongsToMany('App\Sport');
+        return $this->belongsToMany('App\Sport', 'news_sport', 'news_id', 'sport_id');
     }
 
     public function levels()
     {
-        return $this->belongsToMany('App\Level');
+        return $this->belongsToMany('App\LevelSport', 'levels_news', 'news_id', 'level_id');
     }
 
     public function rosters()

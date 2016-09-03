@@ -19,9 +19,6 @@
                                 {{ Form::hidden('news_invisible_image', null, ['id' => 'news_invisible_image']) }}
                                 {{ Form::hidden('news_invisible_action', null, ['id' => 'news_invisible_action']) }}
 
-                                <img id="photo" height="100"
-                                     src="http://images5.fanpop.com/image/photos/28100000/david-david-hasselhoff-28104576-400-300.jpg">
-
                                 <div class="control-group">
                                     <div class="controls">
                                         {!! Form::label('title', 'Select Image:', ['class' => 'control-label']) !!}
