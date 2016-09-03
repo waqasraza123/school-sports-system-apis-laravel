@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\School;
 use Illuminate\Support\Facades\View;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
@@ -15,7 +16,8 @@ class Controller extends BaseController
     {
         if (Auth::check()){
             $this->schoolId = Auth::user()->school_id;
-            View::share('school_id', $this->schoolId);
+            $currentSchool = School::find($this->schoolId);
+            View::share(['school_id' => $this->schoolId, 'currentSchool' => $currentSchool]);
         }
 
     }
