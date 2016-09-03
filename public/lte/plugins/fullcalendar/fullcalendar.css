@@ -62,7 +62,7 @@ body .fc { /* extra precedence to overcome jqui */
 }
 
 .fc-nonbusiness { /* default look for non-business-hours areas */
-	/* will inherit .fc-bgevent's styles */
+	/* will inherit .fc-bgevent's styles-scripts */
 	background: #ccc;
 }
 
@@ -456,7 +456,7 @@ temporary rendered events).
 	font-weight: normal; /* undo jqui's ui-widget-header bold */
 }
 
-/* overpower some of bootstrap's and jqui's styles on <a> tags */
+/* overpower some of bootstrap's and jqui's styles-scripts on <a> tags */
 .fc-event,
 .fc-event:hover,
 .ui-widget .fc-event {
@@ -740,7 +740,7 @@ a.fc-more:hover {
 /* TimeGrid axis running down the side (for both the all-day area and the slot area)
 --------------------------------------------------------------------------------------------------*/
 
-.fc .fc-axis { /* .fc to overcome default cell styles */
+.fc .fc-axis { /* .fc to overcome default cell styles-scripts */
 	vertical-align: middle;
 	padding: 0 4px;
 	white-space: nowrap;

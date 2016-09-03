@@ -77,7 +77,7 @@ CKEDITOR.replace( '<em>textarea_id</em>', {
 
 					/*
 					 * Allowed content rules which beside limiting allowed HTML
-					 * will also take care of transforming styles to attributes
+					 * will also take care of transforming styles-scripts to attributes
 					 * (currently only for img - see transformation rules defined below).
 					 *
 					 * Read more: http://docs.ckeditor.com/#!/guide/dev_advanced_content_filter
@@ -88,7 +88,7 @@ CKEDITOR.replace( '<em>textarea_id</em>', {
 						'img[!src,alt,align,width,height]; font[!face]; font[!family]; font[!color]; font[!size]; font{!background-color}; a[!href]; a[!name]',
 
 					/*
-					 * Core styles.
+					 * Core styles-scripts.
 					 */
 					coreStyles_bold: { element: 'b' },
 					coreStyles_italic: { element: 'i' },

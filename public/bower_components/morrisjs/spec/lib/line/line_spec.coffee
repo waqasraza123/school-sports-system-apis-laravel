@@ -12,7 +12,7 @@ describe 'Morris.Line', ->
       )
     fn.should.throw(/Graph container element not found/)
 
-  it 'should make point styles customizable', ->
+  it 'should make point styles-scripts customizable', ->
     my_data = [{x: 1, y: 1}, {x: 2, y: 2}]
     red = '#ff0000'
     blue = '#0000ff'

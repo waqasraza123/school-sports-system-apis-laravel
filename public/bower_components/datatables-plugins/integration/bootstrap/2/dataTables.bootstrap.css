@@ -100,7 +100,7 @@ div.dataTables_scrollFoot table {
 
 
 /*
- * TableTools styles
+ * TableTools styles-scripts
  */
 .table tbody tr.active td,
 .table tbody tr.active th {
@@ -179,7 +179,7 @@ div.DTTT_print_info p {
 
 
 /*
- * FixedColumns styles
+ * FixedColumns styles-scripts
  */
 div.DTFC_LeftHeadWrapper table,
 div.DTFC_LeftFootWrapper table,

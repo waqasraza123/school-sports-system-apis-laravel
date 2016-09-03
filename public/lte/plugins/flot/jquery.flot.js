@@ -315,7 +315,7 @@ Licensed under the MIT license.
 			textStyle = font;
 		}
 
-		// Retrieve (or create) the cache for the text's layer and styles
+		// Retrieve (or create) the cache for the text's layer and styles-scripts
 
 		layerCache = this._textCache[layer];
 

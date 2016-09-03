@@ -5224,16 +5224,16 @@ wysihtml5.dom.copyAttributes = function(attributesToCopy) {
   };
 };
 ;/**
- * Copy a set of styles from one element to another
- * Please note that this only works properly across browsers when the element from which to copy the styles
+ * Copy a set of styles-scripts from one element to another
+ * Please note that this only works properly across browsers when the element from which to copy the styles-scripts
  * is in the dom
  *
- * Interesting article on how to copy styles
+ * Interesting article on how to copy styles-scripts
  *
- * @param {Array} stylesToCopy List of styles which should be copied
+ * @param {Array} stylesToCopy List of styles-scripts which should be copied
  * @return {Object} Returns an object which offers the "from" method which can be invoked with the element where to
- *    copy the styles from., this again returns an object which provides a method named "to" which can be invoked
- *    with the element where to copy the styles to (see example)
+ *    copy the styles-scripts from., this again returns an object which provides a method named "to" which can be invoked
+ *    with the element where to copy the styles-scripts to (see example)
  *
  * @example
  *    var textarea    = document.querySelector("textarea"),
@@ -6197,7 +6197,7 @@ wysihtml5.dom.parse = function(elementOrHtml_current, config_current) {
       }
     }
 
-    // test for styles, if one found return true
+    // test for styles-scripts, if one found return true
     if (nodeStyles && definition.styles) {
 
       nodeStyles = nodeStyles.split(';');
@@ -6313,7 +6313,7 @@ wysihtml5.dom.parse = function(elementOrHtml_current, config_current) {
     var attributes          = {},                         // fresh new set of attributes to set on newNode
         setClass            = rule.set_class,             // classes to set
         addClass            = rule.add_class,             // add classes based on existing attributes
-        addStyle            = rule.add_style,             // add styles based on existing attributes
+        addStyle            = rule.add_style,             // add styles-scripts based on existing attributes
         setAttributes       = rule.set_attributes,        // attributes to set on the current node
         allowedClasses      = currentRules.classes,
         i                   = 0,
@@ -6823,7 +6823,7 @@ wysihtml5.dom.replaceWithChildNodes = function(node) {
   dom.resolveList = resolveList;
 })(wysihtml5.dom);
 ;/**
- * Sandbox for executing javascript, parsing css styles and doing dom operations in a secure way
+ * Sandbox for executing javascript, parsing css styles-scripts and doing dom operations in a secure way
  *
  * Browser Compatibility:
  *  - Secure in MSIE 6+, but only when the user hasn't made changes to his security level "restricted"
@@ -7002,7 +7002,7 @@ wysihtml5.dom.replaceWithChildNodes = function(node) {
         // Please note: This isn't hack safe!
         // It more or less just takes care of basic attacks and prevents accidental theft of sensitive information
         // IE is secure though, which is the most important thing, since IE is the only browser, who
-        // takes over scripts & styles into contentEditable elements when copied from external websites
+        // takes over scripts & styles-scripts into contentEditable elements when copied from external websites
         // or applications (Microsoft Word, ...)
         var i, length;
         for (i=0, length=windowProperties.length; i<length; i++) {
@@ -10449,7 +10449,7 @@ wysihtml5.Commands = Base.extend(
   };
 })(wysihtml5);
 ;/**
- * document.execCommand("fontSize") will create either inline styles (firefox, chrome) or use font tags
+ * document.execCommand("fontSize") will create either inline styles-scripts (firefox, chrome) or use font tags
  * which we don't want
  * Instead we set a css class
  */
@@ -10466,7 +10466,7 @@ wysihtml5.Commands = Base.extend(
     }
   };
 })(wysihtml5);
-;/* In case font size adjustment to any number defined by user is preferred, we cannot use classes and must use inline styles. */
+;/* In case font size adjustment to any number defined by user is preferred, we cannot use classes and must use inline styles-scripts. */
 (function(wysihtml5) {
   var REG_EXP = /(\s|^)font-size\s*:\s*[^;\s]+;?/gi;
 
@@ -10501,7 +10501,7 @@ wysihtml5.Commands = Base.extend(
   };
 })(wysihtml5);
 ;/**
- * document.execCommand("foreColor") will create either inline styles (firefox, chrome) or use font tags
+ * document.execCommand("foreColor") will create either inline styles-scripts (firefox, chrome) or use font tags
  * which we don't want
  * Instead we set a css class
  */
@@ -10519,7 +10519,7 @@ wysihtml5.Commands = Base.extend(
   };
 })(wysihtml5);
 ;/**
- * document.execCommand("foreColor") will create either inline styles (firefox, chrome) or use font tags
+ * document.execCommand("foreColor") will create either inline styles-scripts (firefox, chrome) or use font tags
  * which we don't want
  * Instead we set a css class
  */
@@ -10566,7 +10566,7 @@ wysihtml5.Commands = Base.extend(
 
   };
 })(wysihtml5);
-;/* In case background adjustment to any color defined by user is preferred, we cannot use classes and must use inline styles. */
+;/* In case background adjustment to any color defined by user is preferred, we cannot use classes and must use inline styles-scripts. */
 (function(wysihtml5) {
   var REG_EXP = /(\s|^)background-color\s*:\s*[^;\s]+;?/gi;
 
@@ -12210,7 +12210,7 @@ wysihtml5.views.View = Base.extend(
 
       dom.addClass(this.element, this.config.composerClassName);
       //
-      // Make the editor look like the original textarea, by syncing styles
+      // Make the editor look like the original textarea, by syncing styles-scripts
       if (this.config.style && !this.config.contentEditableMode) {
         this.style();
       }
@@ -12237,7 +12237,7 @@ wysihtml5.views.View = Base.extend(
         dom.simulatePlaceholder(this.parent, this, placeholderText);
       }
 
-      // Make sure that the browser avoids using inline styles whenever possible
+      // Make sure that the browser avoids using inline styles-scripts whenever possible
       this.commands.exec("styleWithCSS", false);
 
       this._initAutoLinking();
@@ -12354,7 +12354,7 @@ wysihtml5.views.View = Base.extend(
     _initObjectResizing: function() {
       this.commands.exec("enableObjectResizing", true);
 
-      // IE sets inline styles after resizing objects
+      // IE sets inline styles-scripts after resizing objects
       // The following lines make sure that the width/height css properties
       // are copied over to the width/height attributes
       if (browser.supportsEvent("resizeend")) {
@@ -12601,10 +12601,10 @@ wysihtml5.views.View = Base.extend(
       textareaElement.blur();
     }
 
-    // enable for copying styles
+    // enable for copying styles-scripts
     textareaElement.disabled = false;
 
-    // set textarea to display="none" to get cascaded styles via getComputedStyle
+    // set textarea to display="none" to get cascaded styles-scripts via getComputedStyle
     textareaElement.style.display = displayValueForCopying = "none";
 
     if ((textareaElement.getAttribute("rows") && dom.getStyle("height").from(textareaElement) === "auto") ||
@@ -12612,22 +12612,22 @@ wysihtml5.views.View = Base.extend(
       textareaElement.style.display = displayValueForCopying = originalDisplayValue;
     }
 
-    // --------- iframe styles (has to be set before editor styles, otherwise IE9 sets wrong fontFamily on blurStylesHost) ---------
+    // --------- iframe styles-scripts (has to be set before editor styles-scripts, otherwise IE9 sets wrong fontFamily on blurStylesHost) ---------
     dom.copyStyles(BOX_FORMATTING).from(textareaElement).to(this.editableArea).andTo(this.blurStylesHost);
 
-    // --------- editor styles ---------
+    // --------- editor styles-scripts ---------
     dom.copyStyles(TEXT_FORMATTING).from(textareaElement).to(this.element).andTo(this.blurStylesHost);
 
     // --------- apply standard rules ---------
     dom.insertCSS(ADDITIONAL_CSS_RULES).into(this.element.ownerDocument);
 
-    // --------- :disabled styles ---------
+    // --------- :disabled styles-scripts ---------
     textareaElement.disabled = true;
     dom.copyStyles(BOX_FORMATTING).from(textareaElement).to(this.disabledStylesHost);
     dom.copyStyles(TEXT_FORMATTING).from(textareaElement).to(this.disabledStylesHost);
     textareaElement.disabled = originalDisabled;
 
-    // --------- :focus styles ---------
+    // --------- :focus styles-scripts ---------
     textareaElement.style.display = originalDisplayValue;
     focusWithoutScrolling(textareaElement);
     textareaElement.style.display = displayValueForCopying;
@@ -12640,7 +12640,7 @@ wysihtml5.views.View = Base.extend(
 
     dom.copyStyles(["display"]).from(textareaElement).to(this.editableArea);
 
-    // Make sure that we don't change the display style of the iframe when copying styles oblur/onfocus
+    // Make sure that we don't change the display style of the iframe when copying styles-scripts oblur/onfocus
     // this is needed for when the change_view event is fired where the iframe is hidden and then
     // the blur event fires and re-displays it
     var boxFormattingStyles = wysihtml5.lang.array(BOX_FORMATTING).without(["display"]);
@@ -12657,7 +12657,7 @@ wysihtml5.views.View = Base.extend(
       textareaElement.setAttribute("placeholder", originalPlaceholder);
     }
 
-    // --------- Sync focus/blur styles ---------
+    // --------- Sync focus/blur styles-scripts ---------
     this.parent.on("focus:composer", function() {
       dom.copyStyles(boxFormattingStyles) .from(that.focusStylesHost).to(that.editableArea);
       dom.copyStyles(TEXT_FORMATTING)     .from(that.focusStylesHost).to(that.element);
@@ -12873,7 +12873,7 @@ wysihtml5.views.View = Base.extend(
 
     if (this.config.copyedFromMarking) {
       // If supported the copied source is based directly on selection
-      // Very useful for webkit based browsers where copy will otherwise contain a lot of code and styles based on whatever and not actually in selection.
+      // Very useful for webkit based browsers where copy will otherwise contain a lot of code and styles-scripts based on whatever and not actually in selection.
       dom.observe(element, "copy", function(event) {
         if (event.clipboardData) {
           event.clipboardData.setData("text/html", that.config.copyedFromMarking + that.selection.getHtml());
@@ -13225,7 +13225,7 @@ wysihtml5.views.View = Base.extend(
   var defaultConfig = {
     // Give the editor a name, the name will also be set as class name on the iframe and on the iframe's body
     name:                 undef,
-    // Whether the editor should look like the textarea (by adopting styles)
+    // Whether the editor should look like the textarea (by adopting styles-scripts)
     style:                true,
     // Id of the toolbar element, pass falsey value if you don't want any toolbar logic
     toolbar:              undef,
@@ -13266,7 +13266,7 @@ wysihtml5.views.View = Base.extend(
     uneditableContainerClassname: "wysihtml5-uneditable-container",
     // Browsers that support copied source handling will get a marking of the origin of the copied source (for determinig code cleanup rules on paste)
     // Also copied source is based directly on selection - 
-    // (very useful for webkit based browsers where copy will otherwise contain a lot of code and styles based on whatever and not actually in selection).
+    // (very useful for webkit based browsers where copy will otherwise contain a lot of code and styles-scripts based on whatever and not actually in selection).
     // If falsy value is passed source override is also disabled
     copyedFromMarking: '<meta name="copied-from" content="wysihtml5">'
   };

@@ -113,7 +113,7 @@
         var node = this,
           id = node.id,
 
-          // Layer styles
+          // Layer styles-scripts
           offset = -area + '%',
           size = 100 + (area * 2) + '%',
           layer = {

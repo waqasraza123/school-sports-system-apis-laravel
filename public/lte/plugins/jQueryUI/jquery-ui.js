@@ -10119,7 +10119,7 @@ $.effects.animateClass = function( value, duration, easing, callback ) {
 			applyClassChange,
 			allAnimations = o.children ? animated.find( "*" ).addBack() : animated;
 
-		// map the animated objects to store the original styles.
+		// map the animated objects to store the original styles-scripts.
 		allAnimations = allAnimations.map(function() {
 			var el = $( this );
 			return {
@@ -10138,7 +10138,7 @@ $.effects.animateClass = function( value, duration, easing, callback ) {
 		};
 		applyClassChange();
 
-		// map all animated objects again - calculate new styles and diff
+		// map all animated objects again - calculate new styles-scripts and diff
 		allAnimations = allAnimations.map(function() {
 			this.end = getElementStyles( this.el[ 0 ] );
 			this.diff = styleDifference( this.start, this.end );
@@ -12338,7 +12338,7 @@ var selectmenu = $.widget( "ui.selectmenu", {
 			})
 			.menu( "instance" );
 
-		// Adjust menu styles to dropdown
+		// Adjust menu styles-scripts to dropdown
 		this.menu
 			.addClass( "ui-corner-bottom" )
 			.removeClass( "ui-corner-all" );
@@ -14284,7 +14284,7 @@ var sortable = $.widget("ui.sortable", $.ui.mouse, {
 						return;
 					}
 
-					//If the element doesn't have a actual height by itself (without styles coming from a stylesheet), it receives the inline height from the dragged item
+					//If the element doesn't have a actual height by itself (without styles-scripts coming from a stylesheet), it receives the inline height from the dragged item
 					if(!p.height()) { p.height(that.currentItem.innerHeight() - parseInt(that.currentItem.css("paddingTop")||0, 10) - parseInt(that.currentItem.css("paddingBottom")||0, 10)); }
 					if(!p.width()) { p.width(that.currentItem.innerWidth() - parseInt(that.currentItem.css("paddingLeft")||0, 10) - parseInt(that.currentItem.css("paddingRight")||0, 10)); }
 				}
