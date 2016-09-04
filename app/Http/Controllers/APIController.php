@@ -87,7 +87,7 @@ class APIController extends Controller
                 'email' => 'admin@gmail.com',
                 'password' => bcrypt('admin'),
                 'school_id' => $school->id,
-                'school_logo' => 'def.png'
+                'school_logo' => asset('uploads/schools/def.png')
             ));
             
             $social = Social::create(array(

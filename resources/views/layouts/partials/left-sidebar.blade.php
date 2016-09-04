@@ -4,7 +4,7 @@
         <!-- user panel (Optional) -->
         <div class="user-panel">
             <div class="pull-left image">
-                <img src="{{asset('/uploads/schools/'.$currentSchool->school_logo)}}" class="img-circle" alt="User Image">
+                <img src="{{$currentSchool->school_logo}}" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
                 <p>{{$currentSchool->name}}</p>

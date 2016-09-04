@@ -118,8 +118,8 @@ class SchoolsController extends Controller
                     'video'=>$file['video'],
                     'livestream_url'=>$file['livestream_url'],
                     'api_key'=> $api,
-                    'school_logo' => $fileName,
-                    'photo' => $fileName2
+                    'school_logo' => asset('uploads/schools/'.$fileName),
+                    'photo' => asset('uploads/schools/'.$fileName2)
                     ));
 
 
@@ -267,8 +267,8 @@ class SchoolsController extends Controller
                     'video'=>$file['video'],
                     'api_key'=>$api,
                     'livestream_url'=>$file['livestream_url'],
-                    'school_logo' => $fileName,
-                    'photo' => $fileName2));
+                    'school_logo' => asset('uploads/schools/'.$fileName),
+                    'photo' => asset('uploads/schools/'.$fileName2)));
 
                 //save the social media links to social_links table
                 Social::where('socialLinks_id', $id)->first()->update(array(

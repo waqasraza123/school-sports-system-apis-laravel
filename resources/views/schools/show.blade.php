@@ -45,7 +45,7 @@
 
                     @foreach($schools as $school)
                         <tr>
-                            <td><img src="{{asset('uploads/schools/'.$school->school_logo ) }}"  height="42"></td>
+                            <td><img src="{{$school->school_logo}}"  height="42"></td>
                             <td class="jersey">{{ $school->name }}</td>
                             <td class="first_name">{{ $school->city }}</td>
                             <td class="position">{{ $school->state}}</td>
