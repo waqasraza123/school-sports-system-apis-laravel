@@ -54,6 +54,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('students/filter', 'StudentsController@filterStudents');
     Route::resource('students', 'StudentsController');
 
+    Route::resource('sponsors', 'SponsorsController');
+
 
     //testing purposes
     Route::get('test', function() {

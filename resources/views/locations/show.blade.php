@@ -2,78 +2,79 @@
 
 @section('content')
 
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Locations</h1>
+                <p class="lead">
+                    <button type="button" id="add_new_location" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#locationModal">Add Location?</button>
+                </p>
 
+                <br>
+                @if (session()->has('success'))
+                    <div class="alert alert-success">
+                        {{Session::get('success')}}
 
-    <h1>Locations</h1>
-    <p class="lead">
-        <button type="button" id="add_new_location" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#locationModal">Add Location?</button>
+                    </div>
+                    <br>
+                @endif
 
-    </p>
+                @if ($locations->isEmpty() )
+                    <div class="bs-callout bs-callout-warning">
+                        <h4>No Results</h4>
+                        Nothing to see here please create a location
+                        <a  data-toggle="modal" data-target="#schoolModal">Here</a>
+                    </div>
 
-    <br>
-    @if (session()->has('success'))
-        <div class="alert alert-success">
-            {{Session::get('success')}}
+                @else
 
-        </div>
-        <br>
-    @endif
+                    <div class="panel panel-primary">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead  style="background-color:#337AB7; color:white">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>City</th>
+                                    <th>State</th>
+                                    <th>&nbsp;</th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                                </thead>
+                                <tbody>
 
-    @if ($locations->isEmpty() )
-        <div class="bs-callout bs-callout-warning">
-            <h4>No Results</h4>
-            Nothing to see here please create a location
-            <a  data-toggle="modal" data-target="#schoolModal">Here</a>
-        </div>
+                                @foreach($locations as $location)
+                                    <tr>
+                                        <td class="name">{{ $location->name }}</td>
+                                        <td class="city">{{ $location->city }}</td>
+                                        <td class="state">{{ $location->state}}</td>
+                                        <td> <button type="button" class="btn btn-primary btn-sm edit_location" data-id="{{ $location->id}}" data-toggle="modal" data-target="#locationModal">Edit</button></td>
+                                        <td> {!! Form::open([    'method' => 'DELETE','route' => ['locations.destroy', $location->id]]) !!}{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}{!! Form::close() !!}</td>
+                                        <td class="id" style="display: none;"  />{{ $location->id}}</td>
+                                        <td class="adress" style="display: none;"  />{{  $location->adress}}</td>
 
-    @else
+                                        <td class="state" style="display: none;"  />{{ $location->state}}</td>
+                                        <td class="zip" style="display: none;"  />{{ $location->zip}}</td>
+                                        <td class="lat" style="display: none;"  />{{ $location->lat}}</td>
+                                        <td class="lon" style="display: none;"  />{{  $location->lon}}</td>
+                                    </tr>
+                                @endforeach
+                                @endif
 
-        <div class="panel panel-primary">
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead  style="background-color:#337AB7; color:white">
-                    <tr>
-                        <th>Name</th>
-                        <th>City</th>
-                        <th>State</th>
-                        <th>&nbsp;</th>
-                        <th>&nbsp;</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-
-                    @foreach($locations as $location)
-                        <tr>
-                            <td class="name">{{ $location->name }}</td>
-                            <td class="city">{{ $location->city }}</td>
-                            <td class="state">{{ $location->state}}</td>
-                            <td> <button type="button" class="btn btn-primary btn-sm edit_location" data-id="{{ $location->id}}" data-toggle="modal" data-target="#locationModal">Edit</button></td>
-                            <td> {!! Form::open([    'method' => 'DELETE','route' => ['locations.destroy', $location->id]]) !!}{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}{!! Form::close() !!}</td>
-                            <td class="id" style="display: none;"  />{{ $location->id}}</td>
-                            <td class="adress" style="display: none;"  />{{  $location->adress}}</td>
-
-                            <td class="state" style="display: none;"  />{{ $location->state}}</td>
-                            <td class="zip" style="display: none;"  />{{ $location->zip}}</td>
-                            <td class="lat" style="display: none;"  />{{ $location->lat}}</td>
-                            <td class="lon" style="display: none;"  />{{  $location->lon}}</td>
-                        </tr>
-                    @endforeach
-                    @endif
-
-                    </tbody>
-                </table>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.table-responsive -->
+                    </div>
+                    <!-- /.panel-body -->
             </div>
-            <!-- /.table-responsive -->
-        </div>
-        <!-- /.panel-body -->
-        </div>
-        <!-- /.panel -->
+            <!-- /.panel -->
         </div>
 
         <!-- Modal -->
         @include('locations.modals.locations_form')
-
-
+            </div>
+        </div>
+    </div>
 
 @stop
 

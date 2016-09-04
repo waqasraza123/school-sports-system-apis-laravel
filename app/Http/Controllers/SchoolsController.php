@@ -30,7 +30,9 @@ class SchoolsController extends Controller
     //show all schools
     public function index()
     {
+        $this->checkAdmin();
         if(!($GLOBALS['admin'])){
+
             if(Auth::check()){
                 $schoolId = Auth::user()->school_id;
             }
@@ -184,7 +186,7 @@ class SchoolsController extends Controller
     public function showEditForm($id){
         $schools = School::find($id);
 
-        $social = Social::where('socialLinks_id', $id)->first();
+        $social = Social::where('socialLinks_id', $id)->where('socialLinks_type', 'App\Sponsor')->first();
 
         return view('schools.update_schools_form', compact('schools', 'social'));
     }

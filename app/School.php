@@ -66,4 +66,8 @@ class School extends Model
     public function students(){
         return $this->hasMany('App\Student');
     }
+
+    public function sponsors(){
+        return $this->hasMany('App\Sponsor', 'school_id');
+    }
 }

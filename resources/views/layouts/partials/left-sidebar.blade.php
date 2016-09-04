@@ -30,6 +30,11 @@
             @endif
 
             <li>
+                <a href="/sponsors"><i class="fa fa-edit fa-fw"></i>
+                    Sponsors</a>
+            </li>
+
+            <li>
                 <a href="/staff"><i class="fa fa-edit fa-fw"></i>
                     Staff</a>
             </li>
