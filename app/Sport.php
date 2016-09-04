@@ -11,6 +11,8 @@ class Sport extends Model
 
     protected $table = 'sports';
 
+    protected $hidden = ['school_id'];
+
     public function rosters()
     {
         return $this->hasMany('App\Roster', 'sport_id');
@@ -32,7 +34,7 @@ class Sport extends Model
     }
 
     public function school(){
-        return $this->belongsTo('App\School');
+        return $this->belongsTo('App\School', 'school_id');
     }
 
     public function years(){
@@ -46,5 +48,4 @@ class Sport extends Model
     public function levels(){
         return $this->belongsToMany('App\LevelSport', 'levels-sports', 'sport_id', 'level_id');
     }
-
 }

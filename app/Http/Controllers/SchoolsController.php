@@ -84,6 +84,9 @@ class SchoolsController extends Controller
         {
             //get the api key
             $api = $this->apiKey();
+            if (School::where('api_key', $api)->first()){
+                $api = $this->apiKey();
+            }
 
             if (Input::file('school_logo') != null && Input::file('photo') !=null) {
 
@@ -213,7 +216,11 @@ class SchoolsController extends Controller
         }
 
         else{
+            //get the api key
             $api = $this->apiKey();
+            if (School::where('api_key', $api)->first()){
+                $api = $this->apiKey();
+            }
             $fileName = "";
             $fileName2 = "";
 

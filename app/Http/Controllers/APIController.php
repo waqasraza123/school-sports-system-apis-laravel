@@ -20,30 +20,48 @@ class APIController extends Controller
      * handle incoming urls and then call appropriate method
      */
     public function handle(Request $request){
-        $school_id = $request->query('school_id');
 
+        //check the action in the url using query method
+        $action = $request->query('action');
+
+
+        //get the ids from the request query method
+        $schoolId = $request->query('school_id');
+        $apiKey = $request->query('school_id');
+
+
+        //create the admin user for requests
+        // other then api calls only one time on '/'
         if(!($request->query('action'))){
             $this->createAdmin();
             return redirect('/home');
         }
 
+        //call the related api method to return the data
         else{
-            return $this->getAppData($school_id);
+            if ($action == 'getAppData'){
+                return $this->getAppData($schoolId, $apiKey);
+            }
         }
     }
 
 
     /**
-     * @param $school_id
+     * get app data api
+     * @param $schoolId, $apiKey
      * @return Response
      */
-    public function getAppData($school_id){
-        $schools = School::find($school_id);
+    public function getAppData($schoolId, $apiKey){
+        $schools = School::
+            with([
+                'sport_list' => function($q){
+                    $q->select('name as sport_name', 'id as sport_id', 'school_id');
+                }
+            ])->select('app_name', 'id as school_id', 'name as school_name', 'school_logo',
+            'school_color', 'school_color2', 'school_color3', 'id')
+            ->where('schools.id', $schoolId)->first();
 
-
-
-        foreach ($schools as $school)
-            return $school;
+        return $schools->toJson();
     }
 
     /**
@@ -68,7 +86,8 @@ class APIController extends Controller
                 'name' => 'Admin',
                 'email' => 'admin@gmail.com',
                 'password' => bcrypt('admin'),
-                'school_id' => $school->id
+                'school_id' => $school->id,
+                'school_logo' => 'def.png'
             ));
             
             $social = Social::create(array(
