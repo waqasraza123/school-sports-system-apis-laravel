@@ -33,7 +33,7 @@
                             @foreach($sponsors as $sponsor)
                                 <tr>
                                     @if($sponsor->photo)
-                                        <td><img src="{{asset('uploads/sponsors/'.$sponsor->photo ) }}"  height="42"></td>
+                                        <td><img src="{{$sponsor->logo}}"  height="42"></td>
                                     @else
                                         <td><img src="{{asset('uploads/def.png') }}"  height="42"></td>
                                     @endif

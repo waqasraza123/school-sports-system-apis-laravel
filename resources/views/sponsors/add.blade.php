@@ -172,7 +172,7 @@
                                             <div class="control-group">
                                                 <div class="controls">
                                                     {!! Form::label('title', 'Sponsor logo:', ['class' => 'control-label']) !!}
-                                                    {!! Form::file('logo', ['class' => 'form-control']) !!}
+                                                    {!! Form::file('logo', ['class' => 'form-control', 'required' => true]) !!}
                                                 </div>
                                             </div>
                                         </div>
