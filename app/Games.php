@@ -35,9 +35,9 @@ class Games extends Model
         return $this->belongsToMany('App\News');
     }
 
-    public function galleries()
+    public function albums()
     {
-        return $this->belongsToMany('App\Gallery');
+        return $this->belongsToMany('App\Album');
     }
 
 }

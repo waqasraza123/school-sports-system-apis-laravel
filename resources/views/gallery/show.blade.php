@@ -9,40 +9,32 @@
         </div>
         <br>
     @endif
-    {{--{!! Form::open(array('url'=>'image/upload', 'method'=>'POST', 'file' => true, 'id' => '', 'class' => 'form-horizontal', 'role' => 'form')) !!}--}}
-    {{--<div class="dropzone dropzone-previews" id="my-awesome-dropzone"></div>--}}
-    {{--<div class="form-group"></div>--}}
 
-    {{--<div class="form-group">--}}
-        {{--<div class="col-sm-10 col-sm-offset-2">--}}
-            {{--<button type="submit" class="btn btn-primary">Submit</button>--}}
-        {{--</div>--}}
-    {{--</div>--}}
-    {{--{!! Form::close() !!}--}}
+    <button class="btn btn-info" id="upload_switch">Add video url</button>
+    </br>
+    </br>
+    <div class="col-lg-12" id="photo_box">
+        <form id="my-awesome-dropzone" class="dropzone">
+            <!-- this is were the previews should be shown. -->
 
-    <form id="my-awesome-dropzone" class="dropzone">
-         <!-- this is were the previews should be shown. -->
+            <div class="dropzone-previews"></div>
+            <button type="submit" class="btn btn-info" id="submitbtn" style="margin-left: 75%; margin-top: 65px; margin-bottom: -70px;">Upload photos!</button>
+        </form>
+    </div>
 
-        <!-- Now setup your input fields -->
-        {!! Form::label('title', 'Sport:', ['class' => 'control-label']) !!}
-        @if (isset($type->name))
-            {{ Form::select('sport_id[]', $sports, $type->id, ['class' => 'form-control', 'id' => 'sport_id', 'style' => 'width: 100%', 'multiple', 'required'=> 'true']) }}
-        @else
-            {{ Form::select('sport_id[]', $sports, null, ['class' => 'form-control', 'id' => 'sport_id', 'style' => 'width: 100%', 'multiple', 'required'=> 'true']) }}
-        @endif
-        {!! Form::label('title[]', 'Level:', ['class' => 'control-label']) !!}
-        {{ Form::select('level_id[]', $levelcreate, null, ['class' => 'form-control', 'id' => 'level_id', 'style' => 'width: 100%', 'multiple']) }}
+    <div class="col-lg-12" id="video_box">
+        {!! Form::open(['route' => ['albums.url-upload', $album_id]]) !!}
+                <!-- this is were the previews should be shown. -->
+        {!! Form::label('title', 'Video url:', ['class' => 'control-label']) !!}
+        {!! Form::text('url', null, ['class' => 'fn form-control', 'required' => 'true']) !!}
 
-        {!! Form::label('title', 'Player:', ['class' => 'control-label']) !!}
-        {{ Form::select('roster_id[]', $rosters, null, ['class' => 'form-control','id' => 'roster_id', 'style' => 'width: 100%', 'multiple']) }}
-        {!! Form::label('title', 'Game:', ['class' => 'control-label']) !!}
-        {{ Form::select('game_id[]', $games, null, ['class' => 'form-control','id' => 'game_id', 'style' => 'width: 100%', 'multiple']) }}
-        <div class="dropzone-previews"></div>
-        <button type="submit" class="btn btn-info" id="submitbtn" style="margin-left: 75%; margin-top: 65px; margin-bottom: -70px;">Upload photos!</button>
-    </form>
+        <button type="submit" class="btn btn-info" id="submitbtn" style="margin-left: 75%; margin-top: 5px;">Add video url</button>
+        {!! Form::close() !!}
+    </div>
 
     <div class="col-lg-12" >
-        @foreach($gallery as $photo)
+        <h2>IMAGES</h2>
+        @foreach($gallery_images as $photo)
             <div class="col-lg-2" style="padding: 20px">
                 <style>
                     .info, .delete
@@ -63,22 +55,36 @@
                         <button data-id="{{ $photo->id}}" data-toggle="modal" class="edit_gallery" data-target="#galleryModal" align="right" style="position: absolute;top: 5px;right: 35px; background: transparent;border: none; font-size: 24px;"><span class="glyphicon glyphicon glyphicon-edit" aria-hidden="true"></span></button>
                         <p class="id" style="display: none;" >{{ $photo->id}}</p>
                         <div>
-                        <p class="sports_id" style="display: none;" >{{ json_encode($photo->sports->lists('id'))}} </p>
-                        <p class="games_ids" style="display: none;" >{{ json_encode($photo->games->lists('id'))}} </p>
-                        <p class="levels_ids" style="display: none;" >{{ json_encode($photo->levels->lists('id'))}} </p>
                         <p class="rosters_ids" style="display: none;" >{{ json_encode($photo->rosters->lists('id'))}} </p>
                         </div>
                         <p style="position: absolute;bottom: 0; right:10px; left:10px">
-                        @foreach($photo->sports as $sport_tag)<span class="label label-info" style="color: black; font-weight: lighter; font-size: 10px" >{{$sport_tag->name}}</span> @endforeach
-                        @foreach($photo->games as $games_tag)<span class="label label-info" style="color: black; font-weight: lighter; font-size: 10px">{{$schools[$games_tag->opponents_id]." ".$games_tag->game_date}}</span> @endforeach
-                        @foreach($photo->levels as $levels_tag)<span class="label label-info" style="color: black; font-weight: lighter; font-size: 10px">{{$levels_tag->name}}</span> @endforeach
-                        @foreach($photo->rosters as $roster_tag)<span class="label label-info" style="color: black; font-weight: lighter; font-size: 10px">{{$roster_tag->first_name}} {{$roster_tag->last_name}}</span> @endforeach
+                        @foreach($photo->rosters as $roster_tag)<span class="label label-info" style="color: black; font-weight: lighter; font-size: 10px">{{$roster_tag->name}}</span> @endforeach
                     </p>
                     </div>
                 </div>
        </div>
         @endforeach
     </div>
+
+    <div class="col-lg-12">
+        <h1>VIDEOS</h1>
+        @foreach($gallery_videos as $video)
+            <div class="col-lg-12">
+            <a href="{{ $video->url}}">{{$video->url}}</a>
+
+        @foreach($video->rosters as $roster_tag)<span class="label label-info" style="color: black; font-weight: lighter; font-size: 10px">{{$roster_tag->name}}</span> @endforeach
+            </div>
+            <div class="col-lg-12">
+                <div>
+                    <p class="video_rosters_ids" style="display: none;" >{{ json_encode($video->rosters->lists('id'))}} </p>
+                </div>
+                {!! Form::open([    'method' => 'DELETE','route' => ['gallery.destroy', $video->id]]) !!}{!! Form::submit('X', array('style' => 'background: none;position: relative; border: none; font-size:24px; font-weight: 700;')) !!}{!! Form::close() !!}
+                <button data-id="{{ $video->id}}" data-toggle="modal" class="edit_video" data-target="#galleryModal" align="right" style="background: transparent;position: relative;border: none; font-size: 24px;"><span class="glyphicon glyphicon glyphicon-edit" aria-hidden="true"></span></button>
+            </div>
+            <br>
+        @endforeach
+    </div>
+
 
     @include('gallery.modal.galltery_form')
 @stop
@@ -87,14 +93,7 @@
     <script src="/dist/js/sb-gallery-2.js"></script>
     <script src="/js/dropzone.js"></script>
     <script type="text/javascript">
-        $('#sport_id').select2();
-        $('#game_id').select2();
-        $('#level_id').select2();
         $('#roster_id').select2();
-
-        $('#sport_modal_id').select2();
-        $('#game_modal_id').select2();
-        $('#level_modal_id').select2();
         $('#roster_modal_id').select2();
 
         submitForms = function(){
@@ -116,7 +115,7 @@
                 acceptedFiles: 'image/*',
                 addRemoveLinks: true,
                 uploadMultiple: true,
-                url: 'image/upload',
+                url: '{{$album_id}}/image/upload',
                 parallelUploads: 100,
                 maxThumbnailFilesize: 10,
                 maxFiles: 100,

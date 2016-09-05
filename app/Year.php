@@ -11,4 +11,9 @@ class Year extends Model
     public function year(){
         return $this->morphTo();
     }
+
+    public function albums()
+    {
+        return $this->belongsToMany('App\Album');
+    }
 }

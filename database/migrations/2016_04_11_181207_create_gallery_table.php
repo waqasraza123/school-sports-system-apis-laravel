@@ -17,6 +17,8 @@ class CreateGalleryTable extends Migration
             $table->increments('id');
             $table->string('title', 225)->nullable();
             $table->string('name', 225)->nullable();
+            $table->string('url', 225)->nullable();
+            $table->string('type', 225)->nullable();
             $table->unsignedInteger('album_id')->nullable()->index('album_id');
             $table->timestamps();
         });

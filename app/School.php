@@ -66,4 +66,9 @@ class School extends Model
     public function students(){
         return $this->hasMany('App\Student');
     }
+
+    public function albums()
+    {
+        return $this->belongsToMany('App\Album');
+    }
 }

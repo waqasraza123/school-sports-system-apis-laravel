@@ -20,15 +20,8 @@
                     </div>
                 </div>
                 <div class="form-group select_sport">
-                    {!! Form::label('title', 'Sport:', ['class' => 'control-label']) !!}
-                    {{ Form::select('sport_modal_id[]', $sports, null, ['class' => 'form-control', 'id' => 'sport_modal_id', 'style' => 'width: 100%', 'multiple', 'required'=> 'true']) }}
-                    {!! Form::label('title[]', 'Level:', ['class' => 'control-label']) !!}
-                    {{ Form::select('level_modal_id[]', $levelcreate, null, ['class' => 'form-control', 'id' => 'level_modal_id', 'style' => 'width: 100%', 'multiple']) }}
-
                     {!! Form::label('title', 'Player:', ['class' => 'control-label']) !!}
                     {{ Form::select('roster_modal_id[]', $rosters, null, ['class' => 'form-control','id' => 'roster_modal_id', 'style' => 'width: 100%', 'multiple']) }}
-                    {!! Form::label('title', 'Game:', ['class' => 'control-label']) !!}
-                    {{ Form::select('game_modal_id[]', $games, null, ['class' => 'form-control','id' => 'game_modal_id', 'style' => 'width: 100%', 'multiple']) }}
                     {{ Form::hidden('gallery_invisible_id', null, ['id' => 'gallery_invisible_id']) }}
                 </div>
                 <div class="row">

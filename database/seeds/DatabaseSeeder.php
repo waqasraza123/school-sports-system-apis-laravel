@@ -1,6 +1,6 @@
 <?php
 
-use App\Level;
+use App\LevelSport;
 use App\Positions;
 use App\Sport;
 use App\Year;
@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // $this->call(UserTableSeeder::class);
+        dd('ok');
         Sport::create(array('id' => 1, 'name' => 'Football'));
         Sport::create(array('id' => 2,'name' => 'Volleyball'));
         Sport::create(array('id' => 3,'name' => 'Tennis'));
@@ -33,10 +34,10 @@ class DatabaseSeeder extends Seeder
         Year::create(array('id' => 3,'name' => 'Junior'));
         Year::create(array('id' => 4,'name' => 'Senior'));
 
-        Level::create(array('id' => 1,'name' => 'Varsity'));
-        Level::create(array('id' => 2,'name' => 'JV'));
-        Level::create(array('id' => 3,'name' => 'JV2'));
-        Level::create(array('id' => 4,'name' => 'Freshman'));
+        LevelSport::create(array('id' => 1,'name' => 'Varsity'));
+        LevelSport::create(array('id' => 2,'name' => 'JV'));
+        LevelSport::create(array('id' => 3,'name' => 'JV2'));
+        LevelSport::create(array('id' => 4,'name' => 'Freshman'));
 
         $positions = array(
             array('id' => '2','name' => 'QB','sport_id' => '1','created_at' => '2016-03-05 17:56:05','updated_at' => '2008-10-04 07:59:52'),

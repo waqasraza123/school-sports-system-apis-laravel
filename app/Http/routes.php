@@ -34,9 +34,15 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('sport/api/{sport_id}', 'RostersController@getPositions');
 
+    Route::get('albums', 'AlbumController@show');
+    Route::post('albums/update', 'AlbumController@update');
+    Route::post('albums/{id}/image/upload', 'GalleryController@uploadImage');
+    Route::resource('albums', 'AlbumController');
+
 //    Route::get('gallery', 'GalleryController@show');
-    Route::get('gallery/{sport_id}', 'GalleryController@show');
+    Route::get('gallery/{id}', 'GalleryController@show');
     Route::resource('gallery', 'GalleryController');
+    Route::post('albums/{id}/url-upload', ['as' => 'albums.url-upload', 'uses' => 'GalleryController@uploadUrl']);
     Route::post('image/upload', 'GalleryController@uploadImage');
 
     Route::post('staff/year', ['as' => 'year-staff', 'uses' => 'StaffController@yearStaff']);
