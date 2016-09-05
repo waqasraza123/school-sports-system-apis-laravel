@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Season;
 use App\Social;
 use App\Sponsor;
+use App\Staff;
 use Illuminate\Http\Request;
 use App\School;
 use App\Sport;
@@ -32,6 +33,7 @@ class APIController extends Controller
         $apiKey = $request->query('api_key');
         $sponsorId = $request->query('sponsor_id');
         $seasonId = $request->query('season_id');
+        $staffId = $request->query('staff_id');
 
 
         //create the admin user for requests
@@ -59,8 +61,12 @@ class APIController extends Controller
                 return $this->getLivestream($schoolId);
             }
 
-            if($action = 'getStaffList'){
+            if($action == 'getStaffList'){
                 return $this->getStaffList($schoolId, $seasonId);
+            }
+
+            if($action == 'getStaff'){
+                return $this->getStaff($schoolId, $staffId);
             }
         }
     }
@@ -134,8 +140,35 @@ class APIController extends Controller
     }
 
 
+    /**
+     * get staff list based on the school id and optional season_id
+     * @param $schoolId
+     * @param $seasonId
+     * @return mixed
+     */
     public function getStaffList($schoolId, $seasonId){
+        if($seasonId){
+            $staff = Staff::select('id as staff_id', 'photo as staff_photo', 'name as staff_name', 'title as staff_title')
+                ->where('school_id', $schoolId)->where('season_id', $seasonId)->get();
 
+            $arr = array('staff_list' => ($staff));
+            return response()->json($arr);
+        }
+        else{
+            $staff = Staff::select('id as staff_id', 'photo as staff_photo', 'name as staff_name', 'title as staff_title')
+                ->where('school_id', $schoolId)->get();
+
+            $arr = array('staff_list' => ($staff));
+            return response()->json($arr);
+        }
+    }
+
+    public function getStaff($schoolId, $staffId){
+        $staff = Staff::select('id as staff_id', 'description as staff_bio', 'name as staff_name', 'title as staff_title',
+            'email as staff_email', 'phone as staff_phone')
+            ->where('school_id', $schoolId)->where('id', $staffId)->get();
+
+        return $staff;
     }
 
     /**

@@ -13,7 +13,8 @@ class AddSeasonIdToStaff extends Migration
     public function up()
     {
         Schema::table('staff', function (Blueprint $table) {
-            //
+            $table->unsignedInteger('season_id')->nullable();
+            $table->foreign('season_id')->references('id')->on('seasons');
         });
     }
 

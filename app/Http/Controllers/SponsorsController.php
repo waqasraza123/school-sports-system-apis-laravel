@@ -151,34 +151,61 @@ class SponsorsController extends Controller
         $logo = "";
         $logo2 = "";
 
-        if(Input::file('photo') != null){
-            $destinationPath = 'uploads/sponsors'; // upload path
-            $extension = Input::file('photo')->getClientOriginalExtension();
-            $photo = rand(1111, 9999) . '.' . $extension;
-            Input::file('photo')->move($destinationPath, $photo);
+        $checkImages = Sponsor::where('id', $id)->first();
+
+        if($checkImages->photo != null){
+
+            if(Input::file('photo') != null){
+                $destinationPath = 'uploads/sponsors'; // upload path
+                $extension = Input::file('photo')->getClientOriginalExtension();
+                $photo = rand(1111, 9999) . '.' . $extension;
+                Input::file('photo')->move($destinationPath, $photo);
+
+                $photo = asset('uploads/sponsors/'.$photo);
+            }
+            else{
+                $photo = $checkImages->photo;
+            }
         }
 
-        if(Input::file('logo') != null){
-            $destinationPath = 'uploads/sponsors'; // upload path
-            $extension = Input::file('logo')->getClientOriginalExtension();
-            $logo = rand(1111, 9999) . '.' . $extension;
-            Input::file('logo')->move($destinationPath, $logo);
+        if($checkImages->logo2 != null){
+
+            if(Input::file('logo2') != null){
+                $destinationPath = 'uploads/sponsors'; // upload path
+                $extension = Input::file('logo2')->getClientOriginalExtension();
+                $logo2 = rand(1111, 9999) . '.' . $extension;
+                Input::file('logo2')->move($destinationPath, $logo2);
+                $logo2 = asset('uploads/sponsors/'.$logo2);
+            }
+
+            else{
+                $logo2 = $checkImages->logo2;
+            }
         }
 
-        if(Input::file('logo2') != null){
-            $destinationPath = 'uploads/sponsors'; // upload path
-            $extension = Input::file('logo2')->getClientOriginalExtension();
-            $logo2 = rand(1111, 9999) . '.' . $extension;
-            Input::file('logo2')->move($destinationPath, $logo2);
+        if ($checkImages->logo != null) {
+
+            if(Input::file('logo') != null){
+                $destinationPath = 'uploads/sponsors'; // upload path
+                $extension = Input::file('logo')->getClientOriginalExtension();
+                $logo = rand(1111, 9999) . '.' . $extension;
+                Input::file('logo')->move($destinationPath, $logo);
+
+                $logo = asset('uploads/sponsors/'.$logo);
+            }
+
+            else{
+                $logo = $checkImages->logo;
+            }
         }
 
         Sponsor::find($id)->update([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'phone' => $request->input('phone'),
-            'logo' => asset('uploads/sponsors/'.$logo),
-            'logo2' => asset('uploads/sponsors/'.$logo2),
-            'photo' => asset('uploads/sponsors/'.$photo),
+            'logo' => $logo,
+            'logo2' => $logo2,
+            'photo' => $photo,
             'address' => $request->input('address'),
             'school_id' => $this->schoolId,
             'color' => $request->input('color'),

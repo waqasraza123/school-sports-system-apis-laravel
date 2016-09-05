@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Season;
 use App\Staff;
 use App\Year;
 use Illuminate\Http\Request;
@@ -47,7 +48,8 @@ class StaffController extends Controller
      */
     public function create()
     {
-        return view('staff.add');
+        $seasons = Season::lists('name', 'id');
+        return view('staff.add', compact('seasons'));
     }
 
     /**
@@ -85,7 +87,8 @@ class StaffController extends Controller
             'title' => $request->input('title'),
             'website' => $request->input('website'),
             'school_id' => $schoolId,
-            'photo' => $fileName,
+            'photo' => $fileName == ""? null : asset('uploads/staff/'.$fileName),
+            'season_id' => $request->input('season_id')
         ]);
 
         $year = Year::create([
@@ -118,7 +121,9 @@ class StaffController extends Controller
     public function edit($id)
     {
         $staff = Staff::findOrFail($id);
-        return view('staff.update', compact('staff'));
+        $seasons = Season::lists('name', 'id');
+
+        return view('staff.update', compact('staff', 'seasons'));
     }
 
     /**
@@ -160,7 +165,8 @@ class StaffController extends Controller
             'title' => $request->input('title'),
             'website' => $request->input('website'),
             'school_id' => $schoolId,
-            'photo' => $fileName,
+            'photo' => $fileName == ""? null : asset('uploads/staff/'.$fileName),
+            'season_id' => $request->input('season_id')
         ]);
 
         $year = Year::where('year_id', $id)->where('year_type', 'App\Staff')->update([
