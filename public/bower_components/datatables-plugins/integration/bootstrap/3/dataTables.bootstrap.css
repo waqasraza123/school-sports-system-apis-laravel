@@ -147,7 +147,7 @@ div.dataTables_scrollHead table.table-bordered {
 
 
 /*
- * TableTools styles
+ * TableTools styles-scripts
  */
 .table.dataTable tbody tr.active td,
 .table.dataTable tbody tr.active th {
@@ -257,7 +257,7 @@ div.dataTables_processing {
 
 
 /*
- * FixedColumns styles
+ * FixedColumns styles-scripts
  */
 div.DTFC_LeftHeadWrapper table,
 div.DTFC_LeftFootWrapper table,
@@ -306,7 +306,7 @@ div.DTFC_LeftFootWrapper table {
 
 
 /*
- * FixedHeader styles
+ * FixedHeader styles-scripts
  */
 div.FixedHeader_Cloned table {
 	margin: 0 !important

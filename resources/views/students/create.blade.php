@@ -67,7 +67,7 @@
             </div>
             <div class="col-md-6">
                 {!! Form::label('roster_id', 'Roster', ['class' => 'control-label']) !!}
-                {!! Form::select('roster_id[]', $rosters, null, ['class' => 'form-control',
+                {!! Form::select('roster_id[]', $rosters, null, ['class' => 'form-control select2',
                 'multiple' => true, 'required' => true]) !!}
             </div>
         </div>

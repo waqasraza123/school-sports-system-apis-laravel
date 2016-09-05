@@ -60,20 +60,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('students/filter', 'StudentsController@filterStudents');
     Route::resource('students', 'StudentsController');
 
+    Route::resource('sponsors', 'SponsorsController');
+
 
     //testing purposes
     Route::get('test', function() {
-        $data = App\School::where('id', 2)->with('sports', 'levels')->get();
-        foreach ($data as $d){
-            $sports = $d->sports;
-            $levels = $d->levels;
-            $rosters = $d->rosters;
-            $students = $d->students;
-        }
-
-        foreach ($levels as $level){
-            dd($level->sports);
-        }
+        return asset('uploads/schools/def.png');
     });
 });
 

@@ -65,7 +65,6 @@ class SportsController extends Controller
     public function create()
     {
         $seasons = Season::lists('name', 'id');
-        $seasons->prepend('Please Select');
 
         $levels = LevelSport::where('school_id', $this->schoolId)->lists('name', 'name');
 

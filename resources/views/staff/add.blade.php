@@ -50,6 +50,9 @@
                     {!! Form::label('year', 'Year', ['class' => 'control-label']) !!}
                     {!! Form::selectYear('year', 2005, \Carbon\Carbon::now()->year, \Carbon\Carbon::now()->year, [
                     'class' => 'form-control', 'required' => true]) !!}
+
+                    {!! Form::label('season_id', 'Season', ['class' => 'control-label']) !!}
+                    {!! Form::select('season_id', $seasons, null, ['class' => 'form-control', 'required' => true]) !!}
                 </div>
             </div>
 

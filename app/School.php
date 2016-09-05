@@ -11,8 +11,9 @@ class School extends Model
         'name', 'short_name', 'school_logo', 'bio', 'adress', 'city', 'state', 'zip', 'phone', 'website',
         'school_color', 'school_color2', 'school_color3', 'school_tagline', 'app_name', 'school_email',
         'video', 'photo', 'api_key'
-
     ];
+
+    protected $hidden = ['id'];
 
     public function games()
     {
@@ -30,11 +31,11 @@ class School extends Model
      * get all social links
      */
     public function social(){
-        return $this->morphMany('App\Social', 'socialLinks');
+        return $this->morphOne('App\Social', 'socialLinks');
     }
 
     public function sports(){
-        return $this->hasMany('App\Sport');
+        return $this->hasMany('App\Sport', 'school_id');
     }
     /**
      * get all staff members for that school
@@ -70,5 +71,14 @@ class School extends Model
     public function albums()
     {
         return $this->belongsToMany('App\Album');
+    }
+
+    public function sponsors(){
+        return $this->hasMany('App\Sponsor', 'school_id');
+    }
+
+    //special methods for api
+    public function sport_list(){
+        return $this->hasMany('App\Sport', 'school_id');
     }
 }
