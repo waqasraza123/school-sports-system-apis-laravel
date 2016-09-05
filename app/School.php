@@ -31,7 +31,7 @@ class School extends Model
      * get all social links
      */
     public function social(){
-        return $this->morphMany('App\Social', 'socialLinks');
+        return $this->morphOne('App\Social', 'socialLinks');
     }
 
     public function sports(){

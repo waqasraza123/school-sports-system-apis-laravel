@@ -31,6 +31,7 @@ class APIController extends Controller
         $schoolId = $request->query('school_id');
         $apiKey = $request->query('api_key');
         $sponsorId = $request->query('sponsor_id');
+        $seasonId = $request->query('season_id');
 
 
         //create the admin user for requests
@@ -52,6 +53,14 @@ class APIController extends Controller
 
             if($action == 'getSponsor'){
                 return $this->getSponsor($schoolId, $sponsorId);
+            }
+
+            if ($action == 'getLivestream'){
+                return $this->getLivestream($schoolId);
+            }
+
+            if($action = 'getStaffList'){
+                return $this->getStaffList($schoolId, $seasonId);
             }
         }
     }
@@ -111,6 +120,22 @@ class APIController extends Controller
             ->where('school_id', $schoolId)->where('id', $sponsorId)->get();
 
         return response()->json($sponsor);
+    }
+
+    /**
+     * returns the livestream url for school
+     * @param $schoolId
+     * @return mixed
+     */
+    public function getLivestream($schoolId){
+        $liveStreamUrl = School::select('livestream_url')->where('id', $schoolId)->first();
+
+        return $liveStreamUrl;
+    }
+
+
+    public function getStaffList($schoolId, $seasonId){
+
     }
 
     /**
