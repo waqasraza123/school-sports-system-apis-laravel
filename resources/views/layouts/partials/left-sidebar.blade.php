@@ -61,6 +61,12 @@
                 <a href="/students"><i class="fa fa-edit fa-fw"></i>
                     Students</a>
             </li>
+
+            <li>
+                <a href="/albums"><i class="fa fa-edit fa-fw"></i>
+                    Albums</a>
+            </li>
+
             <li>
                 <a href="/locations"><i class="fa fa-edit fa-fw"></i>
                     Schedule Locations</a>
