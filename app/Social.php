@@ -8,6 +8,7 @@ class Social extends Model
 {
     protected $fillable = ['facebook', 'twitter', 'instagram', 'gplus', 'youtube', 'vimeo', 'socialLinks_id', 'socialLinks_type'];
     protected $table = 'social';
+    protected $hidden = ['id', 'socialLinks_id', 'socialLinks_type'];
 
     /**
      * get all social links

@@ -13,6 +13,7 @@ use Carbon\Carbon;
 
 use App\Http\Requests;
 use Illuminate\Http\Response;
+use Symfony\Component\HttpFoundation\Tests\JsonSerializableObject;
 
 class APIController extends Controller
 {
@@ -29,6 +30,7 @@ class APIController extends Controller
         //get the ids from the request query method
         $schoolId = $request->query('school_id');
         $apiKey = $request->query('api_key');
+        $sponsorId = $request->query('sponsor_id');
 
 
         //create the admin user for requests
@@ -46,6 +48,10 @@ class APIController extends Controller
 
             if($action == 'getSponsorList'){
                 return $this->getSponsorList($schoolId, $apiKey);
+            }
+
+            if($action == 'getSponsor'){
+                return $this->getSponsor($schoolId, $sponsorId);
             }
         }
     }
@@ -84,7 +90,27 @@ class APIController extends Controller
 
         $arr = array('sponsor_list' => ($sponsors));
         return response()->json($arr);
-        return response()->json(['object' => 'ok', 'data' => $sponsors]);
+    }
+
+    public function getSponsor($schoolId, $sponsorId){
+
+        $sponsor = Sponsor::with([
+            'sponsor_social' => function($q){
+
+                $q->select('id', 'socialLinks_id', 'twitter as twitter_url', 'facebook as facebook_url',
+                'instagram as instagram_url')->first();
+            }
+            ]
+            )//end with here
+
+            ->select('id', 'id as sponsor_id', 'name as sponsor_name', 'logo as sponsor_logo', 'logo2 as sponsor_logo2',
+            'color as sponsor_color', 'color2 as sponsor_color2', 'color3 as sponsor_color3',
+            'tagline as sponsor_tagline', 'bio as sponsor_bio', 'photo as sponsor_photo',
+            'video as sponsor_video', 'address as sponsor_address', 'email as sponsor_address',
+            'url as sponsor_url', 'email as sponsor_email', 'phone as sponsor_phone')
+            ->where('school_id', $schoolId)->where('id', $sponsorId)->get();
+
+        return response()->json($sponsor);
     }
 
     /**
