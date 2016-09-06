@@ -11,10 +11,8 @@ use App\School;
 use App\Sport;
 use App\User;
 use Carbon\Carbon;
-
 use App\Http\Requests;
 use Illuminate\Http\Response;
-use Symfony\Component\HttpFoundation\Tests\JsonSerializableObject;
 
 class APIController extends Controller
 {
@@ -67,6 +65,10 @@ class APIController extends Controller
 
             if($action == 'getStaff'){
                 return $this->getStaff($schoolId, $staffId);
+            }
+
+            if($action == 'getSchool'){
+                return $this->getSchool($schoolId);
             }
         }
     }
@@ -163,12 +165,32 @@ class APIController extends Controller
         }
     }
 
+    /**
+     * get staff list based on the school id
+     * @param $schoolId
+     * @param $staffId
+     * @return mixed
+     */
     public function getStaff($schoolId, $staffId){
         $staff = Staff::select('id as staff_id', 'description as staff_bio', 'name as staff_name', 'title as staff_title',
             'email as staff_email', 'phone as staff_phone')
             ->where('school_id', $schoolId)->where('id', $staffId)->get();
 
         return $staff;
+    }
+
+    public function getSchool($schoolId){
+        $school = School::with([
+            'social' => function($q){
+                $q->select('id', 'socialLinks_id', 'youtube as youtube_url', 'facebook as facebook_url',
+                    'instagram as instagram_url', 'twitter as twitter_url')->first();
+            }
+        ])->select('id', 'id as school_id', 'name as school_name', 'school_logo', 'school_color',
+            'school_color2', 'school_tagline', 'bio as school_bio', 'photo as school_photo',
+            'video as school_video', 'adress as school_address', 'website as school_url',
+            'phone as school_phone', 'school_email')->where('id', $schoolId)->get();
+
+        return $school;
     }
 
     /**
@@ -187,14 +209,14 @@ class APIController extends Controller
             $school = School::create(array(
                 'id' => 1,
                 'name' => 'Admin',
-                'school_email' => 'admin@gmail.com'
+                'school_email' => 'admin@gmail.com',
+                'school_logo' => asset('uploads/schools/def.png')
             ));
             $user = User::create(array(
                 'name' => 'Admin',
                 'email' => 'admin@gmail.com',
                 'password' => bcrypt('admin'),
                 'school_id' => $school->id,
-                'school_logo' => asset('uploads/schools/def.png')
             ));
             
             $social = Social::create(array(
