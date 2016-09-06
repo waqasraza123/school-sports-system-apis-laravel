@@ -23,13 +23,13 @@
     {!! Form::open(['route' => 'albums.store']) !!}
         <!-- this is were the previews should be shown. -->
         {!! Form::label('title', 'Album name:', ['class' => 'control-label']) !!}
-        {!! Form::text('name', null, ['class' => 'fn form-control', 'required' => 'true']) !!}
+        {!! Form::text('name', null, ['class' => 'fn form-control']) !!}
         <!-- Now setup your input fields -->
         {!! Form::label('title', 'Sport:', ['class' => 'control-label']) !!}
         @if (isset($type->name))
-            {{ Form::select('sport_id[]', $sports, $type->id, ['class' => 'form-control', 'id' => 'sport_id', 'style' => 'width: 100%', 'multiple', 'required'=> 'true']) }}
+            {{ Form::select('sport_id[]', $sports, $type->id, ['class' => 'form-control', 'id' => 'sport_id', 'style' => 'width: 100%', 'multiple']) }}
         @else
-            {{ Form::select('sport_id[]', $sports, null, ['class' => 'form-control', 'id' => 'sport_id', 'style' => 'width: 100%', 'multiple', 'required'=> 'true']) }}
+            {{ Form::select('sport_id[]', $sports, null, ['class' => 'form-control', 'id' => 'sport_id', 'style' => 'width: 100%', 'multiple']) }}
         @endif
         {!! Form::label('title[]', 'Level:', ['class' => 'control-label']) !!}
         {{ Form::select('level_id[]', $levelcreate, null, ['class' => 'form-control', 'id' => 'level_id', 'style' => 'width: 100%', 'multiple']) }}

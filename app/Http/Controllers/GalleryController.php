@@ -85,7 +85,7 @@ class GalleryController extends Controller
     {
         $gallery = Gallery::findOrFail($id);
         $gallery->delete();
-        Session::flash('flash_message_s', 'School successfully deleted!');
+        Session::flash('flash_message_s', 'Album successfully deleted!');
         return redirect()->back();
     }
 //

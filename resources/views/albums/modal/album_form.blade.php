@@ -13,7 +13,7 @@
                     <div class="col-md-6">
                         <div class="form-group-sm">
                             <div class="col-s-3">
-
+                                @if (isset($album))
                                 {!! Form::open(array('url'=>'albums/update', 'method'=>'POST')) !!}
                             </div>
                         </div>
@@ -53,6 +53,7 @@
 
 
                 {!! Form::close() !!}
+                @endif
             </div>
         </div>
     </div>
