@@ -24,10 +24,10 @@ $(document).ready(function() {
         $("#dynamic-fields-row").append('<div style="margin-top: 10px" class="col-md-6 remove '+localCount+'" data-id-remove="'+localCount+'">'+
             '<div class="row">'+
             '<div class="col-md-5">'+
-            '<input type="text" class="form-control col-md-3" placeholder="Name">'+
+            ' <input type="text" class="form-control col-md-3" name="custom-field-name[]" placeholder="Name">'+
             '</div>'+
             '<div class="col-md-6">'+
-            ' <input type="text" class="form-control col-md-3" placeholder="Value">'+
+            ' <input type="text" class="form-control col-md-3" name="custom-field-value[]" placeholder="Value">'+
             '</div>'+
             '<div class="col-md-1"><button data-id-remove="'+localCount+'" type="button" class="btn btn-sm remove-btn">-</button></div>'+
             '</div>'+

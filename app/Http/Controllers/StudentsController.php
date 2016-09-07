@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\CustomStudent;
 use App\LevelSport;
 use App\Student;
 use App\Http\Requests;
+use Doctrine\DBAL\Schema\Schema;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Auth;
 use App\Sport;
 use App\Roster;
@@ -120,10 +123,28 @@ class StudentsController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'name' => 'required|max:255',
-            'academic_year' => 'required'
-        ]);
+
+        //        dd($request->input('custom-field-name'), $request->input('custom-field-value'));
+
+        $custom = false;
+        if($request->input('custom-field-name')){
+            $this->validate($request, [
+                'name' => 'required|max:255',
+                'academic_year' => 'required',
+                'roster_id' => 'required',
+                //custom_students is table where to check for
+                // uniqueness and label is the column name where will be checked
+                'column-name' => 'max:255|unique:custom_students,label'
+            ]);
+            $custom = true;
+        }
+        else{
+            $this->validate($request, [
+                'name' => 'required|max:255',
+                'academic_year' => 'required',
+                'roster_id' => 'required'
+            ]);
+        }
 
         //store images
         $fileName = "";
@@ -190,6 +211,20 @@ class StudentsController extends Controller
             'year_id' => $student->id,
             'year_type' => 'App\Student'
         ]);
+
+        if($custom){
+            $labels = $request->input('custom-field-name');
+            $values = $request->input('custom-field-value');
+            for ($i=0; $i< sizeof($labels); $i++){
+                if($labels[$i] != ''){
+                    CustomStudent::create([
+                        'label' => $labels[$i],
+                        'data' => $values[$i],
+                        'student_id' => $student->id
+                    ]);
+                }
+            }
+        }
 
         $student->rosters()->syncWithoutDetaching($request->input('roster_id'));
 
