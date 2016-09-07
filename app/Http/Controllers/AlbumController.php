@@ -107,7 +107,7 @@ class AlbumController extends Controller
                 $album->years()->attach(array_values($data['year_id']));
             }
 
-            return redirect(route('albums.index'))->with('success', 'Roster created successfully');
+            return redirect(route('albums.index'))->with('success', 'Album created successfully');
         }
 
     }

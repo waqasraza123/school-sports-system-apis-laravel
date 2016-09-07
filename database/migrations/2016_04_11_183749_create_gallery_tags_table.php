@@ -56,6 +56,21 @@ class CreateGalleryTagsTable extends Migration
             $table->foreign('gallery_id')->references('id')->on('gallery')->onDelete('cascade');
             $table->timestamps();
         });
+
+        Schema::create('album_gallery', function(Blueprint $table)
+        {
+            $table->unsignedInteger('album_id')
+                ->nullable()
+                ->index();
+            $table->foreign('album_id')
+                ->references('id')
+                ->on('album')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+            $table->unsignedInteger('gallery_id')->nullable()->index();
+            $table->foreign('gallery_id')->references('id')->on('gallery')->onDelete('cascade');
+            $table->timestamps();
+        });
     }
 
     /**
