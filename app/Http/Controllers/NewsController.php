@@ -80,7 +80,65 @@ class NewsController extends Controller
         return view('news.show', compact('news','type', 'sports', 'id_sport', 'rosters', 'levelcreate', 'years', 'games', 'schools'));
     }
 
-    //save news to db
+    public function create(){
+
+        //Lists for Schools, Sports, Years and Levels with key = id and value = name
+        $schools = School::lists('name', 'id');
+        $sports = Sport::lists('name', 'id');
+        $levelcreate = LevelSport::lists('name', 'id');
+        $years = Year::lists('year', 'id');
+        //making list of all games where key=game_id and value= opponent name and date of the game
+        $games_all = Games::all();
+        $games = [];
+        foreach ($games_all as $game)
+        {
+            $games[$game->id] = School::where('id','=',$game->opponents_id)->first()->name." ".(new Carbon($game->game_date))->toDateString();
+        }
+        //making list for rosters where key=rooster_id and value= rooster name and surname
+        $rosters_all = Roster::all();
+        $rosters = [];
+        foreach ($rosters_all as $roster)
+        {
+            $rosters[$roster->id] = $roster->name;
+        }
+
+        $news = News::orderBy('news_date', 'DESC')->get();
+        //return view for all news
+        return view('news.add', compact('news','type', 'sports', 'id_sport', 'rosters', 'levelcreate', 'years', 'games', 'schools'));
+
+    }
+
+    public function edit($id){
+
+        //Lists for Schools, Sports, Years and Levels with key = id and value = name
+        $schools = School::lists('name', 'id');
+        $sports = Sport::lists('name', 'id');
+        $levelcreate = LevelSport::lists('name', 'id');
+        $years = Year::lists('year', 'id');
+        //making list of all games where key=game_id and value= opponent name and date of the game
+        $games_all = Games::all();
+        $games = [];
+        foreach ($games_all as $game)
+        {
+            $games[$game->id] = School::where('id','=',$game->opponents_id)->first()->name." ".(new Carbon($game->game_date))->toDateString();
+        }
+        //making list for rosters where key=rooster_id and value= rooster name and surname
+        $rosters_all = Roster::all();
+        $rosters = [];
+        foreach ($rosters_all as $roster)
+        {
+            $rosters[$roster->id] = $roster->name;
+        }
+
+        $news = News::find($id);
+        //return view for all news
+        return view('news.update', compact('news','type', 'sports', 'id_sport', 'rosters', 'levelcreate', 'years', 'games', 'schools'));
+    }
+
+    /**
+     * save news to db
+     * @return mixed
+     */
     public function store()
     {
         //get all input
@@ -101,88 +159,46 @@ class NewsController extends Controller
         }
         else
         {
-            //add news
-            if ($file['news_invisible_action'] == 'add') {
-                if (Input::file('image') != null) {
-                    $destinationPath = 'uploads/news'; // upload path
-                    $extension = Input::file('image')->getClientOriginalExtension(); // getting image extension
-                    $fileName = rand(11111, 99999) . '.' . $extension; // renameing image
-                    Input::file('image')->move($destinationPath, $fileName); // uploading file to given path
-                    //create news
-                    $news = News::create(array('title' => $file['title'], 'image' => $fileName,  'news_date' => $file['news_date'], 'content' => $file['content'], ));
+            if (Input::file('image') != null) {
+                $destinationPath = 'uploads/news'; // upload path
+                $extension = Input::file('image')->getClientOriginalExtension(); // getting image extension
+                $fileName = rand(11111, 99999) . '.' . $extension; // renameing image
+                Input::file('image')->move($destinationPath, $fileName); // uploading file to given path
+                //create news
+                $news = News::create(array('title' => $file['title'], 'image' => $fileName,  'news_date' => $file['news_date'], 'content' => $file['content'], ));
 
-                } else {
-                    //create news
-                    $news = News::create(array('title' => $file['title'],  'news_date' => $file['news_date'],  'content' => $file['content']));
+            } else {
+                //create news
+                $news = News::create(array('title' => $file['title'],  'news_date' => $file['news_date'],  'content' => $file['content']));
 
-                }
-
-                //add sports tags
-                if (isset($file['sport_id']))
-                {
-                    $news->sports()->attach(array_values($file['sport_id']));
-                }
-                //add levels tags
-                if (isset($file['level_id']))
-                {
-                    $news->levels()->attach(array_values($file['level_id']));
-                }
-                //add rosters tags
-                if (isset($file['roster_id']))
-                {
-                    $news->rosters()->attach(array_values($file['roster_id']));
-                }
-                //add games tags
-                if (isset($file['game_id']))
-                {
-                    $news->games()->attach(array_values($file['game_id']));
-                }
-                Session::flash('success', 'Created successfully');
-                return Redirect::back();
             }
-            //edit news
-            else
+
+            //add sports tags
+            if (isset($file['sport_id']))
             {
-                if (Input::file('image') != null) {
-                    $destinationPath = 'uploads/news'; // upload path
-                    $extension = Input::file('image')->getClientOriginalExtension(); // getting image extension
-                    $fileName = rand(11111, 99999) . '.' . $extension; // renameing image
-                    Input::file('image')->move($destinationPath, $fileName); // uploading file to given path
-                    //update
-                    News::where('id', '=', $file['news_invisible_id'])->first()->update(['title' => $file['title'], 'image' => $fileName, 'news_date' => $file['news_date'],  'content' => $file['content']]);
-                } else {
-                    //update
-                    News::where('id', '=', $file['news_invisible_id'])->first()->update(['title' => $file['title'],  'news_date' => $file['news_date'], 'content' => $file['content']]);
-                }
-                $news = News::where('id', '=', $file['news_invisible_id'])->first();
-
-                //add sports tags
-                if (isset($file['sport_id']))
-                {
-                    $news->sports()->sync(array_values($file['sport_id']));
-                }
-                //add levels tags
-                if (isset($file['level_id']))
-                {
-                    $news->levels()->sync(array_values($file['level_id']));
-                }
-                //add rosters tags
-                if (isset($file['roster_id']))
-                {
-                    $news->rosters()->sync(array_values($file['roster_id']));
-                }
-                //add games tags
-                if (isset($file['game_id']))
-                {
-                    $news->games()->sync(array_values($file['game_id']));
-                }
-                Session::flash('success', 'Updated successfully');
-                return Redirect::back();
+                $news->sports()->attach(array_values($file['sport_id']));
             }
+            //add levels tags
+            if (isset($file['level_id']))
+            {
+                $news->levels()->attach(array_values($file['level_id']));
+            }
+            //add rosters tags
+            if (isset($file['roster_id']))
+            {
+                $news->rosters()->attach(array_values($file['roster_id']));
+            }
+            //add games tags
+            if (isset($file['game_id']))
+            {
+                $news->games()->attach(array_values($file['game_id']));
+            }
+
+            return redirect('/news')->with('success', 'Created successfully');
         }
     }
 
-    public function update($sport_id)
+    public function update(Request $request, $id)
     {
         $file = Input::all();
         $rules = array(
@@ -200,79 +216,41 @@ class NewsController extends Controller
         }
         else
         {
-            if ($file['news_invisible_action'] == 'add') {
-                if (Input::file('image') != null) {
-                    $destinationPath = 'uploads/news'; // upload path
-                    $extension = Input::file('image')->getClientOriginalExtension(); // getting image extension
-                    $fileName = rand(11111, 99999) . '.' . $extension; // renameing image
-                    Input::file('image')->move($destinationPath, $fileName); // uploading file to given path
-                    //create news
-                    $news = News::create(array('title' => $file['title'], 'image' => $fileName,  'news_date' => $file['news_date'], 'content' => $file['content'], ));
-                } else {
-                    //create news
-                    $news = News::create(array('title' => $file['title'],  'news_date' => $file['news_date'],  'content' => $file['content']));
-                }
-                //add sports tags
-                if (isset($file['sport_id']))
-                {
-                    $news->sports()->attach(array_values($file['sport_id']));
-                }
-                //add levels tags
-                if (isset($file['level_id']))
-                {
-                    $news->levels()->attach(array_values($file['level_id']));
-                }
-                //add rosters tags
-                if (isset($file['roster_id']))
-                {
-                    $news->rosters()->attach(array_values($file['roster_id']));
-                }
-                //add games tags
-                if (isset($file['game_id']))
-                {
-                    $news->games()->attach(array_values($file['game_id']));
-                }
-                Session::flash('success', 'Created successfully');
-                return Redirect::back();
+            if (Input::file('image') != null) {
+                $destinationPath = 'uploads/news'; // upload path
+                $extension = Input::file('image')->getClientOriginalExtension(); // getting image extension
+                $fileName = rand(11111, 99999) . '.' . $extension; // renameing image
+                Input::file('image')->move($destinationPath, $fileName); // uploading file to given path
+                //update
+                News::where('id', '=', $file['news_invisible_id'])->first()->update(['title' => $file['title'], 'image' => $fileName, 'news_date' => $file['news_date'],  'content' => $file['content']]);
+            } else {
+                //update
+                News::where('id', '=', $id)->first()->update(['title' => $file['title'],  'news_date' => $file['news_date'], 'content' => $file['content']]);
             }
-            else
-            {
-                if (Input::file('image') != null) {
-                    $destinationPath = 'uploads/news'; // upload path
-                    $extension = Input::file('image')->getClientOriginalExtension(); // getting image extension
-                    $fileName = rand(11111, 99999) . '.' . $extension; // renameing image
-                    Input::file('image')->move($destinationPath, $fileName); // uploading file to given path
-                    //update
-                    News::where('id', '=', $file['news_invisible_id'])->first()->update(['title' => $file['title'], 'image' => $fileName, 'news_date' => $file['news_date'],  'content' => $file['content']]);
-                } else {
-                    //update
-                    News::where('id', '=', $file['news_invisible_id'])->first()->update(['title' => $file['title'],  'news_date' => $file['news_date'], 'content' => $file['content']]);
-                }
-                $news = News::where('id', '=', $file['news_invisible_id'])->first();
+            $news = News::where('id', '=', $id)->first();
 
-                //add sports tags
-                if (isset($file['sport_id']))
-                {
-                    $news->sports()->sync(array_values($file['sport_id']));
-                }
-                //add levels tags
-                if (isset($file['level_id']))
-                {
-                    $news->levels()->sync(array_values($file['level_id']));
-                }
-                //add rosters tags
-                if (isset($file['roster_id']))
-                {
-                    $news->rosters()->sync(array_values($file['roster_id']));
-                }
-                //add games tags
-                if (isset($file['game_id']))
-                {
-                    $news->games()->sync(array_values($file['game_id']));
-                }
-                Session::flash('success', 'Updated successfully');
-                return Redirect::back();
+            //add sports tags
+            if (isset($file['sport_id']))
+            {
+                $news->sports()->sync(array_values($file['sport_id']));
             }
+            //add levels tags
+            if (isset($file['level_id']))
+            {
+                $news->levels()->sync(array_values($file['level_id']));
+            }
+            //add rosters tags
+            if (isset($file['roster_id']))
+            {
+                $news->rosters()->sync(array_values($file['roster_id']));
+            }
+            //add games tags
+            if (isset($file['game_id']))
+            {
+                $news->games()->sync(array_values($file['game_id']));
+            }
+
+            return redirect('/news')->with('success', 'Updated successfully');
         }
     }
 

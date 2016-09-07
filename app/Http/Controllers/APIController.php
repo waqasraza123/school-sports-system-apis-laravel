@@ -181,7 +181,7 @@ class APIController extends Controller
 
     public function getSchool($schoolId){
         $school = School::with([
-            'social' => function($q){
+            'social_list' => function($q){
                 $q->select('id', 'socialLinks_id', 'youtube as youtube_url', 'facebook as facebook_url',
                     'instagram as instagram_url', 'twitter as twitter_url')->first();
             }

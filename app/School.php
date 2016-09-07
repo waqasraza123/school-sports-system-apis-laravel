@@ -81,4 +81,8 @@ class School extends Model
     public function sport_list(){
         return $this->hasMany('App\Sport', 'school_id');
     }
+
+    public function social_list(){
+        return $this->morphOne('App\Social', 'socialLinks');
+    }
 }

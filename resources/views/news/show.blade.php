@@ -6,7 +6,7 @@
             <div class="col-md-12">
                 <h1>@if (isset($type->name)){{ $type->name }} @endif News</h1>
                 <p class="lead">
-                    <button type="button" id="add_news" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#newsModal">Add News?</button>
+                    <a href="/news/create" type="button" id="add_news" class="btn btn-primary btn-sm">Add News?</a>
                 </p>
 
                 <br>
@@ -46,7 +46,7 @@
 
                                             <td>
                                                 <div style="padding-left: 15px;">
-                                                    <button type="button" class="btn btn-primary btn-sm edit_news" data-id="{{ $new->id}}" data-toggle="modal" data-target="#newsModal">Edit</button>
+                                                    <a href="{{url('news/'.$new->id.'/edit')}}" type="button" class="btn btn-primary btn-sm edit_news">Edit</a>
                                                 </div>
                                             </td>
                                             <td>
@@ -101,10 +101,6 @@
             </div>
             <!-- /.panel -->
         </div>
-
-        @include('news.modals.news_form')
-            </div>
-        </div>
     </div>
 @stop
 
@@ -129,25 +125,5 @@
 
     </script>
     <script src="/dist/js/sb-news-2.js"></script>
-    @if ($errors->has())
-
-        <script>
-            $('#photo').attr('src',document.getElementById('news_invisible_image').value);
-            //open modal when error is made
-            //display errors in modal and hid them with animation slide up in 3 sec
-            $('div.alert').delay(4000).slideUp(300);
-            $('#newsModal').modal();
-            $('.newsModal').show();
-
-            {{ $errors = null }}
-        </script>
-
-    @endif
-
-    @if (session()->has('success'))
-        <script>
-            //display success message in the top when successfully updated roster
-            $('div.alert').delay(4000).slideUp(300);
-        </script>
-    @endif
+    @include('partials.error-messages.footer-script')
 @stop
