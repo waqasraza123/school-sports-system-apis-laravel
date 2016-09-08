@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Opponent;
 use App\Season;
 use App\Social;
 use App\Sponsor;
@@ -9,6 +10,7 @@ use App\Staff;
 use Illuminate\Http\Request;
 use App\School;
 use App\Sport;
+use DateTime;
 use App\User;
 use Carbon\Carbon;
 use App\Http\Requests;
@@ -32,7 +34,8 @@ class APIController extends Controller
         $sponsorId = $request->query('sponsor_id');
         $seasonId = $request->query('season_id');
         $staffId = $request->query('staff_id');
-
+        $levelId = $request->input('level_id');
+        $sportId = $request->input('sport_id');
 
         //create the admin user for requests
         // other then api calls only one time on '/'
@@ -69,6 +72,9 @@ class APIController extends Controller
 
             if($action == 'getSchool'){
                 return $this->getSchool($schoolId);
+            }
+            if($action == 'getSport'){
+                return $this->getSport($schoolId, $levelId, $seasonId, $sportId);
             }
         }
     }
@@ -191,6 +197,78 @@ class APIController extends Controller
             'phone as school_phone', 'school_email')->where('id', $schoolId)->get();
 
         return $school;
+    }
+
+    public function getSport($schoolId, $levelId, $seasonId, $sportId){
+        $lastGameOpp = null;
+        $nextGameOpp = null;
+
+        $sport = Sport::with([
+
+            'sport_social' => function($q){
+                $q->select('id', 'socialLinks_id', 'facebook as facebook_url', 'twitter as twitter_url',
+                    'instagram as instagram_url')->first();
+            },
+
+            'season_list' => function($q){
+                $q->select('id', 'id as season_id', 'name as season_name')->get();
+            },
+
+            'sport_levels' => function($q) use ($sportId, $schoolId){
+                $q->select('levels.id', 'name');
+            },
+
+            'latest_video' => function($q){
+                $q->select('id', 'id as video_id', 'title as video_title', 'date as video_date', 'url as video_url')
+                    ->orderBy('date', 'desc')->first();
+            },
+
+            'latest_news' => function($q){
+                $q->select('id as news_id', 'title as news_title', 'intro as news_teaser', 'image as news_photo',
+                    'news_date', 'link as news_url')->orderBy('news_date', 'desc')->first();
+            },
+
+            'latest_photos' => function($q){
+                $q->select('photos.id', 'photos.id as photo_id', 'thumb as photo_thumb', 'large as photo_large')->get();
+            },
+
+            'last_game' => function($q) use ($sportId){
+                $currentDate = Carbon::now()->utc;
+                $lastGameId = $q->select('games.id as game_id', 'sport_id', 'our_score as school_score', 'result as game_result',
+                    'game_date as game_vs_at', 'name as opp_name', 'nick as opp_nick', 'opponents.photo as opp_logo',
+                    'opponents_score as opp_score')
+                    ->join('opponents', 'games.opponents_id', '=', 'opponents.id')
+                    ->where('sport_id', $sportId)
+                    ->where('game_date', '<=' ,new DateTime())
+                    ->orderBy('game_date', 'DESC')->first();
+                },
+
+            'next_game' => function($q) use ($sportId){
+                $currentDate = Carbon::now()->utc;
+                $nextGameId = $q->select('games.id as game_id', 'sport_id', 'our_score as school_score', 'result as game_result',
+                    'game_date as game_vs_at', 'name as opp_name', 'nick as opp_nick', 'opponents.photo as opp_logo',
+                    'opponents_score as opp_score')
+                    ->join('opponents', 'games.opponents_id', '=', 'opponents.id')
+                    ->where('sport_id', $sportId)
+                    ->where('game_date', '>', new DateTime())
+                    ->orderBy('game_date', 'asc')->first();
+            }
+            ]
+        )
+
+                ->select('id', 'id as sport_id', 'name as sport_name',
+                    'photo as sport_photo', 'record as sport_record')
+
+                ->where('school_id', $schoolId)->where('id', $sportId)->first();
+
+
+        $opponent = Opponent::where('id', 1)->first();
+
+        $arr = "";
+
+        /*dd($sport);*/
+
+        return response()->json($sport);
     }
 
     /**

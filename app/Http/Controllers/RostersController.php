@@ -2,25 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\RostersUploadRequest;
 use App\LevelRoster;
 use App\LevelSport;
 use App\Positions;
 use App\School;
 use App\Season;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Validator;
+use App\Sponsor;
 use Session;
 use App\Roster;
 use App\Sport;
 use App\Level;
 use App\Year;
 use Illuminate\Http\Request;
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
 
 class RostersController extends Controller
 {
@@ -107,8 +100,9 @@ class RostersController extends Controller
         $sports = Sport::where('school_id', $this->schoolId)->lists('name', 'id');
         $levels = LevelSport::where('school_id', $this->schoolId)->lists('name', 'id');
         $seasons = Season::lists('name', 'id');
+        $sponsors = Sponsor::lists('name', 'id');
 
-        return View('rosters.create', compact('sports', 'levels', 'seasons'));
+        return View('rosters.create', compact('sports', 'levels', 'seasons', 'sponsors'));
     }
 
     /**
@@ -133,6 +127,9 @@ class RostersController extends Controller
             'school_id' => $this->schoolId,
             'season_id' => $request->input('season_id'),
             'level_id' => $request->input('level_id'),
+            'rosters_advertiser' => $request->input('roster_advertiser'),
+            'games_advertiser' => $request->input('games_advertiser'),
+            'news_advertiser' => $request->input('news_advertiser')
         ]);
 
         Year::create([
@@ -140,7 +137,6 @@ class RostersController extends Controller
             'year_id' => $roster->id,
             'year_type' => 'App\Roster'
         ]);
-
 
         return redirect('/rosters')->with('success', 'Roster created successfully');
     }
@@ -228,6 +224,9 @@ class RostersController extends Controller
             'school_id' => $this->schoolId,
             'season_id' => $request->input('season_id'),
             'level_id' => $request->input('level_id'),
+            'rosters_advertiser' => $request->input('roster_advertiser'),
+            'games_advertiser' => $request->input('games_advertiser'),
+            'news_advertiser' => $request->input('news_advertiser')
         ]);
 
         Year::create([

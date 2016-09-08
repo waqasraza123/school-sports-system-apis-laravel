@@ -42,7 +42,19 @@
                     {!! Form::select('season_id', $seasons, null, ['class' => 'fn form-control']) !!}
                 </div>
                 <div class="col-md-6">
+                    {!! Form::label('rosters_advertiser', 'Roster Pages Advertiser:', ['class' => 'control-label']) !!}
+                    {!! Form::select('roster_advertiser', $sponsors, null, ['class' => 'fn form-control']) !!}
+                </div>
+            </div>
 
+            <div class="row">
+                <div class="col-md-6">
+                    {!! Form::label('games_advertiser', 'Game Pages Advertiser:', ['class' => 'control-label']) !!}
+                    {!! Form::select('games_advertiser', $sponsors, null, ['class' => 'fn form-control']) !!}
+                </div>
+                <div class="col-md-6">
+                    {!! Form::label('news_advertiser', 'News Pages Advertiser:', ['class' => 'control-label']) !!}
+                    {!! Form::select('news_advertiser', $sponsors, null, ['class' => 'fn form-control']) !!}
                 </div>
             </div>
 

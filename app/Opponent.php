@@ -11,6 +11,7 @@ class Opponent extends Model
      * @var array
      */
     protected $fillable = ['name', 'photo', 'nick', 'school_id'];
+    protected $hidden = [''];
 
 
     /**

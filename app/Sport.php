@@ -11,7 +11,7 @@ class Sport extends Model
 
     protected $table = 'sports';
 
-    protected $hidden = ['school_id'];
+    protected $hidden = ['school_id', 'pivot', 'game_date', 'id'];
 
     public function rosters()
     {
@@ -41,11 +41,47 @@ class Sport extends Model
         return $this->morphMany('App\Year', 'year');
     }
 
-    public function season(){
+    public function season_list(){
         return $this->belongsTo('App\Season', 'season_id');
     }
     
     public function levels(){
         return $this->belongsToMany('App\LevelSport', 'levels-sports', 'sport_id', 'level_id');
+    }
+
+
+    //special functions for APIs only, no other purpose
+    public function sport_social(){
+        return $this->morphOne('App\Social', 'socialLinks');
+    }
+
+    public function sport_levels(){
+
+        return $this->belongsToMany('App\LevelSport', 'levels-sports', 'sport_id', 'level_id');
+
+    }
+
+    public function latest_video(){
+
+        return $this->morphOne('App\Video', 'video');
+
+    }
+    public function latest_news()
+    {
+        return $this->belongsToMany('App\News', 'news_sport', 'sport_id', 'news_id');
+    }
+
+    public function latest_photos(){
+
+        return $this->belongsToMany('App\Photo', 'photo_sport', 'sport_id', 'photo_id');
+
+    }
+
+    public function last_game(){
+        return $this->hasOne('App\Games', 'sport_id');
+    }
+
+    public function next_game(){
+        return $this->hasOne('App\Games', 'sport_id');
     }
 }

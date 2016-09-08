@@ -228,7 +228,6 @@ class StudentsController extends Controller
 
         $student->rosters()->syncWithoutDetaching($request->input('roster_id'));
 
-
         return redirect('/students')->with('success', 'Student Created Successfully');
     }
 

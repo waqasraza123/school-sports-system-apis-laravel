@@ -127,6 +127,8 @@
 
     </script>
     <script src="/dist/js/sb-games-2.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
     <script type="text/javascript">
         $(function () {
             $('#game_date').datetimepicker({format: "YYYY-MM-DD HH:mm:ss",  inline: true, sideBySide: true});

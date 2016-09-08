@@ -24,6 +24,7 @@ class Games extends Model
         'opponents_score'
     ];
     protected $dates = ['game_date'];
+    protected $hidden = ['sport_id'];
 
     public function schools()
     {
@@ -38,6 +39,10 @@ class Games extends Model
     public function albums()
     {
         return $this->belongsToMany('App\Album');
+    }
+
+    public function opponent(){
+
     }
 
 }

@@ -10,6 +10,8 @@ class LevelSport extends Model
 
     protected $fillable = ['name', 'id', 'school_id'];
 
+    protected $hidden = ['pivot'];
+
     public function sports(){
         return $this->belongsToMany('App\Sport', 'levels-sports','level_id', 'sport_id');
     }
