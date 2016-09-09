@@ -40,6 +40,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('albums/update', 'AlbumController@update');
     Route::post('albums/{id}/image/upload', 'GalleryController@uploadImage');
     Route::get('albums/add-photos', 'ImageController@showAddPhotosForm');
+    Route::post('albums/add-videos/get/{id}', ['as' => 'add-videos', 'uses' => 'VideosController@showAddVideosForm']);
+
+    Route::post('albums/add-videos/{id}', ['as' => 'add-videos-post', 'uses' => 'VideosController@storeVideos']);
+
     Route::post('albums/add-photos', ['as' => 'upload-photos-post', 'uses' => 'ImageController@storePhotos']);
     Route::resource('albums', 'AlbumController');
 
@@ -69,7 +73,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('schedules', 'SchedulesController');
 
     //testing purposes
-    Route::get('test', function() {
+    Route::post('test', function() {
         return asset('uploads/schools/def.png');
     });
 });

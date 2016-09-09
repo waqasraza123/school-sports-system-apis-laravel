@@ -2,13 +2,22 @@
 @section('content')
     <div class="container-fluid">
         <div class="row">
+
             @include('partials.error-messages.error')
             @include('partials.error-messages.success')
             {!! Html::style('css/dropzone.css') !!}
 
 
             <div class="row">
+
                 <div class="col-md-offset-1 col-md-10">
+
+                    {!! Form::open(['route' => ['add-videos', $album_id]]) !!}
+
+                    <input type="hidden" value="{{$album_id}}" class="btn btn-primary" style="margin-top: 30px">
+
+                    {!! Form::submit('Add Videos?', ['class' => 'btn btn-primary']) !!}
+                    {!! Form::close() !!}
                     <div class="jumbotron how-to-create" >
 
                         <h3>Images <span id="photoCounter"></span></h3>
