@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\LevelSport;
 use App\Opponent;
 use App\Season;
 use App\Social;
@@ -261,12 +262,16 @@ class APIController extends Controller
 
                 ->where('school_id', $schoolId)->where('id', $sportId)->first();
 
+        if($seasonId){
+            $sport = $sport->where('season_id', $seasonId);
+        }
 
-        $opponent = Opponent::where('id', 1)->first();
-
-        $arr = "";
-
-        /*dd($sport);*/
+        if($levelId){
+            $sportWithLevel = $sport->levels()->where('level_id', $levelId)->first();
+            if (!($sportWithLevel)){
+                return '{}';
+            }
+        }
 
         return response()->json($sport);
     }

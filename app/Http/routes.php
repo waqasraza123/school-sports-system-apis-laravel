@@ -37,6 +37,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('albums', 'AlbumController@show');
     Route::post('albums/update', 'AlbumController@update');
     Route::post('albums/{id}/image/upload', 'GalleryController@uploadImage');
+    Route::get('albums/add-photos', 'ImageController@showAddPhotosForm');
+    Route::post('albums/add-photos', ['as' => 'upload-photos-post', 'uses' => 'ImageController@storePhotos']);
     Route::resource('albums', 'AlbumController');
 
 //    Route::get('gallery', 'GalleryController@show');

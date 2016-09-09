@@ -8,6 +8,7 @@ use App\Games;
 use App\LevelSport;
 use App\Roster;
 use App\School;
+use App\Season;
 use App\Sport;
 use App\Year;
 use Carbon\Carbon;
@@ -23,13 +24,12 @@ class AlbumController extends Controller
 {
     public function index()
     {
-
         //Lists for Schools, Sports, Years and Levels with key = id and value = name
-        $schools = School::lists('name', 'id');
+        $schools = School::where('school_email', '<>', 'admin@gmail.com')->lists('name', 'id');
         $sports = Sport::lists('name', 'id');
         $levelcreate = LevelSport::lists('name', 'id');
         $years = Year::lists('year', 'id');
-        //making list od all games where key=game_id and value= opponent name and date of the game
+        //making list of all games where key=game_id and value= opponent name and date of the game
         $games_all = Games::all();
         $games = [];
         foreach ($games_all as $game)
@@ -45,10 +45,11 @@ class AlbumController extends Controller
     public function create()
     {
         //Lists for Schools, Sports, Years and Levels with key = id and value = name
-        $schools = School::lists('name', 'id');
+        $schools = School::where('school_email', '<>', 'admin@gmail.com')->lists('name', 'id');
         $sports = Sport::lists('name', 'id');
         $levelcreate = LevelSport::lists('name', 'id');
         $years = Year::lists('year', 'id');
+        $seasons = Season::lists('name', 'id');
         //making list od all games where key=game_id and value= opponent name and date of the game
         $games_all = Games::all();
         $games = [];
@@ -56,17 +57,18 @@ class AlbumController extends Controller
         {
             $games[$game->id] = School::where('id','=',$game->opponents_id)->first()->name." ".(new Carbon($game->game_date))->toDateString();
         }
-        return view('albums.create', compact('sports', 'games','years', 'levelcreate', 'schools'));
+        return view('albums.create', compact('sports', 'games','years', 'levelcreate', 'schools', 'seasons'));
     }
 
     public function store(Request $request)
     {
-        $data =Input::all();
+        $data = Input::all();
         $rules = array('name' => 'required|max:255',
             'sport_id' => '',
             'year_id' => '',
             'level_id' => '',
-            'season_id' => '');
+            'season_id' => 'required');
+
         $validator = Validator::make(Input::all(), $rules);
 
         if ($validator->fails()) {
@@ -79,7 +81,10 @@ class AlbumController extends Controller
         else
         {
             $album = Album::create([
-                'name' => $request->input('name')
+                'name' => $request->input('name'),
+                'date' => Carbon::now()->utc,
+                'school_id' => $this->schoolId,
+                'season_id' => $request->input('season_id')
             ]);
 
             if (isset($data['sport_id']))
@@ -126,8 +131,16 @@ class AlbumController extends Controller
         }
         else
         {
-            $album = Album::where('id', '=', $file['album_invisible_id'])->first();
-            $album->name = $file['name'];
+
+            Album::where('id', '=', $file['album_invisible_id'])->update([
+                'name' => $file['name'],
+                'date' => Carbon::now()->utc,
+                'school_id' => $this->schoolId,
+                'season_id' => $file['season_id']
+            ]);
+
+            $album = Album::find($file['album_invisible_id']);
+
             //add sports tags
             if (isset($file['sport_modal_id']))
             {
@@ -153,7 +166,6 @@ class AlbumController extends Controller
             {
                 $album->schools()->sync(array_values($file['school_modal_id']));
             }
-            $album->save();
             Session::flash('success', 'Updated successfully');
             return Redirect::back();
         }
@@ -174,9 +186,8 @@ class AlbumController extends Controller
         $gallery_images = Gallery::where('album_id','=', $album_id)->where('type', '=', 'picture')->get();
         $gallery_videos = Gallery::where('album_id','=', $album_id)->where('type', '=', 'video')->get();
         //showing view for all photos
-        return view('gallery.show', compact('gallery_images', 'gallery_videos', 'rosters', 'album_id'));
+        return view('albums.add-photos', compact('gallery_images', 'gallery_videos', 'rosters', 'album_id'));
     }
-
     public function destroy($id)
     {
         $album = Album::findOrFail($id);

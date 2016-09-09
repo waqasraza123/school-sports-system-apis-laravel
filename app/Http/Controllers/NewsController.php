@@ -24,7 +24,7 @@ class NewsController extends Controller
     public function index()
     {
         //Lists for Schools, Sports, Years and Levels with key = id and value = name
-        $schools = School::lists('name', 'id');
+        $schools = School::where('id', '<>', '1')->lists('name', 'id');
         $sports = Sport::lists('name', 'id');
         $levelcreate = LevelSport::lists('name', 'id');
         $years = Year::lists('year', 'id');
@@ -51,7 +51,7 @@ class NewsController extends Controller
     public function show($sport_id)
     {
         //Lists for Schools, Sports, Years and Levels with key = id and value = name
-        $schools = School::lists('name', 'id');
+        $schools = School::where('id', '<>', '1')->lists('name', 'id');
         $type = Sport::where('id', $sport_id)->first();
         $sports = Sport::lists('name', 'id');
         $levelcreate = LevelSport::lists('name', 'id');
@@ -83,7 +83,7 @@ class NewsController extends Controller
     public function create(){
 
         //Lists for Schools, Sports, Years and Levels with key = id and value = name
-        $schools = School::lists('name', 'id');
+        $schools = School::where('id', '<>', '1')->lists('name', 'id');
         $sports = Sport::lists('name', 'id');
         $levelcreate = LevelSport::lists('name', 'id');
         $years = Year::lists('year', 'id');
@@ -111,7 +111,7 @@ class NewsController extends Controller
     public function edit($id){
 
         //Lists for Schools, Sports, Years and Levels with key = id and value = name
-        $schools = School::lists('name', 'id');
+        $schools = School::where('id', '<>', '1')->lists('name', 'id');
         $sports = Sport::lists('name', 'id');
         $levelcreate = LevelSport::lists('name', 'id');
         $years = Year::lists('year', 'id');

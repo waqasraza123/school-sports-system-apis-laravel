@@ -24,9 +24,9 @@ class GamesController extends Controller
         $levels = LevelSport::all();
         $levelcreate = LevelSport::lists('name', 'id');
         $id_sport = $sport_id;
-        $opponents = School::lists('name', 'id');
+        $opponents = School::where('id', '<>', '1')->lists('name', 'id');
         $school_names = School::where('id', '<>', '1')->lists('name', 'id');
-        $school_logo = School::lists('school_logo','id');
+        $school_logo = School::where('id', '<>', '1')->lists('school_logo','id');
         $show_games = '0';
         $locations = Location::lists('name', 'id');
         return view('games.show', compact('games', 'sports', 'levels', 'years', 'type', 'levelcreate', 'id_sport', 'opponents', 'school_names','school_logo', 'show_games', 'locations'));
@@ -56,9 +56,9 @@ class GamesController extends Controller
         $levels = LevelSport::all();
         $levelcreate = LevelSport::lists('name', 'id');
         $id_sport = $sport_id;
-        $opponents = School::lists('name', 'id');
+        $opponents = School::where('id', '<>', '1')->lists('name', 'id');
         $school_names = School::where('id', '<>', 1)->lists('name', 'id');
-        $school_logo = School::lists('school_logo','id');
+        $school_logo = School::where('id', '<>', '1')->lists('school_logo','id');
         $locations = Location::lists('name', 'id');
         return view('games.show', compact('games', 'sports', 'levels', 'years', 'type', 'levelcreate', 'id_sport', 'opponents', 'school_names','school_logo', 'show_games', 'locations'));
     }
@@ -92,10 +92,10 @@ class GamesController extends Controller
         $levelcreate = LevelSport::lists('name', 'id');
         $sports = Sport::lists('name', 'id');
         $levels = LevelSport::all();
-        $opponents = School::lists('name', 'id');
+        $opponents = School::where('id', '<>', '1')->lists('name', 'id');
         $id_sport = $sport_id;
         $school_names = School::where('id', '<>', 1)->lists('name', 'id');
-        $school_logo = School::lists('school_logo','id');
+        $school_logo = School::where('id', '<>', '1')->lists('school_logo','id');
         $locations = Location::lists('name', 'id');
         return view('games.filter', compact('sports', 'levels', 'years', 'lev', 'levelcreate', 'id_sport', 'school_names','school_logo', 'opponents', 'show_games', 'locations'))->withGames($games)->with('type', $type);
 
@@ -112,10 +112,10 @@ class GamesController extends Controller
         $levelcreate = LevelSport::lists('name', 'id');
         $sports = Sport::lists('name', 'id');
         $levels = LevelSport::all();
-        $opponents = School::lists('name', 'id');
+        $opponents = School::where('id', '<>', '1')->lists('name', 'id');
         $id_sport = $sport_id;
         $school_names = School::where('id', '<>', 1)->lists('name', 'id');
-        $school_logo = School::lists('school_logo','id');
+        $school_logo = School::where('id', '<>', '1')->lists('school_logo','id');
         $show_games = '0';
         $locations = Location::lists('name', 'id');
         return view('games.filter', compact('sports', 'levels', 'years', 'lev', 'levelcreate', 'id_sport', 'school_names','school_logo', 'opponents', 'show_games','locations'))->withGames($games)->with('type', $type);

@@ -27,7 +27,7 @@ class GalleryController extends Controller
     {
 
         //Lists for Schools, Sports, Years and Levels with key = id and value = name
-        $schools = School::lists('name', 'id');
+        $schools = School::where('id', '<>', '1')->lists('name', 'id');
         $sports = Sport::lists('name', 'id');
         $levelcreate = LevelSport::lists('name', 'id');
         $years = Year::lists('year', 'id');
@@ -88,8 +88,8 @@ class GalleryController extends Controller
         Session::flash('flash_message_s', 'Album successfully deleted!');
         return redirect()->back();
     }
-//
-//    //upload function where we validate and then upload the images and tags for each image if they are set
+
+    //upload function where we validate and then upload the images and tags for each image if they are set
     public function store()
     {
         $file = Input::all();

@@ -9,7 +9,12 @@ class Album extends Model
     protected $table = 'album';
     protected $fillable = [
         'name',
-        'album_id'
+        'season_id',
+        'school_id',
+        'date',
+        'url',
+        'created_at',
+        'updated_at',
 
     ];
 
@@ -43,6 +48,8 @@ class Album extends Model
         return $this->hasMany('App\Gallery');
     }
 
-
+    public function seasons(){
+        return $this->belongsTo('App\Season', 'season_id');
+    }
 
 }
