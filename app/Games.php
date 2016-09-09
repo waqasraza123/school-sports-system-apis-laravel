@@ -10,6 +10,8 @@ class Games extends Model
     protected $fillable = [
         'sport_id',
         'level_id',
+        'year_id',
+        'school_id',
         'opponents_id',
         'locations_id',
         'game_date',

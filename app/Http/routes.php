@@ -12,12 +12,14 @@ Route::group(['middleware' => ['auth']], function () {
 
 
 
-    Route::put('games/{sport_id}', 'GamesController@show_games');
-    Route::put('games/{sport_id}/filter/{level_id}', 'GamesController@show_games_filter');
-    Route::post('games/{sport_id}', 'GamesController@update');
+//    Route::put('games/{sport_id}', 'GamesController@show_games');
+//    Route::put('games/{sport_id}/filter/{level_id}', 'GamesController@show_games_filter');
+//    Route::post('games/{sport_id}', 'GamesController@update');
 
-    Route::get('games/{sport_id}', 'GamesController@show');
-    Route::get('games/{sport_id}/filter/{level_id}', 'GamesController@filter');
+//    Route::get('games/{sport_id}', 'GamesController@show');
+//    Route::get('games/{sport_id}/filter/{level_id}', 'GamesController@filter');
+    Route::put('games/', 'GamesController@show_games');
+    Route::post('games/filter', 'GamesController@filter');
     Route::resource('games', 'GamesController');
 
     //Route::get('schools/', 'SchoolsController@index');
@@ -62,6 +64,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::resource('sponsors', 'SponsorsController');
 
+    Route::resource('schedules', 'SchedulesController');
 
     //testing purposes
     Route::get('test', function() {
