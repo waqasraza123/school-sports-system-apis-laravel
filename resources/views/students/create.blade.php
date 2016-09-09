@@ -1,12 +1,12 @@
 @extends('layouts.master')
 @section('content')
-    <div class="container-fluid">
+    <div class="container-fluid" id="dynamics-form-outer">
         <h2 style="text-align: center">Add Student</h2>
 
         @include('partials.error-messages.success')
         @include('partials.error-messages.error')
 
-        {!! Form::open(['url' => 'students/', 'files' =>true]) !!}
+        {!! Form::open(['url' => 'students/', 'files' =>true, 'id' => '']) !!}
 
         <div class="row">
             <div class="col-md-6">
@@ -91,10 +91,29 @@
                 {!! Form::label('pro_flag', 'Pro Flag:', ['class' => 'control-label hide-pro']) !!}
                 {!! Form::file('pro_flag', ['class' => 'fn form-control hide-pro']) !!}
             </div>
+
         </div>
 
-        <div class="row">
-            <div class="col-md-6 col-md-offset-5" style="margin-top: 20px">
+        <div class="row" id="dynamic-fields-row" style="display: none">
+            <div class="col-md-6" id="duplicate">
+                <div class="row" style="margin-top: 10px">
+                    <div class="col-md-5">
+                        <input type="text" name="custom-field-name[]" class="form-control col-md-3" placeholder="Name">
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" name="custom-field-value[]" class="form-control col-md-3" placeholder="Value">
+                    </div>
+                    <div class="col-md-1"><button type="button" class="btn btn-sm" id="add-new-field">+</button></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin: 0 auto; width: 300px; padding: 10px">
+            <div class="">
+                <button style="margin-top: 20px; float: left" type="button" id="add-field" class="btn btn-default">
+                    Add Fields?</button>
+            </div>
+            <div class="" style="margin-top: 20px; margin-left: 10px !important; float: left;">
                 {!! Form::submit('Create Student', ['class' => 'btn btn-primary']) !!}
             </div>
         </div>

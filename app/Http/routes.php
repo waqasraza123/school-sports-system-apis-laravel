@@ -28,8 +28,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('schools/edit/{id}', 'SchoolsController@edit');
     Route::resource('schools', 'SchoolsController');
 
-    Route::post('news/{sport_id}', 'NewsController@update');
-    Route::get('news/{sport_id}', 'NewsController@show');
+    /*Route::post('news/{sport_id}', 'NewsController@update');
+    Route::get('news/{sport_id}', 'NewsController@show');*/
     Route::resource('news', 'NewsController');
 
     Route::resource('locations', 'LocationsController');
@@ -39,6 +39,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('albums', 'AlbumController@show');
     Route::post('albums/update', 'AlbumController@update');
     Route::post('albums/{id}/image/upload', 'GalleryController@uploadImage');
+    Route::get('albums/add-photos', 'ImageController@showAddPhotosForm');
+    Route::post('albums/add-photos', ['as' => 'upload-photos-post', 'uses' => 'ImageController@storePhotos']);
     Route::resource('albums', 'AlbumController');
 
 //    Route::get('gallery', 'GalleryController@show');

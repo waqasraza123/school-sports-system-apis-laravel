@@ -7,17 +7,8 @@
         <a href="{{url('albums/create')}}"><button class="btn btn-primary">Add album</button></a>
         <br>
     </div>
-
-    @if (session()->has('success'))
-        <div class="alert alert-success">
-            {{Session::get('success')}}
-
-        </div>
-        <br>
-    @endif
-
-
-
+    @include('partials.error-messages.error')
+    @include('partials.error-messages.success')
     <div class="col-lg-12" >
         @foreach($albums as $album)
             <div class="col-lg-2" style="padding: 20px">
@@ -87,11 +78,5 @@
         $('#year_modal_id').select2();
 
     </script>
-
-    @if (session()->has('success'))
-        <script>
-            //display success message in the top when successfully updated roster
-            $('div.alert').delay(4000).slideUp(300);
-        </script>
-    @endif
+    @include('partials.error-messages.footer-script')
 @stop

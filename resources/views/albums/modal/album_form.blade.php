@@ -4,12 +4,10 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-
                 <h4 class="modal-title form_title">Edit album tags</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
-
                     <div class="col-md-6">
                         <div class="form-group-sm">
                             <div class="col-s-3">
@@ -50,8 +48,6 @@
                         </div>
                     </div>
                 </div>
-
-
                 {!! Form::close() !!}
                 @endif
             </div>

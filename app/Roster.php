@@ -12,6 +12,9 @@ class Roster extends Model
         'name',
         'school_id',
         'season_id',
+        'rosters_advertiser',
+        'games_advertiser',
+        'news_advertiser',
     ];
 
     public function sport()

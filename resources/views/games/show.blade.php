@@ -80,3 +80,48 @@
 @section('footer')
     @include('partials.error-messages.footer-script')
 @endsection
+    <script type="text/javascript">
+        $('#game_sport_id').select2();
+        $('#game_level_id').select2();
+        $('#game_location_id').select2();
+        $('#opponent').select2({
+            placeholder: "Select opponent",
+        });
+        $('#home_or_away').select2({
+            placeholder: "Select home or away",
+        });
+
+    </script>
+    <script src="/dist/js/sb-games-2.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#game_date').datetimepicker({format: "YYYY-MM-DD HH:mm:ss",  inline: true, sideBySide: true});
+        });
+    </script>
+    @if ($errors->has())
+
+        <script>
+            //set the image when redirected back with errors
+            $('#photo').attr('src',document.getElementById('game_invisible_image').value);
+
+            //open modal when error is made
+            //display errors in modal and hid them with animation slide up in 3 sec
+            $('div.alert').delay(4000).slideUp(300);
+            $('#gameModal').modal();
+            $('.gameModal').show();
+
+            {{ $errors = null }}
+        </script>
+
+    @endif
+
+    @if (session()->has('success'))
+        <script>
+            //display success message in the top when successfully updated roster
+            $('div.alert').delay(4000).slideUp(300);
+        </script>
+    @endif
+
+

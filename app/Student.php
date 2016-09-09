@@ -21,4 +21,8 @@ class Student extends Model
     public function years(){
         return $this->morphMany('App\Year', 'year');
     }
+
+    public function custom_fields(){
+        return $this->hasMany('App\CustomStudent', 'school_id');
+    }
 }

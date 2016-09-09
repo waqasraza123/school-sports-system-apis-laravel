@@ -17,6 +17,7 @@ class News extends Model
         'intro',
         'link'
     ];
+    protected $hidden = ['pivot'];
 
     public function sports()
     {
