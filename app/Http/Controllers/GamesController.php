@@ -116,7 +116,7 @@ class GamesController extends Controller
             $extension = Input::file('image')->getClientOriginalExtension(); // getting image extension
             $fileName = rand(11111, 99999) . '.' . $extension; // renameing image
             Input::file('image')->move($destinationPath, $fileName); // uploading file to given path
-            Games::where('id','=', $id)->first()->update(array('school_id' => $this->schoolId, 'sport_id' => $file['sport_id'], 'level_id' => $file['level_id'], 'locations_id' => $file['location_id'], 'year_id' => $file['year_id'],
+            Games::where('id','=', $id)->first()->update(array('season_id' => $request->input('season_id'),'school_id' => $this->schoolId, 'sport_id' => $file['sport_id'], 'level_id' => $file['level_id'], 'locations_id' => $file['location_id'], 'year_id' => $file['year_id'],
                 'opponents_id' => $file['opponent'],'game_date' => $file['game_date'], 'home_away' => $file['home_or_away'],'game_preview'=>$file['game_preview'], 'game_recap'=>$file['game_recap'], 'our_score'=>$file['our_score'],
                 'opponents_score'=>$file['opponents_score'], 'video' => $file['video'],
                 'photo' => $fileName));
@@ -125,7 +125,7 @@ class GamesController extends Controller
         }
         else
         {
-            Games::where('id','=', $id)->first()->update(array('school_id' => $this->schoolId, 'sport_id' => $file['sport_id'], 'level_id' => $file['level_id'], 'locations_id' => $file['location_id'], 'year_id' => $file['year_id'],
+            Games::where('id','=', $id)->first()->update(array('season_id' => $request->input('season_id'),'school_id' => $this->schoolId, 'sport_id' => $file['sport_id'], 'level_id' => $file['level_id'], 'locations_id' => $file['location_id'], 'year_id' => $file['year_id'],
                 'opponents_id' => $file['opponent'], 'game_date' => $file['game_date'], 'home_away' => $file['home_or_away'],'game_preview'=>$file['game_preview'], 'game_recap'=>$file['game_recap'], 'our_score'=>$file['our_score'],
                 'opponents_score'=>$file['opponents_score'], 'video' => $file['video']));
 
@@ -158,6 +158,7 @@ class GamesController extends Controller
             'year_id' => 'required',
             'level_id' => 'required',
             'location_id' => 'required',
+            'season_id' => 'required',
             'opponent' => 'required',
             'game_date' => 'required',
             'home_or_away' => 'required',
@@ -169,7 +170,7 @@ class GamesController extends Controller
             $extension = Input::file('image')->getClientOriginalExtension(); // getting image extension
             $fileName = rand(11111, 99999) . '.' . $extension; // renameing image
             Input::file('image')->move($destinationPath, $fileName); // uploading file to given path
-            Games::create(array('school_id' => $this->schoolId, 'sport_id' => $file['sport_id'], 'level_id' => $file['level_id'], 'locations_id' => $file['location_id'], 'year_id' => $file['year_id'],
+            Games::create(array('season_id' => $request->input('season_id'), 'school_id' => $this->schoolId, 'sport_id' => $file['sport_id'], 'level_id' => $file['level_id'], 'locations_id' => $file['location_id'], 'year_id' => $file['year_id'],
                 'opponents_id' => $file['opponent'],'game_date' => $file['game_date'], 'home_away' => $file['home_or_away'],'game_preview'=>$file['game_preview'],
                 'photo' => $fileName));
 
@@ -177,7 +178,7 @@ class GamesController extends Controller
         }
         else
         {
-            Games::create(array('school_id' => $this->schoolId, 'sport_id' => $file['sport_id'], 'level_id' => $file['level_id'], 'locations_id' => $file['location_id'], 'year_id' => $file['year_id'],
+            Games::create(array('season_id' => $request->input('season_id'),'school_id' => $this->schoolId, 'sport_id' => $file['sport_id'], 'level_id' => $file['level_id'], 'locations_id' => $file['location_id'], 'year_id' => $file['year_id'],
                 'opponents_id' => $file['opponent'], 'game_date' => $file['game_date'], 'home_away' => $file['home_or_away'],'game_preview'=>$file['game_preview']));
 
             return redirect('/games')->with('success', 'Game created successfully');

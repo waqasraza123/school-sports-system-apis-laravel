@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Album;
+use App\Games;
 use App\LevelSport;
 use App\Opponent;
 use App\Season;
@@ -37,6 +39,7 @@ class APIController extends Controller
         $staffId = $request->query('staff_id');
         $levelId = $request->input('level_id');
         $sportId = $request->input('sport_id');
+        $gameId = $request->input('game_id');
 
         //create the admin user for requests
         // other then api calls only one time on '/'
@@ -76,6 +79,13 @@ class APIController extends Controller
             }
             if($action == 'getSport'){
                 return $this->getSport($schoolId, $levelId, $seasonId, $sportId);
+            }
+            if ($action == 'getSchedule'){
+                return $this->getSchedule($schoolId, $sportId, $levelId, $seasonId);
+            }
+
+            if($action == 'getGame'){
+                return $this->getGame($schoolId, $sportId, $levelId, $seasonId, $gameId);
             }
         }
     }
@@ -186,6 +196,11 @@ class APIController extends Controller
         return $staff;
     }
 
+
+    /**
+     * @param $schoolId
+     * @return mixed
+     */
     public function getSchool($schoolId){
         $school = School::with([
             'social_list' => function($q){
@@ -200,6 +215,14 @@ class APIController extends Controller
         return $school;
     }
 
+
+    /**
+     * @param $schoolId
+     * @param $levelId
+     * @param $seasonId
+     * @param $sportId
+     * @return string
+     */
     public function getSport($schoolId, $levelId, $seasonId, $sportId){
         $lastGameOpp = null;
         $nextGameOpp = null;
@@ -274,6 +297,67 @@ class APIController extends Controller
         }
 
         return response()->json($sport);
+    }
+
+
+    /**
+     * @param $schoolId
+     * @param $sportId
+     * @param $levelId
+     * @param $seasonId
+     * @return string
+     */
+    public function getSchedule($schoolId, $sportId, $levelId, $seasonId){
+        $schedule = Games::select('games.id as game_id', 'sport_id', 'our_score as school_score', 'result as game_result',
+            'home_away as game_vs_at', 'name as opp_name', 'nick as opp_nick', 'opponents.photo as opp_logo',
+            'opponents_score as opp_score')
+            ->join('opponents', 'games.opponents_id', '=', 'opponents.id')
+            ->where('games.school_id', $schoolId)
+            ->get();
+
+        $arr = array('games_list' => ($schedule));
+        return json_encode($arr);
+    }
+
+
+    public function getGame($schoolId, $sportId, $levelId, $seasonId, $gameId){
+        if(!($schoolId && $sportId && $levelId && $seasonId && $gameId)){
+            return response()->json();
+        }
+        else{
+            $game = Game::select('id as game_id',
+                    'game_date',
+                    'game_date as game_time',
+                    'locations.name as game_location',
+                    'locations.address as game_address',
+                    'map_url as game_map_url',
+                    'home_away as game_vs_at',
+                    'result as game_result',
+                    'our_score as school_score',
+                    'schools.name as school_name',
+                    'schools.nick as school_nick',
+                    'opponents.name as opp_name',
+                    'opponents.nick as opp_nick',
+                    'opponents.photo as opp_logo',
+                    'games.opponents_score as opp_score'
+                    )
+                ->join('locations', 'games.locations_id', '=', 'locations.id')
+                ->join('schools', 'schools.id', '=', 'games.school_id')
+                ->join('opponents', 'opponents.id', '=', 'games.opponents_id')
+                ->where([
+                    ['school_id' => $schoolId],
+                    ['sport_id' => $sportId],
+                    ['level_id' => $levelId],
+                    ['season_id' => $seasonId],
+                    ['id' => $gameId],
+            ])->first();
+
+            $game_photos = Games::where('id', 1)->first();
+
+            dd($game_photos);
+
+            /*return $game;*/
+        }
     }
 
     /**

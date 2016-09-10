@@ -23,7 +23,8 @@ class Games extends Model
         'photo',
         'opponent_roster',
         'our_score',
-        'opponents_score'
+        'opponents_score',
+        'season_id'
     ];
     protected $dates = ['game_date'];
     protected $hidden = ['sport_id'];

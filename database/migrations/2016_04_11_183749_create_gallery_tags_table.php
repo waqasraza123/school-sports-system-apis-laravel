@@ -25,6 +25,7 @@ class CreateGalleryTagsTable extends Migration
             $table->unsignedInteger('gallery_id')->nullable()->index();
             $table->foreign('gallery_id')->references('id')->on('gallery')->onDelete('cascade');
             $table->timestamps();
+
         });
 
         Schema::create('gallery_roster', function(Blueprint $table)
