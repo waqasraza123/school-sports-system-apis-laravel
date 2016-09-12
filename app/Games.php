@@ -26,7 +26,7 @@ class Games extends Model
         'opponents_score',
         'season_id'
     ];
-    protected $dates = ['game_date'];
+
     protected $hidden = ['sport_id'];
 
     public function schools()
@@ -46,6 +46,10 @@ class Games extends Model
 
     public function opponent(){
 
+    }
+
+    public function year(){
+        return $this->morphOne('App\Year', 'year');
     }
 
 }

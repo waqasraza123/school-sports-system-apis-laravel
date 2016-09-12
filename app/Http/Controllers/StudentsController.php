@@ -132,7 +132,6 @@ class StudentsController extends Controller
             $this->validate($request, [
                 'name' => 'required|max:255',
                 'academic_year' => 'required',
-                'roster_id' => 'required',
                 //custom_students is table where to check for
                 // uniqueness and label is the column name where will be checked
                 'column-name' => 'max:255|unique:custom_students,label'
@@ -142,8 +141,7 @@ class StudentsController extends Controller
         else{
             $this->validate($request, [
                 'name' => 'required|max:255',
-                'academic_year' => 'required',
-                'roster_id' => 'required'
+                'academic_year' => 'required'
             ]);
         }
 
@@ -238,8 +236,6 @@ class StudentsController extends Controller
                 $customStudent->save();
             }
         }
-
-        $student->rosters()->sync($request->input('roster_id'));
 
         return redirect('/students')->with('success', 'Student Created Successfully');
     }
@@ -388,13 +384,6 @@ class StudentsController extends Controller
                 }
             }
             $customStudent->save();
-        }
-
-
-        $roster_id = $request->input('roster_id');
-        $student = Student::find($id);
-        if($roster_id){
-            $student->rosters()->sync($request->input('roster_id'));
         }
 
         return redirect('/students')->with('success', 'Student Updated Successfully');
