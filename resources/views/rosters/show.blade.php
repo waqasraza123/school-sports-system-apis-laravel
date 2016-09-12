@@ -35,6 +35,7 @@
                         <th>Name</th>
                         <th>&nbsp;</th>
                         <th>&nbsp;</th>
+                        <th>&nbsp;</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -61,6 +62,7 @@
                                                         <td>{{$r->name}}</td>
                                                         <td><a href="{{url('rosters/'. $r->id. '/edit')}}" class="btn btn-primary btn-sm">Edit</a></td>
                                                         <td>{!! Form::open([    'method' => 'DELETE','url' => ['/rosters', $r->id]]) !!}{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}{!! Form::close() !!}</td>
+                                                        <td><a href="{{route('roster-students', [$r->id])}}" class="btn btn-sm btn-default">Add Students</a></td>
                                                     </tr>
                                                 @else
 

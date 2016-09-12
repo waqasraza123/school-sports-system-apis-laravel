@@ -18,31 +18,31 @@
                 {!! Form::selectYear('year_id', 2005, \Carbon\Carbon::now()->year, \Carbon\Carbon::now()->year, ['class' => 'form-control', 'required' => 'true']) !!}
             </div>
         </div>
-
         <div class="row">
             <div class="col-md-6">
                 {!! Form::label('photo', 'Photo:', ['class' => 'control-label']) !!}
                 {!! Form::file('photo', ['class' => 'fn form-control']) !!}
             </div>
             <div class="col-md-6">
-                {!! Form::label('title', 'Position:', ['class' => 'control-label']) !!}
-                {!! Form::text('position', null, ['class' => 'form-control']) !!}
+                {!! Form::label('title', 'Weight(pounds):', ['class' => 'control-label']) !!}
+                {!! Form::selectRange('weight', 80, 220, 80, ['class' => 'form-control']) !!}
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-6">
                 {!! Form::label('number', 'Phone:', ['class' => 'control-label']) !!}
-                {!! Form::number('number', null, ['class' => 'form-control']) !!}
+                {!! Form::tel('number', null, ['class' => 'form-control']) !!}
             </div>
             <div class="col-md-6">
-                {!! Form::label('title', 'Height:', ['class' => 'control-label']) !!}
                 <div class="row">
                     <div class="col-md-6">
-                        {!! Form::number('height_feet', 'feet', ['class' => 'form-control']) !!}
+                        {!! Form::label('title', 'Height in Feet:', ['class' => 'control-label']) !!}
+                        {!! Form::selectRange('height_feet', 4, 7, 4, ['class' => 'form-control']) !!}
                     </div>
                     <div class="col-md-6">
-                        {!! Form::number('height_inches', 'inches', ['class' => 'form-control']) !!}
+                        {!! Form::label('title', 'Height in Inches:', ['class' => 'control-label']) !!}
+                        {!! Form::selectRange('height_inches', 0, 12, 0, ['class' => 'form-control']) !!}
                     </div>
                 </div>
             </div>
@@ -51,11 +51,13 @@
         <div class="row">
             <div class="col-md-6">
                 {!! Form::label('academic_year', 'Academic Year:', ['class' => 'control-label']) !!}
-                {!! Form::selectRange('academic_year', 1, 4, null, ['class' => 'form-control']) !!}
+                {!! Form::select('academic_year',
+                        ['Freshman' => 'Freshman', 'Sohphomore' => 'Sohphomore',
+                         'Junior' => 'Junior', 'Senior' => 'Senior'], 'Please Select'
+                        ,['class' => 'form-control']) !!}
             </div>
             <div class="col-md-6">
-                {!! Form::label('title', 'Weight(pounds):', ['class' => 'control-label']) !!}
-                {!! Form::text('weight', null, ['class' => 'form-control']) !!}
+
             </div>
         </div>
 
@@ -66,9 +68,8 @@
                  ['class' => 'fn form-control', 'id'=>'pro_free_', 'onchange' => 'return pro()', 'required' => true]) !!}
             </div>
             <div class="col-md-6">
-                {!! Form::label('roster_id', 'Roster', ['class' => 'control-label']) !!}
-                {!! Form::select('roster_id[]', $rosters, null, ['class' => 'form-control select2',
-                'multiple' => true, 'required' => true]) !!}
+                {!! Form::label('pro_flag', 'Pro Flag:', ['class' => 'control-label hide-pro']) !!}
+                {!! Form::file('pro_flag', ['class' => 'fn form-control hide-pro']) !!}
             </div>
         </div>
 
@@ -78,62 +79,62 @@
                 {!! Form::file('pro_head_photo', ['class' => 'fn form-control hide-pro']) !!}
             </div>
             <div class="col-md-6">
-
+                {!! Form::label('pro_cover_photo', 'Pro Cover Photo:', ['class' => 'control-label hide-pro']) !!}
+                {!! Form::file('pro_cover_photo', ['class' => 'fn form-control hide-pro']) !!}
             </div>
         </div>
 
         <div class="row">
             <div class="col-md-6">
-                {!! Form::label('pro_cover_photo', 'Pro Cover Photo:', ['class' => 'control-label hide-pro']) !!}
-                {!! Form::file('pro_cover_photo', ['class' => 'fn form-control hide-pro']) !!}
+
             </div>
             <div class="col-md-6">
-                {!! Form::label('pro_flag', 'Pro Flag:', ['class' => 'control-label hide-pro']) !!}
-                {!! Form::file('pro_flag', ['class' => 'fn form-control hide-pro']) !!}
+
             </div>
 
         </div>
-
-        <div class="row" id="dynamic-fields-row" style="display: none">
-            <div class="col-md-6" id="duplicate">
-                <div class="row" style="margin-top: 10px">
-                    <div class="col-md-5">
-                        <input type="text" name="custom-field-name[]" class="form-control col-md-3" placeholder="Name">
-                    </div>
-                    <div class="col-md-6">
-                        <input type="text" name="custom-field-value[]" class="form-control col-md-3" placeholder="Value">
-                    </div>
-                    <div class="col-md-1"><button type="button" class="btn btn-sm" id="add-new-field">+</button></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row" style="margin: 0 auto; width: 300px; padding: 10px">
-            <div class="">
-                <button style="margin-top: 20px; float: left" type="button" id="add-field" class="btn btn-default">
+        <div class="row" style="margin: 20px 20px 20px 0px">
+            <div class="col-md-12">
+                <b>{{$school->name}} Custom Fields: </b>
+                <button style="" type="button" id="add-field" class="btn btn-default">
                     Add Fields?</button>
             </div>
+        </div>
+        <div class="row" id="dynamic-fields-row">
+            {{--will append the data on button click--}}
+        </div>
+
+    </div>{{--container fluid closed--}}
+    <div class="container-fluid">
+        @if($columnNames)
+            @for($i = 0; $i < sizeof($columnNames); $i++)
+                @if($columnNames[$i] != 'id' && $columnNames[$i] != 'student_id'
+                    && $columnNames[$i] != 'created_at' && $columnNames[$i] != 'updated_at')
+                    <div class="row" id="" style="">
+                        <div class="col-md-6" id="">
+                            <div class="row" style="margin-top: 10px">
+                                <div class="col-md-6">
+                                    <input value="{{$columnNames[$i]}}" readonly type="text" name="custom-field-name[]" class="form-control col-md-3">
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" name="custom-field-value[]" class="form-control col-md-3" placeholder="Value">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+            @endfor
+        @endif
+        <div class="row" style="margin: 0 auto; width: 300px; padding: 10px">
             <div class="" style="margin-top: 20px; margin-left: 10px !important; float: left;">
                 {!! Form::submit('Create Student', ['class' => 'btn btn-primary']) !!}
             </div>
         </div>
 
         {!! Form::close() !!}
-
-    </div>{{--container fluid closed--}}
+    </div>
 @endsection
 @section('footer')
     @include('partials.error-messages.footer-script')
-    <script>
-        $('.hide-pro').hide();
-    function pro() {
-
-        if($("#pro_free_").val() == 0){
-            $('.hide-pro').hide('slow');
-        }
-        if($("#pro_free_").val() == 1){
-            $('.hide-pro').show('slow');
-        }
-    }
-    </script>
+    @include('students.partials.footer')
 @endsection

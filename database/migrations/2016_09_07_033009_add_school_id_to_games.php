@@ -13,7 +13,7 @@ class AddSchoolIdToGames extends Migration
     public function up()
     {
         Schema::table('games', function (Blueprint $table) {
-            if(!(Schema::hasColumn('school_id')))
+            if(!(Schema::hasColumn('games', 'school_id')))
             {
                 $table->unsignedInteger('school_id')->default(1);
             }

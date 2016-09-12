@@ -3,18 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\CustomStudent;
-use App\LevelSport;
 use App\Student;
-use App\Http\Requests;
-use Doctrine\DBAL\Schema\Schema;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Auth;
 use App\Sport;
 use App\Roster;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\Year;
 use App\School;
+use Illuminate\Support\Facades\Schema;
 
 class StudentsController extends Controller
 {
@@ -112,7 +109,11 @@ class StudentsController extends Controller
     public function create()
     {
         $rosters = Roster::where('school_id', $this->schoolId)->lists('name', 'id');
-        return View('students.create', compact('rosters'));
+        $school = School::select('name')->where('id', $this->schoolId)->first();
+        $customFields = CustomStudent::all();
+        $columnNames = \DB::connection()->getSchemaBuilder()->getColumnListing("custom_students");
+
+        return View('students.create', compact('rosters', 'school', 'customFields', 'columnNames'));
     }
 
     /**
@@ -124,7 +125,7 @@ class StudentsController extends Controller
     public function store(Request $request)
     {
 
-        //        dd($request->input('custom-field-name'), $request->input('custom-field-value'));
+        /*dd($request->input('roster_id'))*/;
 
         $custom = false;
         if($request->input('custom-field-name')){
@@ -211,22 +212,34 @@ class StudentsController extends Controller
             'year_id' => $student->id,
             'year_type' => 'App\Student'
         ]);
-
         if($custom){
+            $customStudent = new CustomStudent();
             $labels = $request->input('custom-field-name');
             $values = $request->input('custom-field-value');
             for ($i=0; $i< sizeof($labels); $i++){
                 if($labels[$i] != ''){
-                    CustomStudent::create([
-                        'label' => $labels[$i],
-                        'data' => $values[$i],
-                        'student_id' => $student->id
-                    ]);
+
+                    $colName = (strtolower($labels[$i]));
+                    //if column exits set its value
+                    if(Schema::hasColumn('custom_students', $colName)){
+                        $customStudent->$labels[$i] = $values[$i];
+                    }
+                    else{
+                        //else create the column
+                        Schema::table('custom_students', function (Blueprint $table) use ($labels, $i){
+                            $table->string(strtolower($labels[$i]));
+                        });
+
+                        //set the newly created column value
+                        $customStudent->$labels[$i] = $values[$i];
+                    }
                 }
+                $customStudent->student_id = $student->id;
+                $customStudent->save();
             }
         }
 
-        $student->rosters()->syncWithoutDetaching($request->input('roster_id'));
+        $student->rosters()->sync($request->input('roster_id'));
 
         return redirect('/students')->with('success', 'Student Created Successfully');
     }
@@ -262,10 +275,13 @@ class StudentsController extends Controller
      */
     public function edit($id)
     {
+        $school = School::select('name')->where('id', $this->schoolId)->first();
+        $customField = CustomStudent::where('student_id', $id)->first();
+        $columnNames = \DB::connection()->getSchemaBuilder()->getColumnListing("custom_students");
         $student = Student::find($id);
         $rosters = Roster::lists('name', 'id');
 
-        return view('students.update', compact('student', 'rosters'));
+        return view('students.update', compact('student', 'rosters', 'school', 'customField', 'columnNames'));
     }
 
     /**
@@ -326,7 +342,7 @@ class StudentsController extends Controller
             }
         }
 
-        $student = Student::find($id)->update([
+        Student::find($id)->update([
             'name' => $request->input('name'),
             'photo' => $fileName,
             'pro_flag' => $pro_flag,
@@ -348,7 +364,35 @@ class StudentsController extends Controller
             'year_type' => 'App\Student'
         ]);
 
+
+
+        $customStudent = CustomStudent::firstOrCreate(['student_id' => $id]);
+        $labels = $request->input('custom-field-name');
+        $values = $request->input('custom-field-value');
+        for ($i=0; $i< sizeof($labels); $i++){
+            if($labels[$i] != ''){
+
+                $colName = (strtolower($labels[$i]));
+                //if column exits set its value
+                if(Schema::hasColumn('custom_students', $colName)){
+                    $customStudent->$labels[$i] = $values[$i];
+                }
+                else{
+                    //else create the column
+                    Schema::table('custom_students', function (Blueprint $table) use ($labels, $i){
+                        $table->string(strtolower($labels[$i]));
+                    });
+
+                    //set the newly created column value
+                    $customStudent->$labels[$i] = $values[$i];
+                }
+            }
+            $customStudent->save();
+        }
+
+
         $roster_id = $request->input('roster_id');
+        $student = Student::find($id);
         if($roster_id){
             $student->rosters()->sync($request->input('roster_id'));
         }

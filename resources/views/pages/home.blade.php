@@ -834,7 +834,7 @@
 @stop
 
 @section('footer')
-    @include('layouts.partials.mater-footer-scripts')
+    @include('layouts.partials.master-footer-scripts')
     @if (session()->has('success'))
         <script>
             //display success message in the top when successfully updated roster

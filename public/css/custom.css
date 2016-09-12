@@ -1,0 +1,6 @@
+.multiselect-native-select{display: block}
+.open>.dropdown-menu {
+    display: block;
+    overflow: auto;
+    max-height: 200px;
+}

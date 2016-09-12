@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class CustomStudent extends Model
 {
     protected $table = 'custom_students';
-    protected $fillable = ['label', 'data', 'school_id'];
+    protected $fillable = ['label', 'data', 'student_id'];
     protected $hidden = ['id', 'school_id'];
 
     public function student(){
