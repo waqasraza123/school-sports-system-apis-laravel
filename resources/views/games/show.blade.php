@@ -26,7 +26,8 @@
                     <thead>
                     <tr>
                         <th style="cursor: pointer;">Oponent</th>
-                        <th style="cursor: pointer;">Date Time</th>
+                        <th style="cursor: pointer;">Date</th>
+                        <th style="cursor: pointer;">Time</th>
                         <th style="cursor: pointer;">Home/Away</th>
                         @if($show_games == '2' || $show_games == '0')
                             <th style="cursor: pointer;">Our Score</th>
@@ -51,6 +52,7 @@
                                     {{--<td><img src="{{asset('uploads/schools/'.$school_logo[$game->opponents_id] ) }}" height="42"></td>--}}
                                     <td> {{ $school_names[$game->opponents_id]}}</td>
                                     <td>{{ $game->game_date}}</td>
+                                    <td>{{ $game->game_time}}</td>
                                     <td>{{ $game->home_away}}</td>
                                     @if($show_games == '2' || $show_games == '0')
                                         <td>{{ $game->opponents_score}}</td>

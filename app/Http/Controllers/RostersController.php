@@ -8,12 +8,15 @@ use App\Positions;
 use App\School;
 use App\Season;
 use App\Sponsor;
+use App\Student;
+use Illuminate\Support\Facades\Input;
 use Session;
 use App\Roster;
 use App\Sport;
 use App\Level;
 use App\Year;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 
 class RostersController extends Controller
 {
@@ -253,11 +256,46 @@ class RostersController extends Controller
         return redirect('/rosters')->with('success', 'Roster deleted successfully');
     }
 
-    //get position for roster
+    /**
+     * get position for roster
+     * @param $sport_id
+     * @return mixed
+     */
     public function getPositions($sport_id)
     {
         $positions = Positions::where('sport_id', '=', $sport_id)->lists('name', 'id');
         return $positions;
+    }
+
+    public function showAddStudentsForm($rosterId){
+        $roster = Roster::find($rosterId);
+        $students = Student::where('school_id', $this->schoolId)->lists('name', 'id');
+        return view('rosters.add-students', compact('roster', 'students'));
+    }
+
+    public function storeRosterStudents(Request $request){
+
+        $this->validate($request, [
+            'position' => 'required|min:2|max:255',
+            'students_id' => 'required'
+        ]);
+
+        $position = $_POST['position'];
+        $students = $_POST['students_id'];
+        $rosterId = $_POST['roster_id'];
+
+        $roster = Roster::find($rosterId);
+        $pivotData = array_fill(0, count($students), ['position' => $position]);
+        $syncData  = array_combine($students, $pivotData);
+
+        $roster->students()->sync($syncData);
+
+        $response = array(
+            'status' => 'success',
+            'msg' => 'Student Added successfully',
+        );
+
+        return Response::json($response);
     }
 
 }

@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddSchoolIdToGames extends Migration
+class UpdateGameDateCol extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,7 @@ class AddSchoolIdToGames extends Migration
     public function up()
     {
         Schema::table('games', function (Blueprint $table) {
-            if(!(Schema::hasColumn('games', 'school_id')))
-            {
-                $table->unsignedInteger('school_id')->default(1);
-            }
-            else{
-                $table->unsignedInteger('school_id')->default(1)->change();
-
-            }
-            $table->foreign('school_id')->references('id')->on('schools');
+            $table->date('game_date')->change();
         });
     }
 

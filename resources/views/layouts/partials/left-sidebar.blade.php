@@ -47,6 +47,11 @@
                 <a href="/sports"><i class="fa fa-edit fa-fw"></i>
                     Sports</a>
             </li>
+
+            <li>
+                <a href="/games"><i class="fa fa-edit fa-fw"></i>
+                    Games</a>
+            </li>
             <li>
                 <a href="/sports-levels"><i class="fa fa-edit fa-fw"></i>
                     Sports Levels</a>

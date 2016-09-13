@@ -3,19 +3,8 @@
 @section('content')
 <link rel="stylesheet" type="text/css" href="{{asset('auth-scripts-styles/css.css')}}">
 
-@if (count($errors) > 0)
-	<div class="alert alert-danger">
-		<strong>Whoops!</strong> There were some problems with your input.<br><br>
-		<ul>
-			@foreach ($errors->all() as $error)
-				<li>{{ $error }}</li>
-			@endforeach
-		</ul>
-	</div>
-@endif
-
 <div class="login-form">
-
+	@include('partials.error-messages.error')
 	<h1>Login</h1>
 
 	<form class="form-horizontal" role="form" method="POST" action="/auth/login">
@@ -51,5 +40,7 @@
 </div>
 @endsection
 @section('footer')
+
 <script src="{{asset('auth-scripts-styles/js.js')}}"></script>
+@include('partials.error-messages.footer-script')
 @endsection

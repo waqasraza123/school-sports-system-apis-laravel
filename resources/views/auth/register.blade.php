@@ -62,4 +62,6 @@
 @endsection
 @section('footer')
 	<script src="{{asset('auth-scripts-styles/js.js')}}"></script>
+	@include('partials.error-messages.footer-script')
+
 @endsection

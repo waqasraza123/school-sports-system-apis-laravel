@@ -80,4 +80,8 @@ class School extends Model
     public function social_list(){
         return $this->morphOne('App\Social', 'socialLinks');
     }
+
+    public function custom_fields(){
+        return $this->hasOne('App\CustomStudent',  'student_id');
+    }
 }

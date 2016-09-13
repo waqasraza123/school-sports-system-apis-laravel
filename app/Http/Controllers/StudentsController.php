@@ -3,18 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\CustomStudent;
-use App\LevelSport;
 use App\Student;
-use App\Http\Requests;
-use Doctrine\DBAL\Schema\Schema;
+use Carbon\Carbon;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Auth;
 use App\Sport;
 use App\Roster;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\Year;
 use App\School;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 class StudentsController extends Controller
 {
@@ -111,8 +110,19 @@ class StudentsController extends Controller
      */
     public function create()
     {
+        $school = School::where('id', $this->schoolId)->first();
+        $tableName = strtolower(str_replace(' ', '_', $school->name)).'_custom_students';
         $rosters = Roster::where('school_id', $this->schoolId)->lists('name', 'id');
-        return View('students.create', compact('rosters'));
+        $school = School::select('name')->where('id', $this->schoolId)->first();
+
+        $customFields = "";
+        if (Schema::hasTable($tableName)){
+            $customFields = \DB::table($tableName)->groupBy('custom_label')->get();
+        }
+
+        /*$columnNames = \DB::connection()->getSchemaBuilder()->getColumnListing("custom_students");*/
+
+        return View('students.create', compact('rosters', 'school', 'customFields', 'columnNames'));
     }
 
     /**
@@ -124,14 +134,13 @@ class StudentsController extends Controller
     public function store(Request $request)
     {
 
-        //        dd($request->input('custom-field-name'), $request->input('custom-field-value'));
+        /*dd($request->input('roster_id'))*/;
 
         $custom = false;
         if($request->input('custom-field-name')){
             $this->validate($request, [
                 'name' => 'required|max:255',
                 'academic_year' => 'required',
-                'roster_id' => 'required',
                 //custom_students is table where to check for
                 // uniqueness and label is the column name where will be checked
                 'column-name' => 'max:255|unique:custom_students,label'
@@ -141,8 +150,7 @@ class StudentsController extends Controller
         else{
             $this->validate($request, [
                 'name' => 'required|max:255',
-                'academic_year' => 'required',
-                'roster_id' => 'required'
+                'academic_year' => 'required'
             ]);
         }
 
@@ -212,21 +220,65 @@ class StudentsController extends Controller
             'year_type' => 'App\Student'
         ]);
 
+
+        //custom fields
+        $school = School::where('id', '=', $this->schoolId)->first();
+
+        //check if custom students table exists for current school
+        //replace space with _
+        $tableName = strtolower(str_replace(' ', '_', $school->name)).'_custom_students';
+
         if($custom){
+
             $labels = $request->input('custom-field-name');
             $values = $request->input('custom-field-value');
-            for ($i=0; $i< sizeof($labels); $i++){
-                if($labels[$i] != ''){
-                    CustomStudent::create([
-                        'label' => $labels[$i],
-                        'data' => $values[$i],
-                        'student_id' => $student->id
+
+            if (Schema::hasTable($tableName))
+            {
+                for ($i=0; $i< sizeof($labels); $i++){
+                    $label = $labels[$i];
+                    $value = $values[$i];
+
+                    //create the record
+                    DB::table($tableName)->insert([
+                        'school_id' => $this->schoolId,
+                        'student_id' => $student->id,
+                        'custom_label' => $label,
+                        'custom_data' => $value,
+                        'created_at' => Carbon::now()->utc,
+                        'updated_at' => Carbon::now()->utc
+                     ]);
+                }
+            }
+            else{
+                //otherwise create the table for that school
+                Schema::create($tableName, function(Blueprint $table){
+                    $table->increments('id');
+                    $table->string('custom_label');
+                    $table->string('custom_data');
+                    $table->unsignedInteger('school_id')->default(1);
+                    $table->unsignedInteger('student_id')->default(1);
+                    $table->foreign('school_id')->references('id')->on('schools');
+                    $table->foreign('student_id')->references('id')->on('students');
+                    $table->timestamps();
+                });
+
+                for ($i=0; $i< sizeof($labels); $i++){
+                    $label = $labels[$i];
+                    $value = $values[$i];
+
+                    //create the record
+                    DB::table($tableName)->insert([
+                        'school_id' => $this->schoolId,
+                        'student_id' => $student->id,
+                        'custom_label' => $label,
+                        'custom_data' => $value,
+                        'created_at' => Carbon::now()->utc,
+                        'updated_at' => Carbon::now()->utc
                     ]);
                 }
             }
         }
-
-        $student->rosters()->syncWithoutDetaching($request->input('roster_id'));
 
         return redirect('/students')->with('success', 'Student Created Successfully');
     }
@@ -262,10 +314,21 @@ class StudentsController extends Controller
      */
     public function edit($id)
     {
+
+        $school = School::where('id', $this->schoolId)->first();
+        $tableName = strtolower(str_replace(' ', '_', $school->name)).'_custom_students';
+        $school = School::select('name')->where('id', $this->schoolId)->first();
+
+        $customFields = "";
+        if (Schema::hasTable($tableName)){
+            $customFields = \DB::table($tableName)->groupBy('custom_label')->get();
+        }
+
+        $columnNames = \DB::connection()->getSchemaBuilder()->getColumnListing("custom_students");
         $student = Student::find($id);
         $rosters = Roster::lists('name', 'id');
 
-        return view('students.update', compact('student', 'rosters'));
+        return view('students.update', compact('student', 'rosters', 'school', 'customFields', 'columnNames'));
     }
 
     /**
@@ -326,7 +389,7 @@ class StudentsController extends Controller
             }
         }
 
-        $student = Student::find($id)->update([
+        Student::find($id)->update([
             'name' => $request->input('name'),
             'photo' => $fileName,
             'pro_flag' => $pro_flag,
@@ -348,9 +411,46 @@ class StudentsController extends Controller
             'year_type' => 'App\Student'
         ]);
 
-        $roster_id = $request->input('roster_id');
-        if($roster_id){
-            $student->rosters()->sync($request->input('roster_id'));
+        //custom fields
+        $school = School::where('id', '=', $this->schoolId)->first();
+
+        //check if custom students table exists for current school
+        //replace space with _
+        $tableName = strtolower(str_replace(' ', '_', $school->name)).'_custom_students';
+
+        $labels = $request->input('custom-field-name');
+        $values = $request->input('custom-field-value');
+
+        if (Schema::hasTable($tableName))
+        {
+            for ($i=0; $i< sizeof($labels); $i++){
+                $label = $labels[$i];
+                $value = $values[$i];
+
+                //create the record
+                $check = DB::table($tableName)->where('student_id', $id)->where('custom_label', $label)->first();
+                if($check){
+                    DB::table($tableName)->where('student_id', $id)->
+                    where('custom_label', $label)->update([
+                        'school_id' => $this->schoolId,
+                        'student_id' => $id,
+                        'custom_label' => $label,
+                        'custom_data' => $value,
+                        'created_at' => Carbon::now()->utc,
+                        'updated_at' => Carbon::now()->utc
+                    ]);
+                }
+                else{
+                    DB::table($tableName)->insert([
+                        'school_id' => $this->schoolId,
+                        'student_id' => $id,
+                        'custom_label' => $label,
+                        'custom_data' => $value,
+                        'created_at' => Carbon::now()->utc,
+                        'updated_at' => Carbon::now()->utc
+                    ]);
+                }
+            }
         }
 
         return redirect('/students')->with('success', 'Student Updated Successfully');
@@ -364,11 +464,14 @@ class StudentsController extends Controller
      */
     public function destroy($id)
     {
-        $roster = Roster::findOrFail($id);
-        $roster->delete();
-        Session::flash('flash_message_s', 'Player successfully deleted!');
+        $school = School::where('id', $this->schoolId)->first();
+        $student = Student::findOrFail($id);
+        $tableName = strtolower(str_replace(' ', '_', $school->name)).'_custom_students';
+        DB::table($tableName)->where('student_id', $id)->delete();
 
-        return redirect('/rosters')->with('success', 'Roster deleted successfully');
+        $student->delete();
+
+        return redirect('/students')->with('success', 'Student deleted successfully');
     }
 
     //get position for roster

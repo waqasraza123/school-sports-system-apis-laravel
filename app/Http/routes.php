@@ -8,6 +8,8 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
 
     Route::post('rosters/year', ['as' => 'year-rosters', 'uses' => 'RostersController@yearRosters']);
+    Route::get('rosters/{id}/students', ['as' => 'roster-students', 'uses' => 'RostersController@showAddStudentsForm']);
+    Route::post('rosters/students/add', ['as' => 'roster-students-post', 'uses' => 'RostersController@storeRosterStudents']);
     Route::resource('rosters', 'RostersController');
 
 
@@ -73,8 +75,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('schedules', 'SchedulesController');
 
     //testing purposes
-    Route::post('test', function() {
-        return asset('uploads/schools/def.png');
+    Route::get('test', function() {
+        $t = DB::table('users')->where('id', 1)->first();
+        echo $t->name;
     });
 });
 

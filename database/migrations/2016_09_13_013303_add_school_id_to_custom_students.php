@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddSchoolIdToGames extends Migration
+class AddSchoolIdToCustomStudents extends Migration
 {
     /**
      * Run the migrations.
@@ -12,15 +12,8 @@ class AddSchoolIdToGames extends Migration
      */
     public function up()
     {
-        Schema::table('games', function (Blueprint $table) {
-            if(!(Schema::hasColumn('games', 'school_id')))
-            {
-                $table->unsignedInteger('school_id')->default(1);
-            }
-            else{
-                $table->unsignedInteger('school_id')->default(1)->change();
-
-            }
+        Schema::table('custom_students', function (Blueprint $table) {
+            $table->unsignedInteger('school_id')->default(1);
             $table->foreign('school_id')->references('id')->on('schools');
         });
     }
@@ -32,7 +25,7 @@ class AddSchoolIdToGames extends Migration
      */
     public function down()
     {
-        Schema::table('games', function (Blueprint $table) {
+        Schema::table('custom_students', function (Blueprint $table) {
             //
         });
     }
