@@ -76,7 +76,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     //testing purposes
     Route::get('test', function() {
-        echo Schema::hasColumn('users', 'a');
+        $t = DB::table('users')->where('id', 1)->first();
+        echo $t->name;
     });
 });
 

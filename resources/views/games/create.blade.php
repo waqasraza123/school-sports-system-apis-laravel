@@ -74,8 +74,8 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    {!! Form::label('title', 'Video:', ['class' => 'control-label']) !!}
-                    {!! Form::text('video', null, ['class' => 'form-control', 'id'=> 'video']) !!}
+                    {!! Form::label('map_url', 'Map Url') !!}
+                    {!! Form::text('map_url', null, ['class' => 'form-control']) !!}
                 </div>
                 <div class="col-md-6">
                     {!! Form::label('title', 'Location:', ['class' => 'control-label']) !!}
@@ -87,15 +87,14 @@
                     {!! Form::label('season_id', 'Season: ', ['class' => 'control-label']) !!}
                     {!! Form::select('season_id', $seasons, null, ['class' => 'form-control']) !!}
                 </div>
+                <div class="col-md-6">
+                    {!! Form::label('result', 'Result: ', ['class' => 'control-label']) !!}
+                    {!! Form::text('result', null, ['class' => 'form-control']) !!}
+                </div>
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    {!! Form::label('title', 'Game preview:', ['class' => 'control-label', 'required'=> 'true']) !!}
-                    {!! Form::textarea('game_preview', null, ['class' => 'form-control', 'id'=> 'game_preview']) !!}
-                </div>
-                <div class="col-md-6">
-                    {!! Form::label('title', 'Game recap:', ['class' => 'control-label']) !!}
-                    {!! Form::textarea('game_recap', null, ['class' => 'form-control', 'id'=> 'game_recap']) !!}
+
                 </div>
             </div>
 

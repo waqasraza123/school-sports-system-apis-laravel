@@ -18,3 +18,8 @@
     $('div.alert').delay(4000).slideUp(300);
 </script>
 @endif
+<script>
+    if(($('div.alert')).length > 0){
+        $('div.alert').delay(4000).slideUp(300);
+    }
+</script>

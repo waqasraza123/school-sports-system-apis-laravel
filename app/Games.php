@@ -19,12 +19,13 @@ class Games extends Model
         'home_away',
         'game_preview',
         'game_recap',
-        'video',
         'photo',
         'opponent_roster',
         'our_score',
         'opponents_score',
-        'season_id'
+        'season_id',
+        'result',
+        'map_url'
     ];
 
     protected $hidden = ['sport_id'];

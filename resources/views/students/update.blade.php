@@ -96,8 +96,8 @@
         <div class="row" style="margin: 20px 20px 20px 0px">
             <div class="col-md-12">
                 <b>{{$school->name}} Custom Fields: </b>
-                {{--<button style="" type="button" id="add-field" class="btn btn-default">
-                    Add Fields?</button>--}}
+                <button style="" type="button" id="add-field" class="btn btn-default">
+                    Add Fields?</button>
             </div>
         </div>
         <div class="row" id="dynamic-fields-row">
@@ -106,25 +106,22 @@
 
     </div>{{--container fluid closed--}}
     <div class="container-fluid">
-        @if($columnNames)
-            @for($i = 0; $i < sizeof($columnNames); $i++)
-                @if($columnNames[$i] != 'id' && $columnNames[$i] != 'student_id'
-                    && $columnNames[$i] != 'created_at' && $columnNames[$i] != 'updated_at')
-                    <div class="row" id="" style="">
-                        <div class="col-md-6" id="">
-                            <div class="row" style="margin-top: 10px">
-                                <div class="col-md-6">
-                                    <input value="{{$columnNames[$i]}}" readonly type="text" name="custom-field-name[]" class="form-control col-md-3">
-                                </div>
-                                <div class="col-md-6">
-                                    <input type="text" name="custom-field-value[]" class="form-control col-md-3" placeholder="Value"
-                                    value="@if($customField){{$customField->$columnNames[$i]}}@endif">
-                                </div>
+        @if($customFields)
+            @foreach($customFields as $customField)
+
+                <div class="row" id="" style="">
+                    <div class="col-md-6" id="">
+                        <div class="row" style="margin-top: 10px">
+                            <div class="col-md-6">
+                                <input value="{{$customField->custom_label}}" readonly type="text" name="custom-field-name[]" class="form-control col-md-3">
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" value="" name="custom-field-value[]" class="form-control col-md-3" placeholder="Value">
                             </div>
                         </div>
                     </div>
-                @endif
-            @endfor
+                </div>
+            @endforeach
         @endif
         <div class="row" style="margin: 0 auto; width: 300px; padding: 10px">
             <div class="" style="margin-top: 20px; margin-left: 10px !important; float: left;">
