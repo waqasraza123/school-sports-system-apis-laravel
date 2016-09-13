@@ -8,11 +8,30 @@
         document.getElementById("form1").submit();
         document.getElementById("form2").submit();
     }
+
+    var scntDiv = $('#inputs');
+    var i = $('#inputs p').size() + 1;
+    $('#addInput').click(function() {
+
+        $('<p><label for="title" class="control-label">Video url:</label><input type="text" class="fn form-control" id="url' + i +'" size="20" name="url' + i +'" value="" placeholder="Input Value" /></label> <a href="#" id="remInput" class="btn btn-danger" onclick="removeMe('+ i +')">Remove</a> ').appendTo('#inputs');
+
+        i++;
+        return false;
+    });
+
+    removeMe = function(id){
+        if( i > 1 ) {
+            $('#url'+id+'').parents('p').remove();
+            i--;
+        }
+        return false;
+    };
+
 </script>
 <script>
 
     jQuery(document).ready(function() {
-        var uploadSizeMax = 50000000;
+        var uploadSizeMax = 8000000;
         var uploadSizeTotal = 0;
 
         Dropzone.options.myAwesomeDropzone = { // The camelized version of the ID of the form element
@@ -27,6 +46,8 @@
             parallelUploads: 100,
             maxThumbnailFilesize: 10,
             maxFiles: 100,
+            dictRemoveFile: 'Remove',
+            dictFileTooBig: 'Image is bigger than 8MB',
             dictDefaultMessage: "Drop image files here",
 
             accept: function(file, done) {
@@ -41,7 +62,7 @@
                 if (uploadSizeTotal + file.size > uploadSizeMax)
                 {
                     isOk = false;
-                    alert("Sorry, you have reached the max size allowed to upload (50M)");
+                    alert("Sorry, you have reached the max size allowed to upload (8MB)");
 
                     var _ref;
                     if ((_ref = file.previewElement) != null) {
@@ -64,8 +85,7 @@
                 var myDropzone = this;
 
                 // First change the button to actually tell Dropzone to process the queue.
-                this.element.querySelector("button[type=submit]").addEventListener("click", function(e) {
-                    // Make sure that the form isn't actually being sent.
+                $("#submitUpload").click(function (e) {
                     e.preventDefault();
                     e.stopPropagation();
                     myDropzone.processQueue();

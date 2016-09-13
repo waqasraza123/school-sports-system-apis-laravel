@@ -37,7 +37,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('sport/api/{sport_id}', 'RostersController@getPositions');
 
     Route::get('albums', 'AlbumController@show');
-    Route::post('albums/update', 'AlbumController@update');
+    Route::post('albums/{id}/update', 'AlbumController@update');
     Route::post('albums/{id}/image/upload', 'GalleryController@uploadImage');
     Route::get('albums/add-photos', 'ImageController@showAddPhotosForm');
     Route::post('albums/add-videos/get/{id}', ['as' => 'add-videos', 'uses' => 'VideosController@showAddVideosForm']);

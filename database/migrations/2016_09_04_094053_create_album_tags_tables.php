@@ -27,14 +27,14 @@ class CreateAlbumTagsTables extends Migration
             $table->timestamps();
         });
 
-        Schema::create('album_level_sport', function(Blueprint $table)
+        Schema::create('album_roster', function(Blueprint $table)
         {
-            $table->unsignedInteger('level_sport_id')
+            $table->unsignedInteger('roster_id')
                 ->nullable()
                 ->index();
-            $table->foreign('level_sport_id')
+            $table->foreign('roster_id')
                 ->references('id')
-                ->on('levels')
+                ->on('rosters')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->unsignedInteger('album_id')->nullable()->index();
@@ -57,36 +57,6 @@ class CreateAlbumTagsTables extends Migration
             $table->timestamps();
         });
 
-        Schema::create('album_sport', function(Blueprint $table)
-        {
-            $table->unsignedInteger('sport_id')
-                ->nullable()
-                ->index();
-            $table->foreign('sport_id')
-                ->references('id')
-                ->on('sports')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-            $table->unsignedInteger('album_id')->nullable()->index();
-            $table->foreign('album_id')->references('id')->on('album')->onDelete('cascade');
-            $table->timestamps();
-        });
-
-        Schema::create('album_school', function(Blueprint $table)
-        {
-            $table->unsignedInteger('school_id')
-                ->nullable()
-                ->index();
-            $table->foreign('school_id')
-                ->references('id')
-                ->on('schools')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-            $table->unsignedInteger('album_id')->nullable()->index();
-            $table->foreign('album_id')->references('id')->on('album')->onDelete('cascade');
-            $table->timestamps();
-        });
-
     }
 
     /**
@@ -97,9 +67,7 @@ class CreateAlbumTagsTables extends Migration
     public function down()
     {
         Schema::dropIfExists('album_games');
-        Schema::dropIfExists('album_level_sport');
+        Schema::dropIfExists('album_roster');
         Schema::dropIfExists('album_year');
-        Schema::dropIfExists('album_sport');
-        Schema::dropIfExists('album_school');
     }
 }

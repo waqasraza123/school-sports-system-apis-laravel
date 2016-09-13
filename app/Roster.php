@@ -46,6 +46,11 @@ class Roster extends Model
         return $this->belongsToMany('App\Gallery');
     }
 
+    public function albums()
+    {
+        return $this->belongsToMany('App\Album');
+    }
+
     /**
      * a roster can belong to multiple students
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

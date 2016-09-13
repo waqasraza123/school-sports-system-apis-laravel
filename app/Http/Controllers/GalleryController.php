@@ -71,10 +71,17 @@ class GalleryController extends Controller
     {
         //get all inputs
         $data =Input::all();
-        $gallery = Gallery::create(array('url' => $data['url']));
-        $gallery->type = 'video';
-        $gallery->album_id = $id;
-        $gallery->save();
+        $var=[];
+        foreach($data as $key => $value)
+        {
+            if(str_contains($key, 'url'))
+            {
+                $gallery = Gallery::create(array('url' => $value));
+                $gallery->type = 'video';
+                $gallery->album_id = $id;
+                $gallery->save();
+            }
+        }
 
         Session::flash('success', 'Created successfully');
         return Redirect::back();

@@ -31,9 +31,8 @@ $(window).load(function(){
 
     $(".edit_video").click(function() {
 
-        var $row = $(this).closest("div");
+        var $row = $(this).closest("tr");
         var $rosters_ids = $row.find(".video_rosters_ids").text();
-        console.log($row);
         var parsed_roster_id = JSON.parse($rosters_ids);
 
         $('#roster_modal_id').val(parsed_roster_id).change();

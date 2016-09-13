@@ -9,7 +9,6 @@ class Album extends Model
     protected $table = 'album';
     protected $fillable = [
         'name',
-        'season_id',
         'school_id',
         'date',
         'url',
@@ -18,15 +17,11 @@ class Album extends Model
 
     ];
 
-    public function sports()
+    public function rosters()
     {
-        return $this->belongsToMany('App\Sport');
+        return $this->belongsToMany('App\Roster');
     }
 
-    public function levels()
-    {
-        return $this->belongsToMany('App\LevelSport');
-    }
 
     public function years()
     {
@@ -38,18 +33,11 @@ class Album extends Model
         return $this->belongsToMany('App\Games');
     }
 
-    public function schools()
-    {
-        return $this->belongsToMany('App\School');
-    }
 
     public function gallery()
     {
         return $this->hasMany('App\Gallery');
     }
 
-    public function seasons(){
-        return $this->belongsTo('App\Season', 'season_id');
-    }
 
 }

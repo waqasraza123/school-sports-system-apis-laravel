@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="/css/dropzone.css">
 @section('content')
     <div class="container-fluid">
-        <div class="row">
+        <div class="row" style="margin-left: 5%; margin-right: 5%">
             <h1>@if (isset($type->name)){{ $type->name }} @endif Gallery</h1>
             @if (session()->has('success'))
                 <div class="alert alert-success">
@@ -12,7 +12,7 @@
                 <br>
             @endif
 
-            <button class="btn btn-info" id="upload_switch">Add video url</button>
+            <button  class="btn btn-info" id="upload_switch">Add video url</button>
             </br>
             </br>
             <div class="col-lg-12" id="photo_box">
@@ -20,15 +20,25 @@
                     <!-- this is were the previews should be shown. -->
 
                     <div class="dropzone-previews"></div>
-                    <button type="submit" class="btn btn-info" id="submitbtn" style="margin-left: 75%; margin-top: 65px; margin-bottom: -70px;">Upload photos!</button>
+                    <h4 style="text-align: center;color:#428bca;">Drop images in this area  <span class="glyphicon glyphicon-hand-down"></span></h4>
+
                 </form>
+                <div class="how-to-create">
+                    <ul>
+                        <li>Maximum allowed size of image is 8MB</li>
+                    </ul>
+                </div>
+                <button id="submitUpload" type="submit" form="my-awesome-dropzone" class="btn btn-info" id="submitbtn" style="margin-left: 75%; ">Upload photos!</button>
             </div>
 
             <div class="col-lg-12" id="video_box">
             {!! Form::open(['route' => ['albums.url-upload', $album_id]]) !!}
             <!-- this is were the previews should be shown. -->
+                <div id="inputs">
                 {!! Form::label('title', 'Video url:', ['class' => 'control-label']) !!}
                 {!! Form::text('url', null, ['class' => 'fn form-control', 'required' => 'true']) !!}
+                </div>
+                <button type="button" class="btn btn-warning" id="addInput">Add new field</button>
 
                 <button type="submit" class="btn btn-info" id="submitbtn" style="margin-left: 75%; margin-top: 5px;">Add video url</button>
                 {!! Form::close() !!}
@@ -70,21 +80,27 @@
 
             <div class="col-lg-12">
                 <h1>VIDEOS</h1>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>URL</th>
+                        <th>Players</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                    </thead>
+                    <tbody>
                 @foreach($gallery_videos as $video)
-                    <div class="col-lg-12">
-                        <a href="{{ $video->url}}">{{$video->url}}</a>
-
-                        @foreach($video->rosters as $roster_tag)<span class="label label-info" style="color: black; font-weight: lighter; font-size: 10px">{{$roster_tag->name}}</span> @endforeach
-                    </div>
-                    <div class="col-lg-12">
-                        <div>
-                            <p class="video_rosters_ids" style="display: none;" >{{ json_encode($video->rosters->lists('id'))}} </p>
-                        </div>
-                        {!! Form::open([    'method' => 'DELETE','route' => ['gallery.destroy', $video->id]]) !!}{!! Form::submit('X', array('style' => 'background: none;position: relative; border: none; font-size:24px; font-weight: 700;')) !!}{!! Form::close() !!}
-                        <button data-id="{{ $video->id}}" data-toggle="modal" class="edit_video" data-target="#galleryModal" align="right" style="background: transparent;position: relative;border: none; font-size: 24px;"><span class="glyphicon glyphicon glyphicon-edit" aria-hidden="true"></span></button>
-                    </div>
-                    <br>
+                    <tr>
+                        <td><a href="{{ $video->url}}">{{$video->url}}</a></td>
+                        <td>@foreach($video->rosters as $roster_tag) <label>{{$roster_tag->name}}, </label> @endforeach
+                        </td>
+                        <td><button data-id="{{ $video->id}}" data-toggle="modal" class="edit_video btn btn-info" data-target="#galleryModal" align="right" >edit</button></td>
+                        <td>{!! Form::open([    'method' => 'DELETE','route' => ['gallery.destroy', $video->id]]) !!}{!! Form::submit('Delete', array('class' => 'btn btn-danger')) !!}{!! Form::close() !!}</td>
+                        <td><p class="video_rosters_ids" style="display: none;" >{{ json_encode($video->rosters->lists('id'))}} </p></td>
+                    </tr>
                 @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

@@ -25,9 +25,6 @@ class AlbumController extends Controller
     public function index()
     {
         //Lists for Schools, Sports, Years and Levels with key = id and value = name
-        $schools = School::where('school_email', '<>', 'admin@gmail.com')->lists('name', 'id');
-        $sports = Sport::lists('name', 'id');
-        $levelcreate = LevelSport::lists('name', 'id');
         $years = Year::lists('year', 'id');
         //making list of all games where key=game_id and value= opponent name and date of the game
         $games_all = Games::all();
@@ -37,19 +34,15 @@ class AlbumController extends Controller
             $games[$game->id] = School::where('id','=',$game->opponents_id)->first()->name." ".(new Carbon($game->game_date))->toDateString();
         }
 
-        $albums = Album::all();
+        $albums = Album::where('school_id','=', $this->schoolId)->get();
         //showing view for all photos
-        return view('albums.show', compact('sports', 'games','years', 'levelcreate', 'albums', 'schools'));
+        return view('albums.show', compact('games','years', 'albums'));
     }
 
     public function create()
     {
-        //Lists for Schools, Sports, Years and Levels with key = id and value = name
-        $schools = School::where('school_email', '<>', 'admin@gmail.com')->lists('name', 'id');
-        $sports = Sport::lists('name', 'id');
-        $levelcreate = LevelSport::lists('name', 'id');
         $years = Year::lists('year', 'id');
-        $seasons = Season::lists('name', 'id');
+        $rosters = Roster::lists('name', 'id');
         //making list od all games where key=game_id and value= opponent name and date of the game
         $games_all = Games::all();
         $games = [];
@@ -57,17 +50,16 @@ class AlbumController extends Controller
         {
             $games[$game->id] = School::where('id','=',$game->opponents_id)->first()->name." ".(new Carbon($game->game_date))->toDateString();
         }
-        return view('albums.create', compact('sports', 'games','years', 'levelcreate', 'schools', 'seasons'));
+        return view('albums.create', compact('games','years', 'rosters'));
     }
 
     public function store(Request $request)
     {
         $data = Input::all();
         $rules = array('name' => 'required|max:255',
-            'sport_id' => '',
+            'roster_id' => '',
             'year_id' => '',
-            'level_id' => '',
-            'season_id' => 'required');
+            'game_id' => '');
 
         $validator = Validator::make(Input::all(), $rules);
 
@@ -84,27 +76,17 @@ class AlbumController extends Controller
                 'name' => $request->input('name'),
                 'date' => Carbon::now()->utc,
                 'school_id' => $this->schoolId,
-                'season_id' => $request->input('season_id')
             ]);
 
-            if (isset($data['sport_id']))
+            //add roster tags
+            if (isset($data['roster_id']))
             {
-                $album->sports()->attach(array_values($data['sport_id']));
-            }
-            //add levels tags
-            if (isset($data['level_id']))
-            {
-                $album->levels()->attach(array_values($data['level_id']));
+                $album->rosters()->attach(array_values($data['roster_id']));
             }
             //add games tags
             if (isset($data['game_id']))
             {
                 $album->games()->attach(array_values($data['game_id']));
-            }
-            //add school tags
-            if (isset($data['school_id']))
-            {
-                $album->schools()->attach(array_values($data['school_id']));
             }
             //add year tags
             if (isset($data['year_id']))
@@ -117,7 +99,7 @@ class AlbumController extends Controller
 
     }
 
-    public function update()
+    public function update($id)
     {
         $file = Input::all();
         $rules = array();
@@ -131,45 +113,49 @@ class AlbumController extends Controller
         }
         else
         {
-
-            Album::where('id', '=', $file['album_invisible_id'])->update([
+            Album::where('id', '=', $id)->update([
                 'name' => $file['name'],
                 'date' => Carbon::now()->utc,
-                'school_id' => $this->schoolId,
-                'season_id' => $file['season_id']
+                'school_id' => $this->schoolId
             ]);
 
-            $album = Album::find($file['album_invisible_id']);
+            $album = Album::find($id);
 
-            //add sports tags
-            if (isset($file['sport_modal_id']))
+            //add roster tags
+            if (isset($file['roster_id']))
             {
-                $album->sports()->sync(array_values($file['sport_modal_id']));
-            }
-            //add levels tags
-            if (isset($file['level_modal_id']))
-            {
-                $album->levels()->sync(array_values($file['level_modal_id']));
+                $album->rosters()->sync(array_values($file['roster_id']));
             }
             //add years tags
-            if (isset($file['year_modal_id']))
+            if (isset($file['year_id']))
             {
-                $album->years()->sync(array_values($file['year_modal_id']));
+                $album->years()->sync(array_values($file['year_id']));
             }
             //add games tags
-            if (isset($file['game_modal_id']))
+            if (isset($file['game_id']))
             {
-                $album->games()->sync(array_values($file['game_modal_id']));
+                $album->games()->sync(array_values($file['game_id']));
             }
-            //add school tags
-            if (isset($file['school_modal_id']))
-            {
-                $album->schools()->sync(array_values($file['school_modal_id']));
-            }
+
             Session::flash('success', 'Updated successfully');
             return Redirect::back();
         }
 
+    }
+
+    public function edit($id)
+    {
+        $years = Year::lists('year', 'id');
+        $rosters = Roster::lists('name', 'id');
+        //making list od all games where key=game_id and value= opponent name and date of the game
+        $games_all = Games::all();
+        $games = [];
+        foreach ($games_all as $game)
+        {
+            $games[$game->id] = School::where('id','=',$game->opponents_id)->first()->name." ".(new Carbon($game->game_date))->toDateString();
+        }
+        $album = Album::where('school_id','=', $this->schoolId)->where('id','=', $id)->first();
+        return view('albums.edit', compact('games','years', 'album', 'rosters'));
     }
 
     public function show($id)
@@ -183,9 +169,10 @@ class AlbumController extends Controller
         }
 
         $album_id = $id;
-        $gallery_images = Gallery::where('album_id','=', $album_id)->where('type', '=', 'picture')->get();
-        $gallery_videos = Gallery::where('album_id','=', $album_id)->where('type', '=', 'video')->get();
+        $gallery_images = Gallery::where('album_id','=', 4)->where('type', '=', 'image')->get();
+        $gallery_videos = Gallery::where('album_id','=', 4)->where('type', '=', 'video')->get();
         //showing view for all photos
+        return view('gallery.show', compact('gallery_images', 'gallery_videos', 'rosters', 'album_id'));
         return view('albums.add-photos', compact('gallery_images', 'gallery_videos', 'rosters', 'album_id'));
     }
     public function destroy($id)

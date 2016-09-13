@@ -20,11 +20,6 @@ class LevelSport extends Model
         return $this->hasMany('App\Roster', 'level_id');
     }
 
-    public function albums()
-    {
-        return $this->belongsToMany('App\Album');
-    }
-
     public function news(){
         return $this->belongsToMany('App\News', 'levels_news', 'level_id', 'news_id');
     }

@@ -68,11 +68,6 @@ class School extends Model
         return $this->hasMany('App\Student');
     }
 
-    public function albums()
-    {
-        return $this->belongsToMany('App\Album');
-    }
-
     public function sponsors(){
         return $this->hasMany('App\Sponsor', 'school_id');
     }
