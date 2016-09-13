@@ -169,8 +169,8 @@ class AlbumController extends Controller
         }
 
         $album_id = $id;
-        $gallery_images = Gallery::where('album_id','=', 4)->where('type', '=', 'image')->get();
-        $gallery_videos = Gallery::where('album_id','=', 4)->where('type', '=', 'video')->get();
+        $gallery_images = Gallery::where('album_id','=', $album_id)->where('type', '=', 'image')->get();
+        $gallery_videos = Gallery::where('album_id','=', $album_id)->where('type', '=', 'video')->get();
         //showing view for all photos
         return view('gallery.show', compact('gallery_images', 'gallery_videos', 'rosters', 'album_id'));
         return view('albums.add-photos', compact('gallery_images', 'gallery_videos', 'rosters', 'album_id'));
