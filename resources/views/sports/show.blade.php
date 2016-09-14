@@ -1,30 +1,37 @@
 @extends('layouts.master')
 @section('content')
     <div class="container-fluid">
-        @include('partials.error-messages.success')
-        @include('partials.error-messages.error')
-        <h2 style="text-align: center">All Sports of year ({{$year}})</h2>
-        <div class="row">
+  <div style="margin: 20px auto; width: 1000px">  <div style="width:50%">
+        <h2 style="text-align: center">All Sports ({{$year}})</h2>
+
             {!! Form::open(['route' => 'year-sports']) !!}
-            <div class="col-md-3 col-md-offset-3">
+
+
+            <div class="col-sm-3" style="width:50%" >
                 {!! Form::selectYear('year', 2005, \Carbon\Carbon::now()->year,
                 \Carbon\Carbon::now()->year, [
                'class' => 'form-control', 'id' => 'select_year_id', 'required' => true, 'onchange' => 'this.form.submit()']) !!}
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3" style="width:50%">
                 {!! Form::select('season_id', $seasonsList, null, ['id' => 'select_season_id', 'class' => 'form-control', 'onchange' => 'this.form.submit()']) !!}
             </div>
+          </div>
             {!! Form::close() !!}
         </div>
 
         <div class="row">
             <div class="table-responsive .table-striped .table-hover col-md-12">
-                <br>
+              <p class="lead">
                 <a href="{{url('sports/create')}}"><button class="btn btn-primary">Add Sport</button></a>
-                <br>
+              </p>
+              <br>
+              @include('partials.error-messages.success')
+              @include('partials.error-messages.error')
+                  <div class="panel panel-primary">
+                      <div class="table-responsive">
+                          <table class="table table-hover">
+                              <thead  style="background-color:#000000; color:white">
 
-                <table class="table">
-                    <thead>
                         <tr>
                             <th>#</th>
                             <th>Icon</th>
@@ -67,7 +74,8 @@
                     @endif
                 </table>
             </div>
-
+          </div>
+      </div>
         </div>
     </div>
 @endsection
