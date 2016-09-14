@@ -87,7 +87,7 @@ class StaffController extends Controller
             'title' => $request->input('title'),
             'website' => $request->input('website'),
             'school_id' => $schoolId,
-            'photo' => $fileName == ""? null : asset('uploads/staff/'.$fileName),
+            'photo' => $fileName == ""? null : asset('/uploads/staff/'.$fileName),
             'season_id' => $request->input('season_id')
         ]);
 
@@ -154,8 +154,9 @@ class StaffController extends Controller
         }
 
         $image = Staff::find($id);
+        $fileNameOld= "";
         if($image->photo){
-            $fileName = $image->photo;
+            $fileNameOld = $image->photo;
         }
         $staff = Staff::where('id', $id)->update([
             'name' => $request->input('name'),
@@ -165,7 +166,7 @@ class StaffController extends Controller
             'title' => $request->input('title'),
             'website' => $request->input('website'),
             'school_id' => $schoolId,
-            'photo' => $fileName == ""? null : asset('uploads/staff/'.$fileName),
+            'photo' => $fileName == ""? $fileNameOld: asset('/uploads/staff/'.$fileName),
             'season_id' => $request->input('season_id')
         ]);
 

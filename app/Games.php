@@ -45,10 +45,6 @@ class Games extends Model
         return $this->belongsToMany('App\Album');
     }
 
-    public function opponent(){
-
-    }
-
     public function year(){
         return $this->morphOne('App\Year', 'year');
     }
