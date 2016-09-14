@@ -7,7 +7,7 @@
         <div class="col-md-12">
             <h1>Sponsors</h1>
             <p class="lead">
-                <a href="{{url('sponsors/create')}}"><button type="button" class="btn btn-primary btn-sm">Add Sponsor</button></a>
+                <a href="{{url('sponsors/create')}}"><button type="button" class="btn btn-success btn-sm">Add Sponsor</button></a>
             </p>
 
             <br>
@@ -16,7 +16,7 @@
                 <div class="panel panel-primary">
                     <div class="table-responsive">
                         <table class="table table-hover">
-                            <thead  style="background-color:#337AB7; color:white">
+                            <thead  style="background-color:#000000; color:white">
                             <tr>
                                 <th> </th>
                                 <th>Name</th>

@@ -1,3 +1,4 @@
+<link rel='shortcut icon' href='/img/favicon.ico'/>
 <!-- Bootstrap 3.3.6 -->
 <link rel="stylesheet" href="/lte/bootstrap/css/bootstrap.min.css">
 <!-- Font Awesome -->
@@ -8,7 +9,7 @@
 <link rel="stylesheet" href="/lte/dist/css/AdminLTE.min.css">
 <!-- lte Skins. Choose a skin from the css/skins
      folder instead of downloading all of them to reduce the load. -->
-<link rel="stylesheet" href="/lte/dist/css/skins/skin-green.min.css">
+<link rel="stylesheet" href="/lte/dist/css/skins/_all-skins.css">
 {{--Select2.js fancy select look js--}}
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
 

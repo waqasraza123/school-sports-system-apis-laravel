@@ -1,7 +1,7 @@
 <header class="main-header">
     <a href="/home" class="logo">
         <!-- LOGO -->
-        Sports
+        <img src="/img/repit_h.png">
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top" role="navigation">

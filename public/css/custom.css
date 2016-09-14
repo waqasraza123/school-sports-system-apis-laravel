@@ -1,1 +1,30 @@
 .multiselect-native-select{display: block}
+
+
+
+.panel-primary {
+    border-color: #21CC06;
+}
+
+
+
+.main-footer a {
+    color:  #21CC06;
+}
+
+.btn-primary {
+  background-color: #000000;
+    border-color: #000000;
+}
+.btn-success {
+  background-color: #21CC06;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active {
+
+  background-color: #4D4F4F;
+  border-color: #000000;
+}

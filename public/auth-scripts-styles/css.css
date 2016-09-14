@@ -73,7 +73,7 @@ h1 {
 }
 
 .log-btn {
-    background: #0AC986;
+    background: #21CC06;
     dispaly: inline-block;
     width: 100%;
     font-size: 16px;
@@ -84,6 +84,15 @@ h1 {
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
     border-radius: 4px;
+}
+
+.log-btn:hover,
+.log-btn:focus,
+.log-btn:active,
+.log-btn.active {
+
+  background-color: #22BD09;
+
 }
 
 .link {
@@ -140,4 +149,13 @@ h1 {
     80% {
         left: -15px;
     }
+}
+
+.navbar-inverse {
+  height: 100px;
+}
+
+body {
+    background-image: url("/img/SFCFootballFieldMorning-1.jpg");
+
 }
