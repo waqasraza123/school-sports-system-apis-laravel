@@ -13,7 +13,7 @@
             <h3 style="text-align: center; margin-bottom: 50px;">Update Staff</h3>
             {!! Form::model($staff, ['method' => 'put', 'url' => 'staff/'.$staff->id, 'files' => true]) !!}
             @if($staff->photo)
-                <img style="margin: 20px auto; display: block" src="{{asset('uploads/staff/'.$staff->photo)}}" alt="image" width="200px" height="200px">
+                <img style="margin: 20px auto; display: block" src="{{$staff->photo}}" alt="image" width="200px" height="200px">
             @else
                 <img style="margin: 20px auto; display: block" src="{{asset('uploads/def.png')}}" height="200px" width="200px" alt="image">
             @endif
