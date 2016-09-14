@@ -1,125 +1,95 @@
 @extends('layouts.master')
-
 @section('content')
+    <div class="container-fluid">
+        @include('partials.error-messages.success')
+        @include('partials.error-messages.error')
+        <h2 style="text-align: center">Games</h2>
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="row">
+                    {!! Form::open(['url' => 'games/filter', 'method'=>'post']) !!}
+                    <div class="col-md-6">
+                        {!! Form::selectYear('year', 2005, \Carbon\Carbon::now()->year,
+            \Carbon\Carbon::now()->year, [
+           'class' => 'form-control', 'id' => 'select_year_id', 'required' => true, 'onchange' => 'this.form.submit()']) !!}
+                    </div>
 
-
-    <h1>{{ $type->name }} Schedule</h1>
-    <p class="lead">{{ $lev->name }}&nbsp;
-        <button type="button" id="add_new_game" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#gameModal">Schedule Event</button>
-
-    </p>
-
-    <ul class="nav nav-tabs">
-        <li><a href="/games/{{ $type->id }}">All</a></li>
-        @foreach($levels as $level)
-            @if ($level['id'] === $lev['id'])
-                <li class="active"><a href="/games/{{ $type->id }}/filter/{{  $level['id']}}">{{ $level['name']}}</a>
-                </li>
-                <div class="selected_level_id" style="display: none;">{{ $level['id']}}</div>
-
-            @else
-                <li><a href="/games/{{ $type->id }}/filter/{{  $level['id']}}">{{ $level['name']}}</a></li>
-            @endif
-        @endforeach
-    </ul>
-
-    <br>
-    <div class="selected_sport_id" style="display: none;">{{ $type->id }}</div>
-    @if (session()->has('success'))
-        <div class="alert alert-success">
-            {{Session::get('success')}}
-
-        </div>
-        <br>
-    @endif
-    @if ($games->isEmpty() )
-        <div class="bs-callout bs-callout-warning">
-            <h4>No Results</h4>
-            Nothing to see here please select another level, or create a player
-            <a data-toggle="modal" data-target="#gameModal">Here</a>
+                    <div class="col-md-6">
+                        {!! Form::select('roster_id', $rostersList, null, ['id' => 'select_roster_id', 'class' => 'form-control', 'onchange' => 'this.form.submit()']) !!}
+                    </div>
+                    {!! Form::close() !!}
+                </div>
+            </div>
         </div>
 
+        <div class="row">
+            <div class="table-responsive .table-striped .table-hover col-md-12">
+                <br>
+                <a href="{{url('games/create')}}"><button class="btn btn-primary">Add game</button></a>
+                <br>
 
-
-
-    @else
-
-        <div class="panel panel-primary">
-            <div class="table-responsive">
-                <table class="table table-hover sortable">
-                    <thead  style="background-color:#337AB7; color:white">
+                <table class="table">
+                    <thead>
                     <tr>
-                        <th class="sorttable_nosort">&nbsp;</th>
-                        <th style="cursor: pointer;">Oponent</th>
-                        <th style="cursor: pointer;">Date Time</th>
+                        <th style="cursor: pointer;">Opponent</th>
+                        <th style="cursor: pointer;">Date</th>
+                        <th style="cursor: pointer;">Time</th>
                         <th style="cursor: pointer;">Home/Away</th>
-                        @if($show_games == '2' || $show_games == '0')
-                            <th style="cursor: pointer;">Our Score</th>
-                            <th style="cursor: pointer;">Opponents Score</th>
-                         @else
-                            <th class="sorttable_nosort">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                            <th class="sorttable_nosort">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                        @endif
-
-                        {!! Form::open(array('url'=>'games/'.$id_sport.'/filter/'.$lev['id'], 'method'=>'put')) !!}
-                        <th colspan="2" class="sorttable_nosort">{!! Form::select('games_select',['All Events','Future Events','Past Events'], $show_games, ['class' => 'form-control', 'id'=> 'games_select', 'onchange' => 'this.form.submit()']) !!}</th>
-                        {!! Form::close() !!}
+                        <th style="cursor: pointer;">Our Score</th>
+                        <th style="cursor: pointer;">Opponents Score</th>
+                        <th></th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($games as $game)
-                        <tr>
-                            <td><img src="{{asset('uploads/schools/'.$school_logo[$game->opponents_id] ) }}" height="42"></td>
-                            <td> {{ $school_names[$game->opponents_id]}}</td>
-                            <td>{{ $game->game_date}}</td>
-                            <td>{{ $game->home_away}}</td>
-                            @if($show_games == '2' || $show_games == '0')
-                                <td>{{ $game->opponents_score}}</td>
-                                <td>{{ $game->our_score}}</td>
-                            @else
-                                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                                <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            @endif
 
-
-                            <td> <button type="button" class="btn btn-primary btn-sm edit_new_game" data-id="{{ $game->id}}" data-toggle="modal" data-target="#gameModal">Edit</button></td>
-                            <td> {!! Form::open([    'method' => 'DELETE','route' => ['games.destroy', $game->id]]) !!}{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}{!! Form::close() !!}</td>
-                            <td class="id" style="display: none;"  />{{ $game->id }}</td>
-                            <td class="game_sport_id" style="display: none;"  />{{ $game->sport_id }}</td>
-                            <td class="game_level_id" style="display: none;"  />{{ $game->level_id }}</td>
-                            <td class="game_locations_id" style="display: none;"  />{{ $game->locations_id }}</td>
-                            <td class="opponents_id" style="display: none;"  />{{ $game->opponents_id }}</td>
-                            <td class="game_date" style="display: none;"  />{{ $game->game_date}}</td>
-                            <td class="hidden_game_date" style="display: none;"  />{{ $game->game_date}}</td>
-                            <td class="home_or_away" style="display: none;"  />{{ $game->home_away}}</td>
-                            <td class="photo" style="display: none;"  />{{asset('uploads/games/'.$game->photo ) }}</td>
-                            <td class="opponents_score" style="display: none;"  />{{ $game->opponents_score}}</td>
-                            <td class="our_score" style="display: none;"  />{{ $game->our_score}}</td>
-                            <td class="video" style="display: none;"  />{{ $game->video}}</td>
-                            <td class="game_preview" style="display: none;"  />{{ $game->game_preview}}</td>
-                            <td class="game_recap" style="display: none;"  />{{ $game->game_recap}}</td>
-
-                        </tr>
-                    @endforeach
+                    @if($year)
+                        @if($games)
+                            {{--all the games for that particular roster--}}
+                            @foreach($games as $game)
+                                @if($game->year == $year)
+                                    <tr>
+                                        <td>{{$opponents[$game->id]}}</td>
+                                        <td>{{$game->game_date}}</td>
+                                        <td>{{$game->game_time}}</td>
+                                        <td>{{$game->home_away}}</td>
+                                        <td>{{$game->our_score}}</td>
+                                        <td>{{$game->opponents_score}}</td>
+                                    </tr>
+                                @endif
+                            @endforeach
+                        @else
+                            @foreach($allGames as $game)
+                                @if($game->year->year == $year)
+                                    <tr>
+                                        @foreach($opponents as $opp)
+                                            @if($opp->id == $game->opponents_id)
+                                                <td>{{$opp->name}}</td>
+                                            @endif
+                                        @endforeach
+                                        <td>{{$game->game_date}}</td>
+                                        <td>{{$game->game_time}}</td>
+                                        <td>{{$game->home_away}}</td>
+                                        <td>{{$game->our_score}}</td>
+                                        <td>{{$game->opponents_score}}</td>
+                                    </tr>
+                                @endif
+                            @endforeach
+                        @endif
                     @endif
-
                     </tbody>
                 </table>
             </div>
-            <!-- /.table-responsive -->
+
         </div>
-        <!-- /.panel-body -->
-        </div>
-        <!-- /.panel -->
-        </div>
-
-
-        <!-- Modal -->
-        @include('games.modal.games_form')
-
-@stop
-
+    </div>
+@endsection
 @section('footer')
+    @include('partials.error-messages.footer-script')
+    <script>
+        $("#select_year_id").val(<?php echo $year?>)
+        $("#select_roster_id").val(<?php echo $rosterId?>)
+    </script>
     <script type="text/javascript">
         $('#game_sport_id').select2();
         $('#game_level_id').select2();
@@ -130,12 +100,15 @@
         $('#home_or_away').select2({
             placeholder: "Select home or away",
         });
+        $("#select_year_id").val(<?php echo $year;?>)
 
     </script>
     <script src="/dist/js/sb-games-2.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
     <script type="text/javascript">
         $(function () {
-            $('#game_date').datetimepicker({format: "YYYY/MM/DD HH:mm:ss"});
+            $('#game_date').datetimepicker({format: "YYYY-MM-DD HH:mm:ss",  inline: true, sideBySide: true});
         });
     </script>
     @if ($errors->has())
@@ -161,4 +134,4 @@
             $('div.alert').delay(4000).slideUp(300);
         </script>
     @endif
-@stop
+@endsection

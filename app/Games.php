@@ -49,4 +49,8 @@ class Games extends Model
         return $this->morphOne('App\Year', 'year');
     }
 
+    public function roster(){
+        return $this->belongsTo('App\Roster', 'roster_id');
+    }
+
 }

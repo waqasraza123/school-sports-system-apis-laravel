@@ -7,14 +7,12 @@
             <div class="col-md-12">
                 <h1>Locations</h1>
                 <p class="lead">
-                    <button type="button" id="add_new_location" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#locationModal">Add Location?</button>
+                    <a href="/locations/create" type="button" id="add_new_location" class="btn btn-primary btn-sm">Add Location?</a>
                 </p>
-
                 <br>
                 @if (session()->has('success'))
                     <div class="alert alert-success">
                         {{Session::get('success')}}
-
                     </div>
                     <br>
                 @endif
@@ -47,7 +45,7 @@
                                         <td class="name">{{ $location->name }}</td>
                                         <td class="city">{{ $location->city }}</td>
                                         <td class="state">{{ $location->state}}</td>
-                                        <td> <button type="button" class="btn btn-primary btn-sm edit_location" data-id="{{ $location->id}}" data-toggle="modal" data-target="#locationModal">Edit</button></td>
+                                        <td> <a class="btn btn-primary btn-sm" href="/locations/{{ $location->id}}/edit">Edit</a></td>
                                         <td> {!! Form::open([    'method' => 'DELETE','route' => ['locations.destroy', $location->id]]) !!}{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}{!! Form::close() !!}</td>
                                         <td class="id" style="display: none;"  />{{ $location->id}}</td>
                                         <td class="adress" style="display: none;"  />{{  $location->adress}}</td>
@@ -58,24 +56,18 @@
                                         <td class="lon" style="display: none;"  />{{  $location->lon}}</td>
                                     </tr>
                                 @endforeach
-                                @endif
 
                                 </tbody>
                             </table>
                         </div>
                         <!-- /.table-responsive -->
                     </div>
+                @endif
                     <!-- /.panel-body -->
             </div>
             <!-- /.panel -->
         </div>
-
-        <!-- Modal -->
-        @include('locations.modals.locations_form')
-            </div>
-        </div>
     </div>
-
 @stop
 
 @section('footer')
@@ -88,7 +80,6 @@
             $('div.alert').delay(4000).slideUp(300);
             $('#locationModal').modal();
             $('.locationModal').show();
-
             {{ $errors = null }}
         </script>
 

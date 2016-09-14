@@ -51,6 +51,10 @@ class Roster extends Model
         return $this->belongsToMany('App\Album');
     }
 
+    public function games(){
+        return $this->hasMany('App\Games', 'roster_id');
+    }
+
     /**
      * a roster can belong to multiple students
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

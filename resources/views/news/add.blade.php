@@ -1,4 +1,5 @@
 @extends('layouts.master')
+<link rel="stylesheet" href="/timepicker/css/bootstrap-timepicker.min.css">
 @section('content')
     <div class="container-fluid">
         <div class="row">
@@ -94,18 +95,16 @@
         // Replace the <textarea id="editor1"> with a CKEditor
         // instance, using default configuration.
         CKEDITOR.replace( 'content' );
-    </script>
+    </script><script src="/js/moment-with-locales.js"></script>
+    <script src="/js/bootstrap-datetimepicker.js"></script>
+
     <script type="text/javascript">
         $('#sport_id').select2();
         $('#game_id').select2();
         $('#level_id').select2();
         $('#roster_id').select2();
 
-        $( "#news_date" ).datepicker({
-            changeMonth: true,
-            changeYear: true,
-            dateFormat: 'yy-mm-dd'
-        });
+        $('#news_date').datetimepicker({format: "YYYY-MM-DD"});
 
     </script>
     <script src="/dist/js/sb-news-2.js"></script>

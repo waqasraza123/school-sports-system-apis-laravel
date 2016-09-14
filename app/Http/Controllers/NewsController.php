@@ -25,18 +25,18 @@ class NewsController extends Controller
     {
         //Lists for Schools, Sports, Years and Levels with key = id and value = name
         $schools = School::where('id', '<>', '1')->lists('name', 'id');
-        $sports = Sport::lists('name', 'id');
-        $levelcreate = LevelSport::lists('name', 'id');
+        $sports = Sport::where('school_id', $this->schoolId)->lists('name', 'id');
+        $levelcreate = LevelSport::where('school_id', $this->schoolId)->lists('name', 'id');
         $years = Year::lists('year', 'id');
         //making list of all games where key=game_id and value= opponent name and date of the game
-        $games_all = Games::all();
+        $games_all = Games::where('school_id', $this->schoolId)->get();
         $games = [];
         foreach ($games_all as $game)
         {
             $games[$game->id] = School::where('id','=',$game->opponents_id)->first()->name." ".(new Carbon($game->game_date))->toDateString();
         }
         //making list for rosters where key=rooster_id and value= rooster name and surname
-        $rosters_all = Roster::all();
+        $rosters_all = Roster::where('school_id', $this->schoolId)->get();
         $rosters = [];
         foreach ($rosters_all as $roster)
         {
@@ -52,19 +52,19 @@ class NewsController extends Controller
     {
         //Lists for Schools, Sports, Years and Levels with key = id and value = name
         $schools = School::where('id', '<>', '1')->lists('name', 'id');
-        $type = Sport::where('id', $sport_id)->first();
-        $sports = Sport::lists('name', 'id');
-        $levelcreate = LevelSport::lists('name', 'id');
+        $type = Sport::where('school_id', $this->schoolId)->where('id', $sport_id)->first();
+        $sports = Sport::where('school_id', $this->schoolId)->lists('name', 'id');
+        $levelcreate = LevelSport::where('school_id', $this->schoolId)->lists('name', 'id');
         $years = Year::lists('year', 'id');
         //making list od all games where key=game_id and value= opponent name and date of the game
-        $games_all = Games::all();
+        $games_all = Games::where('school_id', $this->schoolId)->get();
         $games = [];
         foreach ($games_all as $game)
         {
             $games[$game->id] = School::where('id','=',$game->opponents_id)->first()->name." ".(new Carbon($game->game_date))->toDateString();
         }
         //making list for rosters where key=rooster_id and value= rooster name and surname
-        $rosters_all = Roster::all();
+        $rosters_all = Roster::where('school_id', $this->schoolId)->get();
         $rosters = [];
         foreach ($rosters_all as $roster)
         {
@@ -72,7 +72,7 @@ class NewsController extends Controller
         }
 
         $id_sport = $sport_id;
-        $news = Sport::where('id', '=', $sport_id)->first();
+        $news = Sport::where('school_id', $this->schoolId)->where('id', '=', $sport_id)->first();
         if($news){
             $news = $news->news()->orderBy('news_date', 'DESC')->get();
         }
@@ -84,18 +84,18 @@ class NewsController extends Controller
 
         //Lists for Schools, Sports, Years and Levels with key = id and value = name
         $schools = School::where('id', '<>', '1')->lists('name', 'id');
-        $sports = Sport::lists('name', 'id');
-        $levelcreate = LevelSport::lists('name', 'id');
+        $sports = Sport::where('school_id', $this->schoolId)->lists('name', 'id');
+        $levelcreate = LevelSport::where('school_id', $this->schoolId)->lists('name', 'id');
         $years = Year::lists('year', 'id');
         //making list of all games where key=game_id and value= opponent name and date of the game
-        $games_all = Games::all();
+        $games_all = Games::where('school_id', $this->schoolId)->get();
         $games = [];
         foreach ($games_all as $game)
         {
             $games[$game->id] = School::where('id','=',$game->opponents_id)->first()->name." ".(new Carbon($game->game_date))->toDateString();
         }
         //making list for rosters where key=rooster_id and value= rooster name and surname
-        $rosters_all = Roster::all();
+        $rosters_all = Roster::where('school_id', $this->schoolId)->get();
         $rosters = [];
         foreach ($rosters_all as $roster)
         {
@@ -112,18 +112,18 @@ class NewsController extends Controller
 
         //Lists for Schools, Sports, Years and Levels with key = id and value = name
         $schools = School::where('id', '<>', '1')->lists('name', 'id');
-        $sports = Sport::lists('name', 'id');
-        $levelcreate = LevelSport::lists('name', 'id');
+        $sports = Sport::where('school_id', $this->schoolId)->lists('name', 'id');
+        $levelcreate = LevelSport::where('school_id', $this->schoolId)->lists('name', 'id');
         $years = Year::lists('year', 'id');
         //making list of all games where key=game_id and value= opponent name and date of the game
-        $games_all = Games::all();
+        $games_all = Games::where('school_id', $this->schoolId)->get();
         $games = [];
         foreach ($games_all as $game)
         {
             $games[$game->id] = School::where('id','=',$game->opponents_id)->first()->name." ".(new Carbon($game->game_date))->toDateString();
         }
         //making list for rosters where key=rooster_id and value= rooster name and surname
-        $rosters_all = Roster::all();
+        $rosters_all = Roster::where('school_id', $this->schoolId)->get();
         $rosters = [];
         foreach ($rosters_all as $roster)
         {

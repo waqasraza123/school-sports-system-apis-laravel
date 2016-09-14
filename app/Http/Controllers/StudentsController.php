@@ -215,13 +215,6 @@ class StudentsController extends Controller
             'school_id' => $this->schoolId
         ]);
 
-        Year::create([
-            'year' => $request->input('year_id'),
-            'year_id' => $student->id,
-            'year_type' => 'App\Student'
-        ]);
-
-
         //custom fields
         $school = School::where('id', '=', $this->schoolId)->first();
 
@@ -404,12 +397,6 @@ class StudentsController extends Controller
             'pro_free' => $request->input('pro_free'),
             'position' => $request->input('position'),
             'school_id' => $this->schoolId
-        ]);
-
-        Year::where('year_id', $id)->where('year_type', 'App\Student')->update([
-            'year' => $request->input('year_id'),
-            'year_id' => $id,
-            'year_type' => 'App\Student'
         ]);
 
         //custom fields

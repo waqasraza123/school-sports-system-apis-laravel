@@ -13,13 +13,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('rosters', 'RostersController');
 
 
-
-//    Route::put('games/{sport_id}', 'GamesController@show_games');
-//    Route::put('games/{sport_id}/filter/{level_id}', 'GamesController@show_games_filter');
-//    Route::post('games/{sport_id}', 'GamesController@update');
-
-//    Route::get('games/{sport_id}', 'GamesController@show');
-//    Route::get('games/{sport_id}/filter/{level_id}', 'GamesController@filter');
     Route::put('games/', 'GamesController@show_games');
     Route::post('games/filter', 'GamesController@filter');
     Route::post('games/{id}', 'GamesController@update');

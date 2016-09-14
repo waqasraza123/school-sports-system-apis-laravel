@@ -98,6 +98,7 @@
         $('#home_or_away').select2({
             placeholder: "Select home or away",
         });
+
     </script>
     <script src="/dist/js/sb-games-2.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>

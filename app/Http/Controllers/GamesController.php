@@ -28,6 +28,10 @@ use App\Http\Controllers\Controller;
 class GamesController extends Controller
 {
 
+    /**
+     * list all the games
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
         $sports = Sport::where('school_id', $this->schoolId)->get();
@@ -39,9 +43,7 @@ class GamesController extends Controller
         $levelsList->prepend('Level');
         $games = Games::where('school_id', $this->schoolId)->get();
         $show_games = '0';
-
-        $opponents = Opponent::where('id', '<>', '1')->lists('name', 'id');
-        $school_names = School::where('id', '<>', '1')->lists('name', 'id');
+        $school_names = Opponent::lists('name', 'id');
         $school_logo = School::where('id', '<>', '1')->lists('school_logo','id');
 
         $rostersList = Roster::where('school_id', $this->schoolId)->lists('name', 'id')->prepend('Select Roster', '');
@@ -50,35 +52,32 @@ class GamesController extends Controller
             'rostersList', 'levels', 'levelsList', 'games', 'show_games', 'school_names', 'school_logo'));
     }
 
+
+    /**
+     * handle the filters
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function filter(Request $request)
     {
-        $sportId = $request->input('sport_id');
-        $levelId = $request->input('level_id');
+        $rosterId = $request->input('roster_id');
+        $year = $request->input('year');
 
-        if($sportId)
+        $allGames = Games::where('school_id', $this->schoolId)->get();
+        $games = "";
+
+        if($rosterId)
         {
-            $games = Games::where('school_id', $this->schoolId)->where('sport_id', $sportId)->get();
+            $games = Games::where('school_id', $this->schoolId)->where('roster_id', $rosterId)->get();
         }
 
-        if($levelId)
-        {
-            $games = Games::where('school_id', $this->schoolId)->where('level_id', $levelId)->get();
-        }
-
-        $sports = Sport::where('school_id', $this->schoolId)->get();
-        $levels = LevelSport::where('school_id', $this->schoolId)->get();
-
-        $sportsList = Sport::lists('name', 'id');
-        $sportsList->prepend('Sport');
-        $levelsList = LevelSport::lists('name', 'id');
-        $levelsList->prepend('Level');
+        $rostersList = Roster::where('school_id', $this->schoolId)->lists('name', 'id')->prepend('Select Roster', '');
         $show_games = '0';
         $school_names = School::lists('name', 'id');
         $school_logo = School::lists('school_logo','id');
+        $opponents = Opponent::where('school_id', $this->schoolId)->get();
 
-
-        return view('games.show',compact('sports', 'school_id', 'sportsList', 'levels', 'levelsList', 'games', 'show_games', 'school_names', 'school_logo'));
-
+        return view('games.filter',compact('rosterId', 'allGames', 'rostersList', 'opponents', 'year', 'sports', 'school_id', 'sportsList', 'levels', 'levelsList', 'games', 'show_games', 'school_names', 'school_logo'));
 
     }
 
@@ -176,7 +175,7 @@ class GamesController extends Controller
         $opponents = School::lists('name', 'id');
         $years = Year::lists('year', 'id');
 
-        $opponents = Opponent::lists('name', 'id');
+        $opponents = Opponent::where('school_id', $this->schoolId)->lists('name', 'id');
         $school_names = School::where('id', '<>', 1)->lists('name', 'id');
         $school_logo = School::where('id', '<>', '1')->lists('school_logo','id');
 
@@ -251,12 +250,14 @@ class GamesController extends Controller
     }
 
     //shows all games ordered by date
+    //working
     /**
      * @param $sport_id
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function show($sport_id)
     {
+        dd($sport_id);
         $type = Sport::where('id', $sport_id)->first();
         $games = Games::where('sport_id', '=', $sport_id)->orderBy('game_date', 'DESC')->get();
         $sports = Sport::lists('name', 'id');
@@ -268,7 +269,7 @@ class GamesController extends Controller
         $locations = Location::lists('name', 'id');
 
         $opponents = Opponent::where('id', '<>', '1')->lists('name', 'id');
-        $school_names = School::where('id', '<>', 1)->lists('name', 'id');
+        $school_names = Opponent::lists('name', 'id');
         $school_logo = School::where('id', '<>', '1')->lists('school_logo','id');
 
         return view('games.show', compact('games', 'sports', 'levels', 'years', 'type', 'levelcreate', 'id_sport', 'opponents', 'school_names','school_logo', 'show_games', 'locations'));
@@ -280,6 +281,7 @@ class GamesController extends Controller
      */
     public function show_games(Request $request)
     {
+        dd($request);
         $games_ids = $request->input('invisible_games');
         $ids = [];
         if($games_ids != '[]');
@@ -316,7 +318,6 @@ class GamesController extends Controller
 
         $school_names = Opponent::where('school_id', $this->schoolId)->lists('name', 'id');
         $school_logo = School::lists('school_logo','id');
-
         return view('games.show',compact('sports', 'school_id', 'sportsList', 'levels', 'levelsList', 'games', 'show_games', 'school_names', 'school_logo'));
     }
 
