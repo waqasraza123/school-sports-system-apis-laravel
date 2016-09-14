@@ -14,9 +14,9 @@ class Gallery extends Model
         'type'
     ];
 
-    public function rosters()
+    public function students()
     {
-        return $this->belongsToMany('App\Roster');
+        return $this->belongsToMany('App\Student');
     }
 
     public function albums()

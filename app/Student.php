@@ -25,4 +25,9 @@ class Student extends Model
     public function custom_fields(){
         return $this->hasMany('App\CustomStudent', 'school_id');
     }
+
+    public function albums()
+    {
+        return $this->belongsToMany('App\Album');
+    }
 }

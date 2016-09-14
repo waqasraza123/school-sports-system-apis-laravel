@@ -114,10 +114,14 @@ class GalleryController extends Controller
         {
             $gallery = Gallery::where('id', '=', $file['gallery_invisible_id'])->first();
 
-            //add rosters tags
-            if (isset($file['roster_modal_id']))
+            //add student tags
+            if (isset($file['student_modal_id']))
             {
-                $gallery->rosters()->sync(array_values($file['roster_modal_id']));
+                $gallery->students()->sync(array_values($file['student_modal_id']));
+            }
+            else
+            {
+                $gallery->students()->sync([]);
             }
 
             Session::flash('success', 'Updated successfully');

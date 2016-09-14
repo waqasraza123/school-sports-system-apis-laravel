@@ -10,6 +10,7 @@ use App\Roster;
 use App\School;
 use App\Season;
 use App\Sport;
+use App\Student;
 use App\Year;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -126,15 +127,27 @@ class AlbumController extends Controller
             {
                 $album->rosters()->sync(array_values($file['roster_id']));
             }
+            else
+            {
+                $album->rosters()->sync([]);
+            }
             //add years tags
             if (isset($file['year_id']))
             {
                 $album->years()->sync(array_values($file['year_id']));
             }
+            else
+            {
+                $album->years()->sync([]);
+            }
             //add games tags
             if (isset($file['game_id']))
             {
                 $album->games()->sync(array_values($file['game_id']));
+            }
+            else
+            {
+                $album->games()->sync([]);
             }
 
             Session::flash('success', 'Updated successfully');
@@ -160,20 +173,13 @@ class AlbumController extends Controller
 
     public function show($id)
     {
-        //making list for rosters where key=rooster_id and value= rooster name and surname
-        $rosters_all = Roster::all();
-        $rosters = [];
-        foreach ($rosters_all as $roster)
-        {
-            $rosters[$roster->id] = $roster->name;
-        }
-
         $album_id = $id;
+        $students = Student::where('school_id','=', $this->schoolId)->get()->lists('name','id');
         $gallery_images = Gallery::where('album_id','=', $album_id)->where('type', '=', 'image')->get();
         $gallery_videos = Gallery::where('album_id','=', $album_id)->where('type', '=', 'video')->get();
         //showing view for all photos
-        return view('gallery.show', compact('gallery_images', 'gallery_videos', 'rosters', 'album_id'));
-        return view('albums.add-photos', compact('gallery_images', 'gallery_videos', 'rosters', 'album_id'));
+        return view('gallery.show', compact('gallery_images', 'gallery_videos', 'students', 'album_id'));
+//        return view('albums.add-photos', compact('gallery_images', 'gallery_videos', 'rosters', 'album_id'));
     }
     public function destroy($id)
     {

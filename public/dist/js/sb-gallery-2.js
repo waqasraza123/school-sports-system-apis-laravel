@@ -21,10 +21,11 @@ $(window).load(function(){
     $(".edit_gallery").click(function() {
 
         var $row = $(this).parent().closest("div");
-        var $rosters_ids = $row.find(".rosters_ids").text();
-        var parsed_roster_id = JSON.parse($rosters_ids);
+        var $students_ids = $row.find(".students_ids").text();
 
-        $('#roster_modal_id').val(parsed_roster_id).change();
+        var parsed_student_id = JSON.parse($students_ids);
+
+        $('#student_modal_id').val(parsed_student_id).change();
         document.getElementById('gallery_invisible_id').value=$(this).data('id') ;
 
     });
@@ -32,10 +33,10 @@ $(window).load(function(){
     $(".edit_video").click(function() {
 
         var $row = $(this).closest("tr");
-        var $rosters_ids = $row.find(".video_rosters_ids").text();
-        var parsed_roster_id = JSON.parse($rosters_ids);
+        var $students_ids = $row.find(".video_students_ids").text();
+        var parsed_student_id = JSON.parse($students_ids);
 
-        $('#roster_modal_id').val(parsed_roster_id).change();
+        $('#student_modal_id').val(parsed_student_id).change();
         document.getElementById('gallery_invisible_id').value=$(this).data('id') ;
 
     });

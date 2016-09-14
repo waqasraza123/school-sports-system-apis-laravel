@@ -67,10 +67,10 @@
                                 <button data-id="{{ $photo->id}}" data-toggle="modal" class="edit_gallery" data-target="#galleryModal" align="right" style="position: absolute;top: 5px;right: 35px; background: transparent;border: none; font-size: 24px;"><span class="glyphicon glyphicon glyphicon-edit" aria-hidden="true"></span></button>
                                 <p class="id" style="display: none;" >{{ $photo->id}}</p>
                                 <div>
-                                    <p class="rosters_ids" style="display: none;" >{{ json_encode($photo->rosters->lists('id'))}} </p>
+                                    <p class="students_ids" style="display: none;" >{{ json_encode($photo->students->lists('id'))}} </p>
                                 </div>
                                 <p style="position: absolute;bottom: 0; right:10px; left:10px">
-                                    @foreach($photo->rosters as $roster_tag)<span class="label label-info" style="color: black; font-weight: lighter; font-size: 10px">{{$roster_tag->name}}</span> @endforeach
+                                    @foreach($photo->students as $student_tag)<span class="label label-info" style="color: black; font-weight: lighter; font-size: 10px">{{$student_tag->name}}</span> @endforeach
                                 </p>
                             </div>
                         </div>
@@ -92,11 +92,11 @@
                 @foreach($gallery_videos as $video)
                     <tr>
                         <td><a href="{{ $video->url}}">{{$video->url}}</a></td>
-                        <td>@foreach($video->rosters as $roster_tag) <label>{{$roster_tag->name}}, </label> @endforeach
+                        <td>@foreach($video->students as $student_tag) <label>{{$student_tag->name}}, </label> @endforeach
                         </td>
                         <td><button data-id="{{ $video->id}}" data-toggle="modal" class="edit_video btn btn-info" data-target="#galleryModal" align="right" >edit</button></td>
                         <td>{!! Form::open([    'method' => 'DELETE','route' => ['gallery.destroy', $video->id]]) !!}{!! Form::submit('Delete', array('class' => 'btn btn-danger')) !!}{!! Form::close() !!}</td>
-                        <td><p class="video_rosters_ids" style="display: none;" >{{ json_encode($video->rosters->lists('id'))}} </p></td>
+                        <td><p class="video_students_ids" style="display: none;" >{{ json_encode($video->students->lists('id'))}} </p></td>
                     </tr>
                 @endforeach
                     </tbody>

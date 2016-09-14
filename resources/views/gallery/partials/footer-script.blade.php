@@ -1,8 +1,8 @@
 <script src="/dist/js/sb-gallery-2.js"></script>
 <script src="/js/dropzone.js"></script>
 <script type="text/javascript">
-    $('#roster_id').select2();
-    $('#roster_modal_id').select2();
+    $('#student_id').select2();
+    $('#student_modal_id').select2();
 
     submitForms = function(){
         document.getElementById("form1").submit();

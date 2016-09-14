@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateGalleryTagsTable extends Migration
+class CreateGalleryStudentTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,14 +12,14 @@ class CreateGalleryTagsTable extends Migration
      */
     public function up()
     {
-        Schema::create('album_gallery', function(Blueprint $table)
+        Schema::create('gallery_student', function(Blueprint $table)
         {
-            $table->unsignedInteger('album_id')
+            $table->unsignedInteger('student_id')
                 ->nullable()
                 ->index();
-            $table->foreign('album_id')
+            $table->foreign('student_id')
                 ->references('id')
-                ->on('album')
+                ->on('students')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->unsignedInteger('gallery_id')->nullable()->index();
@@ -35,9 +35,6 @@ class CreateGalleryTagsTable extends Migration
      */
     public function down()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
-        Schema::dropIfExists('gallery_games');
-        Schema::dropIfExists('gallery_roster');
-        Schema::dropIfExists('gallery_sport');
+        Schema::dropIfExists('gallery_student');
     }
 }

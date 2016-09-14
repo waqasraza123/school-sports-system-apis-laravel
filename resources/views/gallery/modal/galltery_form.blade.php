@@ -21,7 +21,7 @@
                 </div>
                 <div class="form-group select_sport">
                     {!! Form::label('title', 'Player:', ['class' => 'control-label']) !!}
-                    {{ Form::select('roster_modal_id[]', $rosters, null, ['class' => 'form-control','id' => 'roster_modal_id', 'style' => 'width: 100%', 'multiple']) }}
+                    {{ Form::select('student_modal_id[]', $students, null, ['class' => 'form-control','id' => 'student_modal_id', 'style' => 'width: 100%', 'multiple']) }}
                     {{ Form::hidden('gallery_invisible_id', null, ['id' => 'gallery_invisible_id']) }}
                 </div>
                 <div class="row">
