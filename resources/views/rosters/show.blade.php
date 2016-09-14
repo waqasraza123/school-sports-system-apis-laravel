@@ -23,13 +23,17 @@
 
         <div class="row">
             <div class="table-responsive .table-striped .table-hover col-md-12">
-                <br>
+                <p class="lead">
                 <a href="{{url('rosters/create')}}"><button class="btn btn-primary">Add Roster</button></a>
+</p>
                 <br>
 
-                <table class="table">
-                    <thead>
-                    <tr>
+                @include('partials.error-messages.success')
+                @include('partials.error-messages.error')
+                <div class="panel panel-primary">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead  style="background-color:#000000; color:white">
                         <th>#</th>
                         <th></th>
                         <th>Name</th>
@@ -81,6 +85,8 @@
 
         </div>
     </div>
+  </div>
+</div>
 @endsection
 @section('footer')
     @include('partials.error-messages.footer-script')
