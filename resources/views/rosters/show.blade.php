@@ -35,7 +35,7 @@
                         <table class="table table-hover">
                             <thead  style="background-color:#000000; color:white">
                         <th>#</th>
-                        <th></th>
+
                         <th>Name</th>
                         <th>&nbsp;</th>
                         <th>&nbsp;</th>
@@ -58,11 +58,7 @@
 
                                                     <tr>
                                                         <td>{{$r->id}}</td>
-                                                        @if($r->photo)
-                                                            <td><img src="{{asset('uploads/rosters/'.$r->photo)}}" height="50px" width="50px" alt="image"></td>
-                                                        @else
-                                                            <td><img src="{{asset('uploads/def.png')}}" height="50px" width="50px" alt="image"></td>
-                                                        @endif
+                                                      
                                                         <td>{{$r->name}}</td>
                                                         <td><a href="{{url('rosters/'. $r->id. '/edit')}}" class="btn btn-primary btn-sm">Edit</a></td>
                                                         <td>{!! Form::open([    'method' => 'DELETE','url' => ['/rosters', $r->id]]) !!}{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}{!! Form::close() !!}</td>
