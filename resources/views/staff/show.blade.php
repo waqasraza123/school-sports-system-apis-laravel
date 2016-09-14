@@ -4,7 +4,7 @@
 
         <div style="margin: 20px auto; width: 300px">
             <h2 style="
-            float: left">All Staff of year ({{$year}})</h2>
+            float: left">All Staff ({{$year}})</h2>
             {!! Form::open(['route' => 'year-staff']) !!}
             <div class="col-sm-6" style="float: left; margin: 20px">
                 {!! Form::selectYear('year', 2005, \Carbon\Carbon::now()->year,
@@ -14,7 +14,7 @@
             {!! Form::close() !!}
         </div>
         <div class="row">
-            <div class="col-md-12">
+          <div class="table-responsive .table-striped .table-hover col-md-12">
                 <br>
                   <p class="lead">
                 <a href="{{url('staff/create')}}"><button class="btn btn-primary">Add Staff</button></a>
@@ -45,7 +45,7 @@
                                         <tr>
                                             <td>{{$s->id}}</td>
                                             @if($s->photo)
-                                                <td><img src="{{asset($s->photo)}}" height="50px" width="50px" alt="image"></td>
+                                                <td><img src="{{$s->photo}}" height="50px" width="50px" alt="image"></td>
                                             @else
                                                 <td><img src="{{asset('uploads/def.png')}}" height="50px" width="50px" alt="image"></td>
                                             @endif
