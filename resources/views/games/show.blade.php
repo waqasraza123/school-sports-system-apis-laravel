@@ -1,35 +1,38 @@
 @extends('layouts.master')
 @section('content')
     <div class="container-fluid">
-        @include('partials.error-messages.success')
-        @include('partials.error-messages.error')
+        <div style="margin: 20px auto; width: 1000px">  <div style="width:50%">
         <h2 style="text-align: center">All games</h2>
-        <div class="row">
-            <div class="col-md-6 col-md-offset-3">
-                <div class="row">
+
                     {!! Form::open(['url' => 'games/filter', 'method'=>'post']) !!}
-                    <div class="col-md-6">
+                  <div class="col-sm-3" style="width:50%" >
                         {!! Form::selectYear('year', 2005, \Carbon\Carbon::now()->year,
             \Carbon\Carbon::now()->year, [
            'class' => 'form-control', 'id' => 'select_year_id', 'required' => true, 'onchange' => 'this.form.submit()']) !!}
                     </div>
 
-                    <div class="col-md-6">
+                      <div class="col-sm-3" style="width:50%" >
                         {!! Form::select('roster_id', $rostersList, null, ['id' => 'select_roster_id', 'class' => 'form-control', 'onchange' => 'this.form.submit()']) !!}
                     </div>
+                    </div>
                     {!! Form::close() !!}
-                </div>
-            </div>
-        </div>
+
+              </div>
+
+
 
         <div class="row">
             <div class="table-responsive .table-striped .table-hover col-md-12">
-                <br>
+                <p class="lead">
                 <a href="{{url('games/create')}}"><button class="btn btn-primary">Add game</button></a>
+</p>
                 <br>
-
-                <table class="table">
-                    <thead>
+                @include('partials.error-messages.success')
+                @include('partials.error-messages.error')
+                <div class="panel panel-primary">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead  style="background-color:#000000; color:white">
                     <tr>
                         <th style="cursor: pointer;">Oponent</th>
                         <th style="cursor: pointer;">Date</th>
@@ -84,6 +87,8 @@
 
         </div>
     </div>
+  </div>
+</div>
 @endsection
 @section('footer')
     @include('partials.error-messages.footer-script')
@@ -131,5 +136,3 @@
             $('div.alert').delay(4000).slideUp(300);
         </script>
     @endif
-
-

@@ -1,20 +1,23 @@
 @extends('layouts.master')
 @section('content')
-    <div class="container-fluid">
-        @include('partials.error-messages.success')
-        @include('partials.error-messages.error')
-        <div>
-            <h2 style="
-            text-align: center">All Sports Levels</h2>
+<div class="container-fluid">
+<div style="margin: 20px auto; width: 1000px">  <div style="width:50%">
+    <h2 style="text-align: center">Available Sport Levels</h2>
         </div>
+      </div>
         <div class="row">
             <div class="table-responsive .table-striped .table-hover col-md-12">
-                <br>
+                <p class="lead">
                 <a href="{{url('sports-levels/create')}}"><button class="btn btn-primary">Add Sport's Level</button></a>
+              </p>
                 <br>
+                @include('partials.error-messages.success')
+                @include('partials.error-messages.error')
+                    <div class="panel panel-primary">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead  style="background-color:#000000; color:white">
 
-                <table class="table">
-                    <thead>
                         <tr>
                             <th>#</th>
                             <th>Name</th>
@@ -37,7 +40,8 @@
                     </tbody>
                 </table>
             </div>
-
+</div>
+</div>
         </div>
     </div>
 @endsection
