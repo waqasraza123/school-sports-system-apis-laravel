@@ -6,13 +6,16 @@
         @include('partials.error-messages.error')
         @include('partials.error-messages.success')
 
-        <h3 style="text-align: center; margin-bottom: 50px;">Add Sponsor</h3>
+
         <div class="row">
+          <div class="col-sm-8">
+            <h3 style="text-align: center; margin-bottom: 50px;">Add Sponsor</h3>
+          </div>
             <div class="col-sm-8">
                 <ul class="nav nav-tabs">
                     <li class="active"><a data-toggle="tab" href="#info">Sponsor Info</a></li>
                     <li><a data-toggle="tab" href="#media">Sponsor Media</a></li>
-                    <li><a data-toggle="tab" href="#mascot">Mascot/Colors</a></li>
+                    <li><a data-toggle="tab" href="#mascot">Images/Colors</a></li>
                 </ul>
 
                 <div class="tab-content">
@@ -49,8 +52,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group-sm">
                                         <div class="col-s-3">
-                                            {!! Form::label('title', 'Bio:', ['class' => 'control-label']) !!}
-                                            {!! Form::text('bio', null, ['class' => 'form-control', 'id'=> 'bio', 'required' => true]) !!}
+                                            {!! Form::label('title', 'Website:', ['class' => 'control-label']) !!}
+                                            {!! Form::text('url', null, ['class' => 'form-control', 'id'=> 'url']) !!}
                                         </div>
                                     </div>
                                 </div>
@@ -67,21 +70,23 @@
                                 <div class="col-md-6">
                                     <div class="form-group-sm">
                                         <div class="col-s-3">
-                                            {!! Form::label('title', 'Website:', ['class' => 'control-label']) !!}
-                                            {!! Form::text('url', null, ['class' => 'form-control', 'id'=> 'url']) !!}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group-sm">
-                                        <div class="col-s-3">
                                             {!! Form::label('title', 'Phone:', ['class' => 'control-label']) !!}
                                             {!! Form::text('phone', null, ['class' => 'form-control', 'id'=> 'phone', 'required' => true]) !!}
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-6">
+                                  <div class="form-group-sm">
+                                      <div class="col-s-3">
+                                          {!! Form::label('title', 'Bio:', ['class' => 'control-label']) !!}
+                                          {!! Form::textarea('bio', null, ['class' => 'form-control', 'id'=> 'bio', 'required' => true]) !!}
+                                      </div>
+                                  </div>
+                              </div>
+
+
                                 <div class="col-md-6">
 
                                 </div>
