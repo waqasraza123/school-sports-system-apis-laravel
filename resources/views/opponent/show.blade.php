@@ -1,11 +1,10 @@
 @extends('layouts.master')
 @section('content')
     <div class="container-fluid">
-        @include('partials.error-messages.success')
-        @include('partials.error-messages.error')
+
         <div style="margin: 20px auto; width: 300px">
             <h2 style="
-            float: left">All Opponents of year ({{$year}})</h2>
+            float: left">All Opponents ({{$year}})</h2>
             {!! Form::open(['route' => 'year-opponents']) !!}
             <div class="col-sm-6" style="float: left; margin: 20px">
                 {!! Form::selectYear('year', 2005, \Carbon\Carbon::now()->year,
@@ -17,17 +16,24 @@
         <div class="row">
             <div class="table-responsive .table-striped .table-hover col-md-12">
                 <br>
+                <p class="lead">
                 <a href="{{url('opponents/create')}}"><button class="btn btn-primary">Add opponents</button></a>
+              </p>
                 <br>
-
-                <table class="table">
-                    <thead>
+                @include('partials.error-messages.success')
+                @include('partials.error-messages.error')
+                <div class="panel panel-primary">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead  style="background-color:#000000; color:white">
                         <tr>
                             <th>#</th>
                             <th>Image</th>
                             <th>Name</th>
                             <th>Nick</th>
                             <th>School</th>
+                            <th>&nbsp;</th>
+                            <th>&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -59,7 +65,8 @@
                     </tbody>
                 </table>
             </div>
-
+          </div>
+      </div>
         </div>
     </div>
 @endsection
