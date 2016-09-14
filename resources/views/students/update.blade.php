@@ -14,8 +14,11 @@
                 {!! Form::text('name', null, ['class' => 'fn form-control', 'required' => 'true']) !!}
             </div>
             <div class="col-md-6">
-                {!! Form::label('year_id', 'Year:', ['class' => 'control-label']) !!}
-                {!! Form::selectYear('year_id', 2005, \Carbon\Carbon::now()->year, \Carbon\Carbon::now()->year, ['class' => 'form-control', 'required' => 'true']) !!}
+                {!! Form::label('academic_year', 'Academic Year:', ['class' => 'control-label']) !!}
+                {!! Form::select('academic_year',
+                        ['Freshman' => 'Freshman', 'Sohphomore' => 'Sohphomore',
+                         'Junior' => 'Junior', 'Senior' => 'Senior'], 'Please Select'
+                        ,['class' => 'form-control']) !!}
             </div>
         </div>
         <div class="row">
@@ -50,11 +53,7 @@
 
         <div class="row">
             <div class="col-md-6">
-                {!! Form::label('academic_year', 'Academic Year:', ['class' => 'control-label']) !!}
-                {!! Form::select('academic_year',
-                        ['Freshman' => 'Freshman', 'Sohphomore' => 'Sohphomore',
-                         'Junior' => 'Junior', 'Senior' => 'Senior'], 'Please Select'
-                        ,['class' => 'form-control']) !!}
+
             </div>
             <div class="col-md-6">
 

@@ -1,6 +1,8 @@
-@if($rosters)
+
+@if($rosters != null)
     @foreach($rosters->students as $student)
-        @foreach($student->years as $y)
+
+        @foreach($rosters->years as $y)
             @if($y->year == $year)
                 <tr>
                     <td>{{$student->id}}</td>
@@ -23,3 +25,6 @@
         No Students for this roster.
     </div>
 @endif
+<script>
+    document.getElementById('select_roster_id').value = '<?php echo $rosters->id; ?>'
+</script>

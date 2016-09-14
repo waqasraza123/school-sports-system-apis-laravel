@@ -5,15 +5,21 @@
         @include('partials.error-messages.error')
         <h2 style="text-align: center">All games</h2>
         <div class="row">
-            {!! Form::open(['url' => 'games/filter', 'method'=>'post']) !!}
-            <div class="col-md-3">
-                {!! Form::select('level_id', $levelsList, null, ['id' => 'select_level_id', 'class' => 'form-control', 'onchange' => 'this.form.submit()']) !!}
-            </div>
+            <div class="col-md-6 col-md-offset-3">
+                <div class="row">
+                    {!! Form::open(['url' => 'games/filter', 'method'=>'post']) !!}
+                    <div class="col-md-6">
+                        {!! Form::selectYear('year', 2005, \Carbon\Carbon::now()->year,
+            \Carbon\Carbon::now()->year, [
+           'class' => 'form-control', 'id' => 'select_year_id', 'required' => true, 'onchange' => 'this.form.submit()']) !!}
+                    </div>
 
-            <div class="col-md-3">
-                {!! Form::select('sport_id', $sportsList, null, ['id' => 'select_sport_id', 'class' => 'form-control', 'onchange' => 'this.form.submit()']) !!}
+                    <div class="col-md-6">
+                        {!! Form::select('roster_id', $rostersList, null, ['id' => 'select_roster_id', 'class' => 'form-control', 'onchange' => 'this.form.submit()']) !!}
+                    </div>
+                    {!! Form::close() !!}
+                </div>
             </div>
-            {!! Form::close() !!}
         </div>
 
         <div class="row">
@@ -92,7 +98,6 @@
         $('#home_or_away').select2({
             placeholder: "Select home or away",
         });
-
     </script>
     <script src="/dist/js/sb-games-2.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment.min.js"></script>

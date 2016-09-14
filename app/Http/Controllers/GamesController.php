@@ -6,6 +6,7 @@ use App\LevelSport;
 use App\Location;
 
 use App\Opponent;
+use App\Roster;
 use App\Season;
 use Carbon\Carbon;
 
@@ -45,7 +46,9 @@ class GamesController extends Controller
         $school_names = School::where('id', '<>', '1')->lists('name', 'id');
         $school_logo = School::where('id', '<>', '1')->lists('school_logo','id');
 
-        return view('games.show',compact('sports', 'school_id', 'sportsList', 'levels', 'levelsList', 'games', 'show_games', 'school_names', 'school_logo'));
+        $rostersList = Roster::where('school_id', $this->schoolId)->lists('name', 'id')->prepend('Select Roster', '');
+
+        return view('games.show',compact('sports', 'school_id', 'rostersList', 'levels', 'levelsList', 'games', 'show_games', 'school_names', 'school_logo'));
     }
 
     public function filter(Request $request)
@@ -158,7 +161,7 @@ class GamesController extends Controller
         $seasons = Season::lists('name', 'id');
         $locations = Location::lists('name', 'id');
         $opponents = School::lists('name', 'id');
-        $years = Year::where('year_type', 'App\Sport')->lists('year', 'id');
+        $years = Year::lists('year', 'id');
 
         $opponents = Opponent::lists('name', 'id');
         $school_names = School::where('id', '<>', 1)->lists('name', 'id');
