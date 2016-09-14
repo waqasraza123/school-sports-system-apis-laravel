@@ -38,7 +38,7 @@
                 </div>
                 <div class="col-md-6">
                     {!! Form::label('title', 'Year:', ['class' => 'control-label']) !!}
-                    {{ Form::select('year_id', $years, null, ['class' => 'form-control', 'id' => 'year_id', 'style' => 'width: 100%']) }}
+                    {!! Form::selectYear('year_id', 2005, \Carbon\Carbon::now()->year, \Carbon\Carbon::now()->year, ['class' => 'form-control', 'required' => 'true']) !!}
                 </div>
             </div>
 

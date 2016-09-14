@@ -45,8 +45,8 @@ class StudentsController extends Controller
         $levelsList = $levels->lists('name', 'id');
         $levelsList->prepend('Sport Level');
 
-        $rostersList = $rosters->lists('name', 'id');
-        $rostersList->prepend('Roster');
+        $rostersList = Roster::where('school_id', $this->schoolId)->get()->lists('name', 'id');
+        $rostersList->prepend('Select Roster', '');
 
         return view('students.show',
             compact('sports', 'rosters', 'school_id', 'year', 'students', 'rostersList', 'sportsList', 'levels', 'levelsList',
@@ -84,7 +84,7 @@ class StudentsController extends Controller
         $levelsList->prepend('Sport Level');
 
         $rostersList = $rosters->lists('name', 'id');
-        $rostersList->prepend('Roster');
+        $rostersList->prepend('Select Roster', '');
 
         if($sportId){
             $sports = ($sports->find($sportId));
@@ -93,13 +93,14 @@ class StudentsController extends Controller
         elseif ($levelId){
             $levels = $levels->find($levelId);
         }
+
         elseif ($rosterId){
-            $rosters = $rosters->find($rosterId);
+            $rosters = Roster::where('id', $rosterId)->where('school_id', $this->schoolId)->first();
         }
 
         return view('students.show',
-            compact('sports', 'rosters', 'school_id', 'year', 'students', 'rostersList', 'sportsList', 'levels', 'levelsList',
-                'yearId', 'sportId', 'levelId', 'rosterId'));
+            compact('sports', 'rosters', 'school_id', 'year', 'students', 'rostersList', 'sportsList',
+                'levels', 'levelsList', 'yearId', 'sportId', 'levelId', 'rosterId'));
 
     }
 
