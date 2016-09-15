@@ -88,6 +88,7 @@ class AuthController extends Controller
      * show the reigster page with schools list
      */
     public function show(){
+
         $schools = School::where('school_email', '<>', 'admin@gmail.com')->get();
 
         return view('auth.register')->withSchools($schools);

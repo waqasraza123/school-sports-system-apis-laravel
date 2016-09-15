@@ -79,7 +79,7 @@ Route::group(['middleware' => ['auth']], function () {
 /**
  * Authentication routes for the applications
  */
-Route::get('auth/register', 'Auth\AuthController@show');
+Route::get('auth/register', 'Auth\AuthController@show')->middleware('disable-registration');
 Route::post('auth/register', 'Auth\AuthController@store');
 Route::controllers([
     'auth' => 'Auth\AuthController',
