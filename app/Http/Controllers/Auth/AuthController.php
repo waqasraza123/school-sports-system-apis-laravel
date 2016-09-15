@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use Illuminate\Http\Request;
 use App\School;
 use App\User;
+use Illuminate\Support\Facades\Redirect;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -40,7 +41,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest', ['except' => 'getLogout']);
+        /*$this->middleware('guest', ['except' => 'getLogout']);*/
     }
 
     /**
@@ -81,7 +82,7 @@ class AuthController extends Controller
         $user->password = bcrypt($request->input('password'));
         $user->save();
 
-        return redirect('/home');
+        return Redirect::back();
     }
 
     /**
@@ -89,8 +90,9 @@ class AuthController extends Controller
      */
     public function show(){
 
+        $currentSchool = School::where('school_email', 'admin@gmail.com')->first();
         $schools = School::where('school_email', '<>', 'admin@gmail.com')->get();
 
-        return view('auth.register')->withSchools($schools);
+        return view('auth.register', compact('currentSchool'))->withSchools($schools);
     }
 }

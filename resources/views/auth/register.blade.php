@@ -1,4 +1,4 @@
-@extends('app')
+@extends('layouts.master', ['currentSchool', $currentSchool])
 
 @section('content')
 
