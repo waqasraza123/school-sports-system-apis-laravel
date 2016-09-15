@@ -40,7 +40,8 @@
     <body>
         <div class="container">
             <div class="content">
-                <div class="title">Be right back.</div>
+                <div class="title">Sorry, that page does not exist.</div>
+                <a href="/">Home</a>
             </div>
         </div>
     </body>

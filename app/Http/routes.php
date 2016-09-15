@@ -68,6 +68,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::resource('schedules', 'SchedulesController');
 
+    Route::resource('ads', 'AdsController');
+
     //testing purposes
     Route::get('test', function() {
         $t = DB::table('users')->where('id', 1)->first();

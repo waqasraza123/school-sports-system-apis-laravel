@@ -34,8 +34,8 @@
             @endif
 
             <li>
-                <a href="/sponsors"><i class="fa fa-edit fa-fw"></i>
-                    Sponsors</a>
+                <a href="/ads"><i class="fa fa-edit fa-fw"></i>
+                    Ads</a>
             </li>
 
             <li>
