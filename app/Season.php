@@ -12,5 +12,4 @@ class Season extends Model
     public function sports(){
         return $this->hasMany('App\Sport', 'season_id');
     }
-
 }

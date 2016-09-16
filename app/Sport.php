@@ -11,7 +11,7 @@ class Sport extends Model
 
     protected $table = 'sports';
 
-    protected $hidden = ['school_id', 'pivot', 'game_date', 'id'];
+    protected $hidden = ['school_id', 'pivot', 'game_date', 'id', 'season_id', 'created_at', 'updated_at'];
 
     public function rosters()
     {

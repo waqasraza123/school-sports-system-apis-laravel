@@ -331,6 +331,14 @@ class APIController extends Controller
     }
 
 
+    /**
+     * @param $schoolId
+     * @param $sportId
+     * @param $levelId
+     * @param $seasonId
+     * @param $gameId
+     * @return mixed
+     */
     public function getGame($schoolId, $sportId, $levelId, $seasonId, $gameId){
         if(!($schoolId && $sportId && $levelId && $seasonId && $gameId)){
             return response()->json();
@@ -375,19 +383,37 @@ class APIController extends Controller
         }
     }
 
+    /**
+     * @param $schoolId
+     * @return mixed
+     */
     public function getRosterList($schoolId){
-        $rosterList = Sport::
-                        with([
-                            'season_list' => function($q){
-                                $q->select('seasons.id', 'seasons.id as season_id',
-                                    'seasons.name as season_name')->first();
-                            }
-                        ])
-                        ->select('sports.id as sport_id', 'sports.name as sport_name')
-                        ->where('school_id', $schoolId)->get();
-        return $rosterList;
+        $sports = Sport::with([
+                        'sport_levels' => function($q){
+                            $q->select('levels.id as level_id', 'levels.name as level_name')
+                                ->get();
+                        },
+                        'season_list' => function($q){
+                            $q->select('seasons.id as season_id', 'seasons.name as season_name',
+                                'seasons.id')
+                                ->get();
+                        }
+                    ])
+                    ->select('sports.id as sport_id', 'sports.name as sport_name', 'sports.id', 'sports.season_id')
+                    ->where('sports.school_id', $schoolId)
+                    ->get();
+
+        $arr = array('sport' => $sports);
+        return json_encode($arr);
     }
 
+    /**
+     * @param $schoolId
+     * @param $sportId
+     * @param $levelId
+     * @param $seasonId
+     * @return mixed
+     */
     public function getRoster($schoolId, $sportId, $levelId, $seasonId){
         $roster = Roster::with([
                         'student_list' => function($q){
