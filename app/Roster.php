@@ -16,6 +16,7 @@ class Roster extends Model
         'games_advertiser',
         'news_advertiser',
     ];
+    protected $hidden = ['pivot', 'id'];
 
     public function sport()
     {
@@ -56,6 +57,12 @@ class Roster extends Model
      */
     public function students(){
         return $this->belongsToMany('App\Student', 'rosters_students');
+    }
+
+
+    //api methods
+    public function student_list(){
+        return $this->belongsToMany('App\Student', 'rosters_students', 'roster_id', 'student_id');
     }
 }
 

@@ -35,7 +35,7 @@ class Games extends Model
         return $this->belongsTo('App\School');
     }
 
-    public function news()
+    public function game_news()
     {
         return $this->belongsToMany('App\News');
     }
@@ -51,6 +51,14 @@ class Games extends Model
 
     public function roster(){
         return $this->belongsTo('App\Roster', 'roster_id');
+    }
+
+    public function game_photos(){
+        return $this->belongsToMany('App\Album', 'album_games', 'games_id', 'album_id');
+    }
+
+    public function game_video(){
+        return $this->belongsToMany('App\Album', 'album_video', 'games_id', 'album_id');
     }
 
 }

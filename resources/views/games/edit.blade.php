@@ -73,27 +73,12 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    {!! Form::label('map_url', 'Map Url') !!}
-                    {!! Form::text('map_url', null, ['class' => 'form-control']) !!}
-                </div>
-                <div class="col-md-6">
-                    {!! Form::label('title', 'Location:', ['class' => 'control-label']) !!}
-                    {{ Form::select('location_id', $locations, null, ['class' => 'form-control', 'id' => 'location_id', 'style' => 'width: 100%']) }}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
                     {!! Form::label('season_id', 'Season: ', ['class' => 'control-label']) !!}
                     {!! Form::select('season_id', $seasons, null, ['class' => 'form-control']) !!}
                 </div>
                 <div class="col-md-6">
-                    {!! Form::label('result', 'Result: ', ['class' => 'control-label']) !!}
-                    {!! Form::text('result', null, ['class' => 'form-control']) !!}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-
+                    {!! Form::label('title', 'Location:', ['class' => 'control-label']) !!}
+                    {{ Form::select('location_id', $locations, null, ['class' => 'form-control', 'id' => 'location_id', 'style' => 'width: 100%']) }}
                 </div>
             </div>
 

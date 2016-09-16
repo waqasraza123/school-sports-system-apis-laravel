@@ -1,31 +1,28 @@
 @extends('layouts.master')
 @section('content')
     <div class="container-fluid">
-        <div style="margin: 20px auto; width: 1000px">  <div style="width:50%">
-        <h2 style="text-align: center">All games</h2>
+        <div class="row">
+            <h2 style="text-align: center">All games</h2>
+            <div class="col-md-6 col-md-offset-3">
+                {!! Form::open(['url' => 'games/filter', 'method'=>'post']) !!}
+                <div class="col-sm-3" style="width:50%" >
+                    {!! Form::selectYear('year', 2005, \Carbon\Carbon::now()->year,
+        \Carbon\Carbon::now()->year, [
+       'class' => 'form-control', 'id' => 'select_year_id', 'required' => true, 'onchange' => 'this.form.submit()']) !!}
+                </div>
 
-                    {!! Form::open(['url' => 'games/filter', 'method'=>'post']) !!}
-                  <div class="col-sm-3" style="width:50%" >
-                        {!! Form::selectYear('year', 2005, \Carbon\Carbon::now()->year,
-            \Carbon\Carbon::now()->year, [
-           'class' => 'form-control', 'id' => 'select_year_id', 'required' => true, 'onchange' => 'this.form.submit()']) !!}
-                    </div>
-
-                      <div class="col-sm-3" style="width:50%" >
-                        {!! Form::select('roster_id', $rostersList, null, ['id' => 'select_roster_id', 'class' => 'form-control', 'onchange' => 'this.form.submit()']) !!}
-                    </div>
-                    </div>
-                    {!! Form::close() !!}
-
-              </div>
-
-
+                <div class="col-sm-3" style="width:50%" >
+                    {!! Form::select('roster_id', $rostersList, null, ['id' => 'select_roster_id', 'class' => 'form-control', 'onchange' => 'this.form.submit()']) !!}
+                </div>
+                {!! Form::close() !!}
+            </div>
+       </div>
 
         <div class="row">
             <div class="table-responsive .table-striped .table-hover col-md-12">
                 <p class="lead">
                 <a href="{{url('games/create')}}"><button class="btn btn-primary">Add game</button></a>
-</p>
+                </p>
                 <br>
                 @include('partials.error-messages.success')
                 @include('partials.error-messages.error')
@@ -46,7 +43,6 @@
                             <th class="sorttable_nosort">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                         @endif
 
-
                         {{--{!! Form::open(array('url'=>'games/', 'method'=>'put')) !!}--}}
                         {{--<th colspan="2" class="sorttable_nosort">{!! Form::select('games_select',['All Events','Future Events','Past Events'], $show_games, ['class' => 'form-control', 'id'=> 'games_select', 'onchange' => 'this.form.submit()']) !!}</th>--}}
                         {{--{{ Form::hidden('invisible_games', $games->lists('id'), ['id' => 'invisible_games']) }}--}}
@@ -64,8 +60,8 @@
                                     <td>{{ $game->game_time}}</td>
                                     <td>{{ $game->home_away}}</td>
                                     @if($show_games == '2' || $show_games == '0')
-                                        <td>{{ $game->opponents_score}}</td>
                                         <td>{{ $game->our_score}}</td>
+                                        <td>{{ $game->opponents_score}}</td>
                                     @else
                                         <td class="sorttable_nosort">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                                         <td class="sorttable_nosort">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>

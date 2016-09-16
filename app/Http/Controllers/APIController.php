@@ -6,10 +6,12 @@ use App\Album;
 use App\Games;
 use App\LevelSport;
 use App\Opponent;
+use App\Roster;
 use App\Season;
 use App\Social;
 use App\Sponsor;
 use App\Staff;
+use App\Student;
 use Illuminate\Http\Request;
 use App\School;
 use App\Sport;
@@ -18,6 +20,7 @@ use App\User;
 use Carbon\Carbon;
 use App\Http\Requests;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 
 class APIController extends Controller
 {
@@ -86,6 +89,14 @@ class APIController extends Controller
 
             if($action == 'getGame'){
                 return $this->getGame($schoolId, $sportId, $levelId, $seasonId, $gameId);
+            }
+
+            if($action == 'getRosterList'){
+                return $this->getRosterList($schoolId);
+            }
+
+            if($action == 'getRoster'){
+                return $this->getRoster($schoolId, $sportId, $levelId, $seasonId);
             }
         }
     }
@@ -315,7 +326,7 @@ class APIController extends Controller
             ->where('games.school_id', $schoolId)
             ->get();
 
-        $arr = array('games_list' => ($schedule));
+        $arr = array('game_list' => ($schedule));
         return json_encode($arr);
     }
 
@@ -325,17 +336,25 @@ class APIController extends Controller
             return response()->json();
         }
         else{
-            $game = Game::select('id as game_id',
+            $game = Games::with(['game_news'=> function($q){
+                $q->select('news.id as news_id', 'news.title as news_title', 'news.intro as news_teaser',
+                    'news.image as news_photo', 'news_date', 'link as news_url')->get();
+            },
+            'game_photos' =>function($q){
+                $q->get();
+            }
+            ])
+            ->select('games.id as game_id',
                     'game_date',
                     'game_date as game_time',
                     'locations.name as game_location',
                     'locations.address as game_address',
-                    'map_url as game_map_url',
+                    'locations.map_url as game_map_url',
                     'home_away as game_vs_at',
                     'result as game_result',
                     'our_score as school_score',
                     'schools.name as school_name',
-                    'schools.nick as school_nick',
+                    'schools.short_name as school_nick',
                     'opponents.name as opp_name',
                     'opponents.nick as opp_nick',
                     'opponents.photo as opp_logo',
@@ -345,19 +364,47 @@ class APIController extends Controller
                 ->join('schools', 'schools.id', '=', 'games.school_id')
                 ->join('opponents', 'opponents.id', '=', 'games.opponents_id')
                 ->where([
-                    ['school_id' => $schoolId],
-                    ['sport_id' => $sportId],
-                    ['level_id' => $levelId],
-                    ['season_id' => $seasonId],
-                    ['id' => $gameId],
+                    ['games.school_id' , $schoolId],
+                    ['games.sport_id' , $sportId],
+                    ['games.level_id' , $levelId],
+                    ['games.season_id' , $seasonId],
+                    ['games.id' , $gameId],
             ])->first();
 
-            $game_photos = Games::where('id', 1)->first();
-
-            dd($game_photos);
-
-            /*return $game;*/
+            return $game;
         }
+    }
+
+    public function getRosterList($schoolId){
+        $rosterList = Sport::
+                        with([
+                            'season_list' => function($q){
+                                $q->select('seasons.id', 'seasons.id as season_id',
+                                    'seasons.name as season_name')->first();
+                            }
+                        ])
+                        ->select('sports.id as sport_id', 'sports.name as sport_name')
+                        ->where('school_id', $schoolId)->get();
+        return $rosterList;
+    }
+
+    public function getRoster($schoolId, $sportId, $levelId, $seasonId){
+        $roster = Roster::with([
+                        'student_list' => function($q){
+                            $q->select('students.id as student_id', 'name as student_name',
+                                'number as student_number', 'photo as student_photo',
+                                'rosters_students.position as student_position',
+                                DB::raw('CONCAT(students.height_feet, " ", students.height_inches) AS student_height'),
+                                'students.weight as student_weight', 'students.academic_year as student_year')
+                                ->get();
+                        }])
+                        ->select('rosters.id')
+                        ->where('school_id', $schoolId)
+                        ->where('sport_id', $sportId)
+                        ->where('level_id', $levelId)
+                        ->where('season_id', $seasonId)
+                        ->get();
+        return $roster;
     }
 
     /**

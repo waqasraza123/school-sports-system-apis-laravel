@@ -21,7 +21,7 @@
                     <div class="bs-callout bs-callout-warning">
                         <h4>No Results</h4>
                         Nothing to see here please create a location
-                        <a  data-toggle="modal" data-target="#schoolModal">Here</a>
+                        <a href="/locations/create">Here</a>
                     </div>
 
                 @else
@@ -34,6 +34,8 @@
                                     <th>Name</th>
                                     <th>City</th>
                                     <th>State</th>
+                                    <th>Address</th>
+                                    <th>Map Url</th>
                                     <th>&nbsp;</th>
                                     <th>&nbsp;</th>
                                 </tr>
@@ -45,15 +47,20 @@
                                         <td class="name">{{ $location->name }}</td>
                                         <td class="city">{{ $location->city }}</td>
                                         <td class="state">{{ $location->state}}</td>
+                                        <td class="state">{{ $location->address}}</td>
+                                        <td class="state">{{ $location->map_url}}</td>
                                         <td> <a class="btn btn-primary btn-sm" href="/locations/{{ $location->id}}/edit">Edit</a></td>
-                                        <td> {!! Form::open([    'method' => 'DELETE','route' => ['locations.destroy', $location->id]]) !!}{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}{!! Form::close() !!}</td>
-                                        <td class="id" style="display: none;"  />{{ $location->id}}</td>
+                                        <td> {!! Form::open([    'method' => 'DELETE','route' => ['locations.destroy',
+                                         $location->id]]) !!}{!! Form::submit('Delete',
+                                          ['class' => 'btn btn-danger btn-sm']) !!}{!! Form::close() !!}</td>
+
+                                       {{-- <td class="id" style="display: none;"  />{{ $location->id}}</td>
                                         <td class="adress" style="display: none;"  />{{  $location->adress}}</td>
 
                                         <td class="state" style="display: none;"  />{{ $location->state}}</td>
                                         <td class="zip" style="display: none;"  />{{ $location->zip}}</td>
                                         <td class="lat" style="display: none;"  />{{ $location->lat}}</td>
-                                        <td class="lon" style="display: none;"  />{{  $location->lon}}</td>
+                                        <td class="lon" style="display: none;"  />{{  $location->lon}}</td>--}}
                                     </tr>
                                 @endforeach
 

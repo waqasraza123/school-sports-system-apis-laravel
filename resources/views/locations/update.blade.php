@@ -29,7 +29,7 @@
                 <div class="form-group-sm">
                     <div class="col-s-3">
                         {!! Form::label('title', 'Address :', ['class' => 'control-label']) !!}
-                        {!! Form::text('adress', null, ['class' => 'form-control', 'id'=> 'adress', 'required'=> 'true']) !!}
+                        {!! Form::text('address', null, ['class' => 'form-control', 'id'=> 'adress', 'required'=> 'true']) !!}
                     </div>
                 </div>
             </div>
@@ -64,18 +64,8 @@
             <div class="col-md-6">
                 <div class="form-group-sm">
                     <div class="col-s-3">
-                        {!! Form::label('title', 'Latitude:', ['class' => 'control-label']) !!}
-                        {!! Form::text('lat', null, ['class' => 'form-control', 'id'=> 'lat', 'required'=> 'true']) !!}
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group-sm">
-                    <div class="col-s-3">
-                        {!! Form::label('title', 'Longitude:', ['class' => 'control-label']) !!}
-                        {!! Form::text('lon', null, ['class' => 'form-control', 'id'=> 'lon', 'required'=> 'true']) !!}
+                        {!! Form::label('map_url', 'Map Url: ', ['class' => 'control-label']) !!}
+                        {!! Form::text('map_url', null, ['class' => 'form-control']) !!}
                     </div>
                 </div>
             </div>
@@ -104,7 +94,6 @@
                             @endif
 
                             {!! Form::submit('Update Location', ['class' => 'btn btn-primary']) !!}
-                            &nbsp;
                         </div>
                     </div>
                 </div>

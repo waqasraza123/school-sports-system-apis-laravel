@@ -121,6 +121,11 @@ class GamesController extends Controller
             'game_time' => 'required'
         ]);
 
+        if($file['our_score'] == $file['opponents_score'])
+            $result = 'D';
+        else
+            $result = ($file['our_score'] > $file['opponents_score']) ? 'W' : 'L';
+
         if (Input::file('image') != null) {
             $destinationPath = 'uploads/games'; // upload path
             $extension = Input::file('image')->getClientOriginalExtension(); // getting image extension
@@ -131,8 +136,8 @@ class GamesController extends Controller
                 'level_id' => $file['level_id'], 'locations_id' => $file['location_id'],
                 'opponents_id' => $file['opponent'],'game_date' => $file['game_date'],
                 'home_away' => $file['home_or_away'],
-                'our_score' => $request->input('our_score'), 'opponents_score' => $file['opponents_score'],
-                'result' => $file['result'], 'map_url' => $file['map_url'],
+                'our_score' => $file['our_score'], 'opponents_score' => $file['opponents_score'],
+                'result' =>  $result,
                 'photo' => $fileName, 'game_time' => $file['game_time']));
 
             Year::create([
@@ -150,8 +155,9 @@ class GamesController extends Controller
                 'level_id' => $file['level_id'], 'locations_id' => $file['location_id'],
                 'opponents_id' => $file['opponent'],'game_date' => $file['game_date'],
                 'home_away' => $file['home_or_away'],
-                'our_score' => $request->input('our_score'), 'opponents_score' => $file['opponents_score'],
-                'result' => $file['result'], 'map_url' => $file['map_url'],
+                'our_score' => $file['our_score'],
+                'opponents_score' => $file['opponents_score'],
+                'result' => $result,
                 'game_time' => $file['game_time']));
 
             Year::create([
@@ -200,9 +206,13 @@ class GamesController extends Controller
             'game_time' => 'required',
             'home_or_away' => 'required',
             'our_score' => 'required',
-            'opponents_score' => 'required',
-            'result'
+            'opponents_score' => 'required'
         ]);
+
+        if($file['our_score'] == $file['opponents_score'])
+            $result = 'D';
+        else
+            $result = ($file['our_score'] > $file['opponents_score']) ? 'W' : 'L';
 
         if (Input::file('image') != null) {
             $destinationPath = 'uploads/games'; // upload path
@@ -216,7 +226,7 @@ class GamesController extends Controller
                 'opponents_id' => $file['opponent'],'game_date' => $file['game_date'],
                 'home_away' => $file['home_or_away'],
                 'our_score' => $request->input('our_score'), 'opponents_score' => $file['opponents_score'],
-                'result' => $file['result'], 'map_url' => $file['map_url'],
+                'result' => $result,
                 'photo' => $fileName, 'game_time' => $file['game_time']));
 
             Year::create([
@@ -235,7 +245,7 @@ class GamesController extends Controller
                 'opponents_id' => $file['opponent'],'game_date' => $file['game_date'],
                 'home_away' => $file['home_or_away'],
                 'our_score' => $request->input('our_score'), 'opponents_score' => $file['opponents_score'],
-                'result' => $file['result'], 'map_url' => $file['map_url'],
+                'result' => $result,
                 'game_time' => $file['game_time']
                 ));
 

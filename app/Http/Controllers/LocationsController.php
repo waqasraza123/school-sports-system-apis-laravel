@@ -26,12 +26,11 @@ class LocationsController extends Controller
         //set validation rules
         $rules = array(
             'name' => 'required',
-            'adress' => 'required',
+            'address' => 'required',
             'city' => 'required',
             'state' => 'required',
             'zip' => 'required',
-            'lat' => 'required',
-            'lon' => 'required',
+            'map_url' => 'required'
         );
 
         $validator = Validator::make(Input::all(), $rules);
@@ -44,8 +43,9 @@ class LocationsController extends Controller
         }
         else
         {
-            Location::create(array('name' => $file['name'], 'adress' => $file['adress'], 'city' => $file['city'], 'state' => $file['state'], 'zip' => $file['zip'],
-                'lat' => $file['lat'], 'lon' => $file['lon']));
+            Location::create(array('name' => $file['name'], 'address' => $file['address'], 'city' => $file['city'],
+                'state' => $file['state'], 'zip' => $file['zip'],
+                'map_url' => $file['map_url'], 'school_id' => $this->schoolId));
             Session::flash('success', 'Created successfully');
             return Redirect::back();
         }
@@ -62,12 +62,10 @@ class LocationsController extends Controller
         //set validation rules
         $rules = array(
             'name' => 'required',
-            'adress' => 'required',
+            'address' => 'required',
             'city' => 'required',
             'state' => 'required',
-            'zip' => 'required',
-            'lat' => 'required',
-            'lon' => 'required',
+            'zip' => 'required'
         );
 
         $validator = Validator::make(Input::all(), $rules);
@@ -81,9 +79,9 @@ class LocationsController extends Controller
         else
         {
             Location::where('id', $id)->update(array('name' => $file['name'],
-                'adress' => $file['adress'], 'city' => $file['city'],
+                'address' => $file['address'], 'city' => $file['city'],
                 'state' => $file['state'], 'zip' => $file['zip'],
-                'lat' => $file['lat'], 'lon' => $file['lon']));
+                'map_url' => $file['map_url'], 'school_id' => $this->schoolId));
             Session::flash('success', 'Updated successfully');
             return Redirect::back();
         }
