@@ -31,7 +31,7 @@
                     {!! Form::select('level_id', $levels, null, ['class' => 'fn form-control']) !!}
                 </div>
                 <div class="col-md-6">
-                    {!! Form::label('title', 'Select Sport:', ['class' => 'control-label']) !!}
+                    {!! Form::label('sport_id', 'Select Sport:', ['class' => 'control-label']) !!}
                     {{ Form::select('sport_id', $sports, null, ['class' => 'form-control'] )}}
                 </div>
             </div>
@@ -42,7 +42,7 @@
                     {!! Form::select('season_id', $seasons, null, ['class' => 'fn form-control']) !!}
                 </div>
                 <div class="col-md-6">
-                    {!! Form::label('rosters_advertiser', 'Roster Pages Advertiser:', ['class' => 'control-label']) !!}
+                    {!! Form::label('roster_advertiser', 'Roster Pages Advertiser:', ['class' => 'control-label']) !!}
                     {!! Form::select('roster_advertiser', $sponsors, null, ['class' => 'fn form-control']) !!}
                 </div>
             </div>
@@ -71,6 +71,14 @@
 @section('footer')
     @include('partials.error-messages.footer-script')
     <script>
+        $('#level_id').select2();
+        $('#sport_id').select2();
+        $('#season_id').select2();
+        $('#games_advertiser').select2();
+        $('#news_advertiser').select2();
+        $('#roster_advertiser').select2();
+        $('#year_id').select2();
+
     function pro() {
         $('.hide-pro').css('display', 'none');
         if($("#pro_free_").val() == 0){
