@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 
 use App\Http\Requests;
+use Xethron\MigrationsGenerator\Generators\SchemaGenerator;
 
 class AlbumController extends Controller
 {
@@ -34,10 +35,11 @@ class AlbumController extends Controller
         {
             $games[$game->id] = School::where('id','=',$game->opponents_id)->first()->name." ".(new Carbon($game->game_date))->toDateString();
         }
+        $schools = School::where('id', '<>', 1)->lists('name', 'id');
 
         $albums = Album::where('school_id','=', $this->schoolId)->get();
         //showing view for all photos
-        return view('albums.show', compact('games','years', 'albums'));
+        return view('albums.show', compact('schools', 'games','years', 'albums'));
     }
 
     public function create()

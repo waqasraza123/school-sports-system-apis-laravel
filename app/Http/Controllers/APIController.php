@@ -50,7 +50,6 @@ class APIController extends Controller
         //create the admin user for requests
         // other then api calls only one time on '/'
         if(!($request->query('action'))){
-            $this->createAdmin();
             return redirect('/home');
         }
 
@@ -498,56 +497,17 @@ class APIController extends Controller
         }
 
         else{
-            $newsList = News::select('id as news_id', 'title as news_title', 'intro as news_teaser',
-                            'image as news_photo', 'news_date', 'link as news_url')
+            $newsList = Roster::with([
+                            'news_list' => function($q){
+                                $q->select('id as news_id', 'title as news_title', 'intro as news_teaser',
+                                    'image as news_photo', 'news_date', 'link as news_url');
+                            }
+                            ])
+                            ->select()
                             ->where('school_id', $schoolId)
                             ->get();
             $arr = array('news_list' => $newsList);
             return json_encode($arr);
         }
-    }
-
-    /**
-     * create the admin user
-     */
-    public function createAdmin(){
-
-        $user = User::where('email', 'admin@gmail.com')->first();
-        $school = School::where('school_email', 'admin@gmail.com')->first();
-        $social = Social::where('socialLinks_type', 'Admin')->first();
-        if($user){
-
-        }
-
-        else{
-            $school = School::create(array(
-                'id' => 1,
-                'name' => 'Admin',
-                'school_email' => 'admin@gmail.com',
-                'school_logo' => asset('uploads/schools/def.png')
-            ));
-            $user = User::create(array(
-                'name' => 'Admin',
-                'email' => 'admin@gmail.com',
-                'password' => bcrypt('admin'),
-                'school_id' => $school->id,
-            ));
-            
-            $social = Social::create(array(
-                'socialLinks_id' => $school->id,
-                'socialLinks_type' => 'Admin'
-            ));
-        }
-
-        $seasons = Season::where('name', 'Fall')->first();
-        $now = Carbon::now('utc')->toDateTimeString();
-        if(!($seasons)){
-            Season::insert([
-                ['name' => 'Fall', 'created_at' => $now, 'updated_at' => $now],
-                ['name' => 'Spring', 'created_at' => $now, 'updated_at' => $now],
-                ['name' => 'Winter', 'created_at' => $now, 'updated_at' => $now],
-            ]);
-        }
-
     }
 }
