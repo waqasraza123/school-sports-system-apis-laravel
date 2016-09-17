@@ -31,4 +31,13 @@ class Student extends Model
     {
         return $this->belongsToMany('App\Album');
     }
+
+    public function news_list(){
+        return $this->belongsToMany('App\News', 'news_student', 'student_id', 'news_id');
+    }
 }
+
+
+
+
+

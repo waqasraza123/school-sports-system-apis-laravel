@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Album;
 use App\Games;
 use App\LevelSport;
+use App\News;
 use App\Opponent;
 use App\Roster;
 use App\Season;
@@ -43,6 +44,8 @@ class APIController extends Controller
         $levelId = $request->input('level_id');
         $sportId = $request->input('sport_id');
         $gameId = $request->input('game_id');
+        $studentId = $request->input('student_id');
+        $year = $request->input('yr');
 
         //create the admin user for requests
         // other then api calls only one time on '/'
@@ -97,6 +100,14 @@ class APIController extends Controller
 
             if($action == 'getRoster'){
                 return $this->getRoster($schoolId, $sportId, $levelId, $seasonId);
+            }
+
+            if($action == 'getStudent'){
+                return $this->getStudent($schoolId, $studentId, $sportId, $levelId, $seasonId, $year);
+            }
+
+            if($action == 'getNewsList'){
+                return $this->getNewsList($schoolId, $sportId, $seasonId);
             }
         }
     }
@@ -431,6 +442,69 @@ class APIController extends Controller
                         ->where('season_id', $seasonId)
                         ->get();
         return $roster;
+    }
+
+    /**
+     * @param $schoolId
+     * @param $studentId
+     * @param $sportId
+     * @param $levelId
+     * @param $seasonId
+     * @param $year
+     */
+    public function getStudent($schoolId, $studentId, $sportId, $levelId, $seasonId, $year){
+
+        //both are required param
+        if($schoolId && $studentId){
+
+        }
+    }
+
+    /**
+     * @param $schoolId
+     * @param $sportId
+     * @param $seasonId
+     * @return string
+     */
+    public function getNewsList($schoolId, $sportId, $seasonId){
+        if($schoolId && $sportId){
+            $newsList = Sport::with([
+                        'news_list' => function($q){
+                            $q->select('news.id', 'id as news_id', 'title as news_title', 'intro as news_teaser',
+                                'image as news_photo', 'news_date', 'link as news_url')
+                                ->get();
+                        }
+                        ])
+                        ->select('sports.id', 'sports.school_id')
+                        ->where('school_id', $schoolId)
+                        ->where('sports.id', $sportId)
+                        ->first();
+            return $newsList;
+        }
+
+        elseif ($schoolId && $seasonId){
+            $newsList = Sport::with([
+                'news_list' => function($q){
+                    $q->select('news.id', 'id as news_id', 'title as news_title', 'intro as news_teaser',
+                        'image as news_photo', 'news_date', 'link as news_url')
+                        ->get();
+                }
+            ])
+                ->select('sports.id', 'sports.school_id')
+                ->where('school_id', $schoolId)
+                ->where('sports.id', $sportId)
+                ->first();
+            return $newsList;
+        }
+
+        else{
+            $newsList = News::select('id as news_id', 'title as news_title', 'intro as news_teaser',
+                            'image as news_photo', 'news_date', 'link as news_url')
+                            ->where('school_id', $schoolId)
+                            ->get();
+            $arr = array('news_list' => $newsList);
+            return json_encode($arr);
+        }
     }
 
     /**

@@ -15,9 +15,11 @@ class News extends Model
         'category',
         'content',
         'intro',
-        'link'
+        'link',
+        'school_id',
+        'season_id'
     ];
-    protected $hidden = ['pivot'];
+    protected $hidden = ['pivot', 'id'];
 
     public function sports()
     {
@@ -37,5 +39,9 @@ class News extends Model
     public function games()
     {
         return $this->belongsToMany('App\Games');
+    }
+
+    public function students(){
+        return $this->belongsToMany('App\Student', 'news_student', 'news_id', 'student_id');
     }
 }

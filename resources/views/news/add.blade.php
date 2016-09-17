@@ -25,22 +25,41 @@
                 </div>
             </div>
         </div>
-        <div class="form-group select_sport">
-            {!! Form::label('title', 'Sport:', ['class' => 'control-label']) !!}
-            {{ Form::select('sport_id[]', $sports, null, ['class' => 'form-control', 'id' => 'sport_id', 'style' => 'width: 100%', 'multiple', 'required'=> 'true']) }}
-            {!! Form::label('title[]', 'Level:', ['class' => 'control-label']) !!}
-            {{ Form::select('level_id[]', $levelcreate, null, ['class' => 'form-control', 'id' => 'level_id', 'style' => 'width: 100%', 'multiple']) }}
-
-            {!! Form::label('title', 'Player:', ['class' => 'control-label']) !!}
-            {{ Form::select('roster_id[]', $rosters, null, ['class' => 'form-control','id' => 'roster_id', 'style' => 'width: 100%', 'multiple']) }}
-            {!! Form::label('title', 'Game:', ['class' => 'control-label']) !!}
-            {{ Form::select('game_id[]', $games, null, ['class' => 'form-control','id' => 'game_id', 'style' => 'width: 100%', 'multiple']) }}
-
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group-sm">
+                    <div class="com-s-6">
+                        {!! Form::label('roster_id', 'Roster:', ['class' => 'control-label']) !!}
+                        {{ Form::select('roster_id[]', $rosters, null,
+                         ['class' => 'form-control','id' => 'roster_id', 'multiple']) }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group-sm">
+                    <div class="com-s-6">
+                        {!! Form::label('title', 'Game:', ['class' => 'control-label']) !!}
+                        {{ Form::select('game_id[]', $games, null,
+                        ['class' => 'form-control','id' => 'game_id', 'multiple']) }}
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group-sm">
-                    <div class="col-s-3">
+                    <div class="com-sm-6">
+                        {!! Form::label('title', 'Student:', ['class' => 'control-label']) !!}
+                        {{ Form::select('student_id[]', $students, null,
+                        ['class' => 'form-control', 'id' => 'student_id', 'multiple', 'required'=> 'true']) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group-sm">
+                    <div class="com-s-3">
                         {{ Form::hidden('news_invisible_id', null, ['id' => 'news_invisible_id']) }}
 
                         {!! Form::label('title', 'Title:', ['class' => 'control-label']) !!}
@@ -101,7 +120,7 @@
     <script type="text/javascript">
         $('#sport_id').select2();
         $('#game_id').select2();
-        $('#level_id').select2();
+        $('#student_id').select2();
         $('#roster_id').select2();
 
         $('#news_date').datetimepicker({format: "YYYY-MM-DD"});

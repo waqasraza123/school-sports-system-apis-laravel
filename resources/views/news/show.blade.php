@@ -14,7 +14,6 @@
                 @if (session()->has('success'))
                     <div class="alert alert-success">
                         {{Session::get('success')}}
-
                     </div>
                     <br>
                 @endif
@@ -72,17 +71,9 @@
                                     <label class="col-lg-10" style="font-size: 12px"> {{$new->author}}</label>
                                     <p  style="text-align:justify">{!! $new->content !!}</p>
                                     <p class="col-lg-12" style="font-size: 24px">
-                                        @if($new->sports)
-                                            @foreach($new->sports as $sport_tag)<span class="label label-info" style="color: black; font-weight: lighter; font-size: 14px" >{{$sport_tag->name}}</span> @endforeach
-                                        @endif
                                         @if($new->games)
-                                            @foreach($new->games as $games_tag)<span class="label label-info" style="color: black; font-weight: lighter; font-size: 14px">{{$schools[$games_tag->opponents_id]." ".$games_tag->game_date}}</span> @endforeach
+                                            @foreach($new->games as $games_tag)<span class="label label-info" style="color: black; font-weight: lighter; font-size: 14px">{{$games_tag->name}}</span> @endforeach
                                         @endif
-
-                                        @if($new->levels)
-                                            @foreach($new->levels as $levels_tag)<span class="label label-info" style="color: black; font-weight: lighter; font-size: 14px">{{$levels_tag->name}}</span> @endforeach
-                                        @endif
-
                                         @if($new->rosters)
                                             @foreach($new->rosters as $roster_tag)<span class="label label-info" style="color: black; font-weight: lighter; font-size: 14px">{{$roster_tag->name}}</span> @endforeach
                                         @endif
