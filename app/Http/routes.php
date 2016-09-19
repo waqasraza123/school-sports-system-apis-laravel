@@ -72,8 +72,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     //testing purposes
     Route::get('test', function() {
-        $sport = \App\Sport::find(1);
-        return $sport->season_list;
+        //return $sport->season_list;
     });
 });
 

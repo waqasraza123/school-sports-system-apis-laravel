@@ -8,8 +8,6 @@ class Games extends Model
 {
     protected $table = 'games';
     protected $fillable = [
-        'sport_id',
-        'level_id',
         'year_id',
         'school_id',
         'opponents_id',
@@ -25,10 +23,11 @@ class Games extends Model
         'opponents_score',
         'season_id',
         'result',
-        'map_url'
+        'map_url',
+        'roster_id'
     ];
 
-    protected $hidden = ['sport_id'];
+    protected $hidden = ['sport_id', 'roster_id'];
 
     public function schools()
     {

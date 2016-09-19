@@ -51,7 +51,7 @@
                     <div class="com-sm-6">
                         {!! Form::label('title', 'Student:', ['class' => 'control-label']) !!}
                         {{ Form::select('student_id[]', $students, null,
-                        ['class' => 'form-control', 'id' => 'student_id', 'multiple', 'required'=> 'true']) }}
+                        ['class' => 'form-control', 'id' => 'student_id', 'multiple']) }}
                     </div>
                 </div>
             </div>

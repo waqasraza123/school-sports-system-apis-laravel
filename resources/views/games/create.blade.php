@@ -7,7 +7,7 @@
         @include('partials.error-messages.success')
         @include('partials.error-messages.error')
 
-        @if($sports->isEmpty())
+        @if($rosters->isEmpty())
             <div class="alert alert-danger">
                 Please add some <a href="/sports/create">sports</a> first.
             </div>
@@ -22,19 +22,21 @@
             </div>
             <div class="row">
                 <div class="col-md-6">
-                    {!! Form::label('title', 'Sport:', ['class' => 'control-label']) !!}
-                    {{ Form::select('sport_id', $sports, null, ['class' => 'form-control', 'id' => 'sport_id', 'style' => 'width: 100%', 'required'=> 'true']) }}
+                    {!! Form::label('title', 'Roster:', ['class' => 'control-label']) !!}
+                    {{ Form::select('roster_id', $rosters, null,
+                     ['class' => 'form-control', 'required'=> 'true', 'id' => 'roster_id']) }}
                 </div>
                 <div class="col-md-6">
-                    {!! Form::label('title', 'Level:', ['class' => 'control-label']) !!}
-                    {{ Form::select('level_id', $levels, null, ['class' => 'form-control', 'id' => 'level_id', 'style' => 'width: 100%', 'required'=> 'true']) }}
+                    {!! Form::label('title', 'Location:', ['class' => 'control-label']) !!}
+                    {{ Form::select('location_id', $locations, null, ['class' => 'form-control',
+                     'id' => 'location_id']) }}
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-6">
                     {!! Form::label('title', 'Opponent:', ['class' => 'control-label']) !!}
-                    {!! Form::select('opponent',$opponents, null, ['class' => 'form-control', 'id'=> 'opponent', 'style' => 'width: 100%', 'required'=> 'true']) !!}
+                    {!! Form::select('opponent', $opponents, null, ['class' => 'form-control', 'id'=> 'opponent', 'style' => 'width: 100%', 'required'=> 'true']) !!}
                 </div>
                 <div class="col-md-6">
                     {!! Form::label('title', 'Year:', ['class' => 'control-label']) !!}
@@ -78,8 +80,7 @@
                     {!! Form::select('season_id', $seasons, null, ['class' => 'form-control']) !!}
                 </div>
                 <div class="col-md-6">
-                    {!! Form::label('title', 'Location:', ['class' => 'control-label']) !!}
-                    {{ Form::select('location_id', $locations, null, ['class' => 'form-control', 'id' => 'location_id', 'style' => 'width: 100%']) }}
+
                 </div>
             </div>
 
@@ -98,8 +99,7 @@
     <script src="/js/moment-with-locales.js"></script>
     <script src="/js/bootstrap-datetimepicker.js"></script>
     <script type="text/javascript">
-        $('#sport_id').select2();
-        $('#level_id').select2();
+        $('#roster_id').select2();
         $('#location_id').select2();
         $('#year_id').select2();
         $('#opponent').select2({
