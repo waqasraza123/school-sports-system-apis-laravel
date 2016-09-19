@@ -530,6 +530,7 @@ class APIController extends Controller
      * @return mixed
      *
      * incomplete
+     * photos and videos remaining + ad_details
      *
      */
     public function getGame($schoolId, $sportId, $levelId, $seasonId, $gameId){
@@ -579,9 +580,12 @@ class APIController extends Controller
     /**
      * @param $schoolId
      * @return mixed
+     *
+     * incomplete
+     * ad_details remaining
      */
     public function getRosterList($schoolId){
-        $sports = Sport::with([
+        $rostersList = Sport::with([
                         'sport_levels' => function($q){
                             $q->select('levels.id as level_id', 'levels.name as level_name')
                                 ->get();
@@ -596,7 +600,7 @@ class APIController extends Controller
                     ->where('sports.school_id', $schoolId)
                     ->get();
 
-        $arr = array('sport' => $sports);
+        $arr = array('sport' => $rostersList);
         return json_encode($arr);
     }
 
@@ -608,22 +612,30 @@ class APIController extends Controller
      * @return mixed
      */
     public function getRoster($schoolId, $sportId, $levelId, $seasonId){
-        $roster = Roster::with([
-                        'student_list' => function($q){
-                            $q->select('students.id as student_id', 'name as student_name',
-                                'number as student_number', 'photo as student_photo',
-                                'rosters_students.position as student_position',
-                                DB::raw('CONCAT(students.height_feet, " ", students.height_inches) AS student_height'),
-                                'students.weight as student_weight', 'students.academic_year as student_year')
-                                ->get();
-                        }])
-                        ->select('rosters.id')
-                        ->where('school_id', $schoolId)
-                        ->where('sport_id', $sportId)
-                        ->where('level_id', $levelId)
-                        ->where('season_id', $seasonId)
+        $roster = Roster::join('rosters_students', 'rosters_students.roster_id', '=', 'rosters.id')
+                        ->join('students', 'students.id', '=', 'rosters_students.student_id')
+                        ->select('students.id as student_id', 'students.name as student_name',
+                            'number as student_number', 'photo as student_photo',
+                            'rosters_students.position as student_position',
+                            DB::raw('CONCAT(students.height_feet, " ", students.height_inches) AS student_height'),
+                            'students.weight as student_weight', 'students.academic_year as student_year',
+                            'rosters.id as roster_id')
+                        ->where('rosters.school_id', $schoolId)
+                        ->where('rosters.sport_id', $sportId)
+                        ->where('rosters.level_id', $levelId)
+                        ->where('rosters.season_id', $seasonId)
                         ->get();
-        return $roster;
+
+        $adDetails = Roster::select('ads.id as ad_id', 'ads.name as ad_name', 'ads.url as ad_url',
+            'ads.image as ad_image', 'sponsors.id as sponsor_id', 'sponsors.name as sponsor_name')
+            ->join('sponsors', 'sponsors.id', '=', 'rosters.games_advertiser')
+            ->join('ads', 'ads.id', '=', 'sponsors.ad_id')
+            ->where('rosters.school_id', $this->schoolId)
+            ->where('rosters.id', $roster[0]->roster_id)
+            ->first();
+
+        $arr = array('student_list' => $roster, 'ad_details' => $adDetails);
+        return json_encode($arr);
     }
 
     /**
@@ -635,6 +647,7 @@ class APIController extends Controller
      * @param $year
      *
      * incomplete
+     * pro sports, videos, photos remaining
      *
      */
     public function getStudent($schoolId, $studentId, $sportId, $levelId, $seasonId, $year){
