@@ -349,6 +349,149 @@ class APIController extends Controller
             ->where('games.school_id', $schoolId)
             ->get();
 
+        //if optional sport id is present
+        //check sport if form rosters
+        if($schoolId && $sportId){
+            $schedule = Roster::with([
+                'game_list' => function($q) use ($schoolId){
+                    $q->select('games.id as game_id', 'sport_id', 'our_score as school_score', 'result as game_result',
+                        'home_away as game_vs_at', 'name as opp_name', 'nick as opp_nick', 'opponents.photo as opp_logo',
+                        'opponents_score as opp_score', 'roster_id', 'games.id')
+                        ->join('opponents', 'games.opponents_id', '=', 'opponents.id')
+                        ->where('games.school_id', $schoolId)
+                        ->get();
+                }
+                ])
+                ->select('rosters.id')
+                ->where('rosters.sport_id', $sportId)
+                ->where('rosters.school_id', $schoolId)
+                ->first();
+
+            $arr = array();
+            foreach ($schedule->game_list as $key => $item){
+                $adDetails = Roster::select('ads.id as ad_id', 'ads.name as ad_name', 'ads.url as ad_url',
+                    'ads.image as ad_image', 'sponsors.id as sponsor_id', 'sponsors.name as sponsor_name')
+                    ->join('sponsors', 'sponsors.id', '=', 'rosters.games_advertiser')
+                    ->join('ads', 'ads.id', '=', 'sponsors.ad_id')
+                    ->where('rosters.school_id', $this->schoolId)
+                    ->where('rosters.id', $item->roster_id)
+                    ->first();
+
+                $arr[$key]["game_id"] = $item->game_id;
+                $arr[$key]["game_date"] = $item->game_date;
+                $arr[$key]["game_location"] = $item->game_location;
+                $arr[$key]["game_vs_at"] = $item->game_vs_at;
+                $arr[$key]["game_result"] = $item->game_result;
+                $arr[$key]["game_result"] = $item->game_result;
+                $arr[$key]["school_score"] = $item->school_score;
+                $arr[$key]["opp_name"] = $item->opp_name;
+                $arr[$key]["opp_nick"] = $item->opp_nick;
+                $arr[$key]["opp_logo"] = $item->opp_logo;
+                $arr[$key]["opp_score"] = $item->opp_score;
+                $arr[$key]["ad_details"] = $adDetails;
+            }
+
+            $arr = array('game_list' => $arr);
+            return json_encode($arr);
+
+        }
+
+        //return results for level id optional param
+        if($schoolId && $levelId){
+            $schedule = Roster::with([
+                'game_list' => function($q) use ($schoolId){
+                    $q->select('games.id as game_id', 'sport_id', 'our_score as school_score', 'result as game_result',
+                        'home_away as game_vs_at', 'name as opp_name', 'nick as opp_nick', 'opponents.photo as opp_logo',
+                        'opponents_score as opp_score', 'roster_id', 'games.id')
+                        ->join('opponents', 'games.opponents_id', '=', 'opponents.id')
+                        ->where('games.school_id', $schoolId)
+                        ->get();
+                }
+            ])
+                ->select('rosters.id')
+                ->where('rosters.level_id', $levelId)
+                ->where('rosters.school_id', $schoolId)
+                ->first();
+
+            $arr = array();
+            foreach ($schedule->game_list as $key => $item){
+                $adDetails = Roster::select('ads.id as ad_id', 'ads.name as ad_name', 'ads.url as ad_url',
+                    'ads.image as ad_image', 'sponsors.id as sponsor_id', 'sponsors.name as sponsor_name')
+                    ->join('sponsors', 'sponsors.id', '=', 'rosters.games_advertiser')
+                    ->join('ads', 'ads.id', '=', 'sponsors.ad_id')
+                    ->where('rosters.school_id', $this->schoolId)
+                    ->where('rosters.id', $item->roster_id)
+                    ->first();
+
+                $arr[$key]["game_id"] = $item->game_id;
+                $arr[$key]["game_date"] = $item->game_date;
+                $arr[$key]["game_location"] = $item->game_location;
+                $arr[$key]["game_vs_at"] = $item->game_vs_at;
+                $arr[$key]["game_result"] = $item->game_result;
+                $arr[$key]["game_result"] = $item->game_result;
+                $arr[$key]["school_score"] = $item->school_score;
+                $arr[$key]["opp_name"] = $item->opp_name;
+                $arr[$key]["opp_nick"] = $item->opp_nick;
+                $arr[$key]["opp_logo"] = $item->opp_logo;
+                $arr[$key]["opp_score"] = $item->opp_score;
+                $arr[$key]["ad_details"] = $adDetails;
+            }
+
+            $arr = array('game_list' => $arr);
+            return json_encode($arr);
+        }
+
+
+        /**
+         * return results for season id optional param
+         */
+        if($schoolId && $seasonId){
+            $schedule = Roster::with([
+                'game_list' => function($q) use ($schoolId, $seasonId){
+                    $q->select('games.id as game_id', 'sport_id', 'our_score as school_score', 'result as game_result',
+                        'home_away as game_vs_at', 'name as opp_name', 'nick as opp_nick', 'opponents.photo as opp_logo',
+                        'opponents_score as opp_score', 'roster_id', 'games.id')
+                        ->join('opponents', 'games.opponents_id', '=', 'opponents.id')
+                        ->where('games.school_id', $schoolId)
+                        ->where('games.school_id', $seasonId)
+                        ->get();
+                }
+            ])
+                ->select('rosters.id')
+                ->where('rosters.school_id', $schoolId)
+                ->first();
+
+            $arr = array();
+            foreach ($schedule->game_list as $key => $item){
+                $adDetails = Roster::select('ads.id as ad_id', 'ads.name as ad_name', 'ads.url as ad_url',
+                    'ads.image as ad_image', 'sponsors.id as sponsor_id', 'sponsors.name as sponsor_name')
+                    ->join('sponsors', 'sponsors.id', '=', 'rosters.games_advertiser')
+                    ->join('ads', 'ads.id', '=', 'sponsors.ad_id')
+                    ->where('rosters.school_id', $this->schoolId)
+                    ->where('rosters.id', $item->roster_id)
+                    ->first();
+
+                $arr[$key]["game_id"] = $item->game_id;
+                $arr[$key]["game_date"] = $item->game_date;
+                $arr[$key]["game_location"] = $item->game_location;
+                $arr[$key]["game_vs_at"] = $item->game_vs_at;
+                $arr[$key]["game_result"] = $item->game_result;
+                $arr[$key]["game_result"] = $item->game_result;
+                $arr[$key]["school_score"] = $item->school_score;
+                $arr[$key]["opp_name"] = $item->opp_name;
+                $arr[$key]["opp_nick"] = $item->opp_nick;
+                $arr[$key]["opp_logo"] = $item->opp_logo;
+                $arr[$key]["opp_score"] = $item->opp_score;
+                $arr[$key]["ad_details"] = $adDetails;
+            }
+
+            $arr = array('game_list' => $arr);
+            return json_encode($arr);
+        }
+
+        /**
+         * result for required param schoolId
+         */
         $arr = array();
         foreach ($schedule as $key => $item){
             $adDetails = Roster::select('ads.id as ad_id', 'ads.name as ad_name', 'ads.url as ad_url',
@@ -372,6 +515,8 @@ class APIController extends Controller
             $arr[$key]["opp_score"] = $item->opp_score;
             $arr[$key]["ad_details"] = $adDetails;
         }
+
+        $arr = array('game_list' => $arr);
         return json_encode($arr);
     }
 
