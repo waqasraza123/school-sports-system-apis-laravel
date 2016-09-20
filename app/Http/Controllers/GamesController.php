@@ -87,19 +87,16 @@ class GamesController extends Controller
      */
     public function edit($id)
     {
-        $sports = Sport::where('school_id', $this->schoolId)->lists('name', 'id');
-        $levels = LevelSport::where('school_id', $this->schoolId)->lists('name', 'id');
+        $rosters = Roster::where('school_id', $this->schoolId)->lists('name', 'id');
         $locations = Location::lists('name', 'id');
-        $opponents = Opponent::lists('name', 'id');
         $years = Year::where('year_type', 'App\Sport')->lists('year', 'id');
 
-        $opponents = Opponent::where('id', '<>', '1')->lists('name', 'id');
-        $school_names = School::where('id', '<>', 1)->lists('name', 'id');
-        $school_logo = School::where('id', '<>', '1')->lists('school_logo','id');
+        $opponents = Opponent::lists('name', 'id');
         $seasons = Season::lists('name', 'id');
         $game = Games::where('id', $id)->first();
 
-        return view('games.edit', compact('seasons', 'sports', 'school_id', 'sportsList', 'levels', 'levelsList', 'opponents', 'years', 'locations','game'));
+        return view('games.edit', compact('rosters', 'seasons', 'school_id', 'sportsList',
+            'opponents', 'years', 'locations', 'game'));
     }
 
     /**
@@ -111,9 +108,8 @@ class GamesController extends Controller
     {
         $file = Input::all();
         $this->validate($request, [
-            'sport_id' => 'required',
+            'roster_id' => 'required',
             'year_id' => 'required',
-            'level_id' => 'required',
             'location_id' => 'required',
             'opponent' => 'required',
             'game_date' => 'required',
@@ -129,11 +125,11 @@ class GamesController extends Controller
         if (Input::file('image') != null) {
             $destinationPath = 'uploads/games'; // upload path
             $extension = Input::file('image')->getClientOriginalExtension(); // getting image extension
-            $fileName = rand(11111, 99999) . '.' . $extension; // renameing image
+            $fileName = rand(11111, 99999) . '.' . $extension; // renaming image
             Input::file('image')->move($destinationPath, $fileName); // uploading file to given path
             Games::where('id','=', $id)->first()->update(array('season_id' => $request->input('season_id'),
-                'school_id' => $this->schoolId, 'sport_id' => $file['sport_id'],
-                'level_id' => $file['level_id'], 'locations_id' => $file['location_id'],
+                'school_id' => $this->schoolId, 'roster_id' => $file['roster_id'],
+                'locations_id' => $file['location_id'],
                 'opponents_id' => $file['opponent'],'game_date' => $file['game_date'],
                 'home_away' => $file['home_or_away'],
                 'our_score' => $file['our_score'], 'opponents_score' => $file['opponents_score'],
@@ -151,8 +147,8 @@ class GamesController extends Controller
         else
         {
             Games::where('id','=', $id)->first()->update(array('season_id' => $request->input('season_id'),
-                'school_id' => $this->schoolId, 'sport_id' => $file['sport_id'],
-                'level_id' => $file['level_id'], 'locations_id' => $file['location_id'],
+                'school_id' => $this->schoolId, 'roster_id' => $file['roster_id'],
+                'locations_id' => $file['location_id'],
                 'opponents_id' => $file['opponent'],'game_date' => $file['game_date'],
                 'home_away' => $file['home_or_away'],
                 'our_score' => $file['our_score'],
@@ -174,18 +170,14 @@ class GamesController extends Controller
      */
     public function create()
     {
-        $sports = Sport::where('school_id', $this->schoolId)->lists('name', 'id');
-        $levels = LevelSport::where('school_id', $this->schoolId)->lists('name', 'id');
         $seasons = Season::lists('name', 'id');
         $locations = Location::lists('name', 'id');
-        $opponents = School::lists('name', 'id');
         $years = Year::lists('year', 'id');
+        $rosters = Roster::where('school_id', $this->schoolId)->lists('name', 'id');
 
         $opponents = Opponent::where('school_id', $this->schoolId)->lists('name', 'id');
-        $school_names = School::where('id', '<>', 1)->lists('name', 'id');
-        $school_logo = School::where('id', '<>', '1')->lists('school_logo','id');
 
-        return View('games.create', compact('sports', 'levels', 'seasons', 'locations', 'opponents', 'years'));
+        return View('games.create', compact('rosters', 'seasons', 'locations', 'opponents', 'years'));
     }
 
     /**
@@ -196,9 +188,8 @@ class GamesController extends Controller
     {
         $file = Input::all();
         $this->validate($request, [
-            'sport_id' => 'required',
+            'roster_id' => 'required',
             'year_id' => 'required',
-            'level_id' => 'required',
             'location_id' => 'required',
             'season_id' => 'required',
             'opponent' => 'required',
@@ -221,9 +212,9 @@ class GamesController extends Controller
             Input::file('image')->move($destinationPath, $fileName); // uploading file to given path
 
             $game = Games::create(array('season_id' => $request->input('season_id'),
-                'school_id' => $this->schoolId, 'sport_id' => $file['sport_id'],
-                'level_id' => $file['level_id'], 'locations_id' => $file['location_id'],
-                'opponents_id' => $file['opponent'],'game_date' => $file['game_date'],
+                'school_id' => $this->schoolId, 'roster_id' => $file['roster_id'],
+                'locations_id' => $file['location_id'],
+                'opponents_id' => $file['opponent'], 'game_date' => $file['game_date'],
                 'home_away' => $file['home_or_away'],
                 'our_score' => $request->input('our_score'), 'opponents_score' => $file['opponents_score'],
                 'result' => $result,
@@ -240,9 +231,9 @@ class GamesController extends Controller
         else
         {
             $game = Games::create(array('season_id' => $request->input('season_id'),
-                'school_id' => $this->schoolId, 'sport_id' => $file['sport_id'],
-                'level_id' => $file['level_id'], 'locations_id' => $file['location_id'],
-                'opponents_id' => $file['opponent'],'game_date' => $file['game_date'],
+                'school_id' => $this->schoolId, 'roster_id' => $file['roster_id'],
+                'locations_id' => $file['location_id'],
+                'opponents_id' => $file['opponent'], 'game_date' => $file['game_date'],
                 'home_away' => $file['home_or_away'],
                 'our_score' => $request->input('our_score'), 'opponents_score' => $file['opponents_score'],
                 'result' => $result,
@@ -267,7 +258,6 @@ class GamesController extends Controller
      */
     public function show($sport_id)
     {
-        dd($sport_id);
         $type = Sport::where('id', $sport_id)->first();
         $games = Games::where('sport_id', '=', $sport_id)->orderBy('game_date', 'DESC')->get();
         $sports = Sport::lists('name', 'id');
@@ -291,7 +281,6 @@ class GamesController extends Controller
      */
     public function show_games(Request $request)
     {
-        dd($request);
         $games_ids = $request->input('invisible_games');
         $ids = [];
         if($games_ids != '[]');

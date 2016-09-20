@@ -64,6 +64,10 @@ class Roster extends Model
     public function student_list(){
         return $this->belongsToMany('App\Student', 'rosters_students', 'roster_id', 'student_id');
     }
+
+    public function game_list(){
+        return $this->hasMany('App\Games', 'roster_id');
+    }
 }
 
 

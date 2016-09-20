@@ -47,7 +47,7 @@ class AppServiceProvider extends ServiceProvider
                     'id' => 1,
                     'name' => 'Admin',
                     'school_email' => 'admin@gmail.com',
-                    'school_logo' => asset('uploads/schools/def.png')
+                    'school_logo' => 'https://lh3.googleusercontent.com/YGqr3CRLm45jMF8eM8eQxc1VSERDTyzkv1CIng0qjcenJZxqV5DBgH5xlRTawnqNPcOp=w300'
                 ));
             }
             $user = User::create(array(
