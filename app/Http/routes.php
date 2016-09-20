@@ -7,11 +7,14 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'PagesController@home'
     ]);
 
+    Route::get('settings', ['as' => 'settings', 'uses' => 'PagesController@settings']);
+    Route::post('rosters/{rosterId}/students/{studentId}/update', ['as' => 'rosters.students.update', 'uses' => 'RostersController@updatePosition']);
     Route::post('rosters/year', ['as' => 'year-rosters', 'uses' => 'RostersController@yearRosters']);
     Route::get('rosters/{id}/students', ['as' => 'roster-students', 'uses' => 'RostersController@showAddStudentsForm']);
     Route::post('rosters/students/add', ['as' => 'roster-students-post', 'uses' => 'RostersController@storeRosterStudents']);
     Route::resource('rosters', 'RostersController');
 
+    Route::delete('rosters/{rosterId}/student/{studentId}/delete', ['as' => 'rosters.students.delete', 'uses' => 'RostersController@deletePosition']);
 
     Route::put('games/', 'GamesController@show_games');
     Route::post('games/filter', 'GamesController@filter');
