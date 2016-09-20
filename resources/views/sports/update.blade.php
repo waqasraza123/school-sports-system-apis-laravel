@@ -1,4 +1,17 @@
 @extends('layouts.master')
+
+<link rel="stylesheet" type="text/css" href="/css/iconselect.css" >
+<script type="text/javascript" src="/js/iconselect.js"></script>
+
+<script type="text/javascript" src="/js/iscroll.js"></script>
+<style>
+    #my-icon-select-box-scroll {
+
+        opacity: 1 !important;
+        z-index: 999 !important;
+    }
+</style>
+
 @section('content')
 <div class="container" style="width: 100% !important;">
 
@@ -25,8 +38,9 @@
             <div class="col-md-6">
               <div class="form-group-sm">
                   <div class="col-s-3">
-                {!! Form::label('photo', 'Icon', ['class' => 'control-label']) !!}
-                {!! Form::file('photo', ['class' => 'form-control']) !!}
+                      {!! Form::label('sport-icon', 'Icon', ['class' => 'control-label']) !!}
+                      <div id="my-icon-select"></div>
+                      {{ Form::hidden('selected-text', null, ['id' => 'selected-text']) }}
             </div>
           </div>
             </div>
@@ -109,4 +123,35 @@
 @section('footer')
     @include('partials.add_new_sport_level_script')
     @include('partials.error-messages.footer-script')
+
+    <script>
+
+        var iconSelect;
+        var selectedText;
+
+        window.onload = function(){
+
+            selectedText = document.getElementById('selected-text');
+
+            document.getElementById('my-icon-select').addEventListener('changed', function(e){
+                selectedText.value = iconSelect.getSelectedValue();
+
+            });
+
+            iconSelect = new IconSelect("my-icon-select");
+
+            var icons = [];
+
+            @foreach ($sportIcons as $sportIcon)
+
+            icons.push({'iconFilePath':'/img/sport_icons/'+'{{$sportIcon->path}}', 'iconValue':'{{$sportIcon->name}}'});
+            @endforeach
+            icons.push({'iconFilePath':'/img/sport_icons/criquet-ball.png'+'', 'iconValue':'criquet-ball'});
+
+            iconSelect.refresh(icons);
+            iconSelect.setSelectedIndex({{$iconSelectedIndex}})
+
+        };
+
+    </script>
 @stop

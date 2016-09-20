@@ -51,8 +51,8 @@
                                     @if($y->year == $year && $s->school_id == $school_id)
                                         <tr>
                                             <td>{{$s->id}}</td>
-                                            @if($s->photo)
-                                                <td><img src="{{asset('uploads/sports/'.$s->photo)}}" height="50px" width="50px" alt="image"></td>
+                                            @if($s->sportIcon()->first())
+                                                <td><img src="{{asset('img/sport_icons/'.$s->sportIcon()->first()->path)}}" height="50px" width="50px" alt="image"></td>
                                             @else
                                                 <td><img src="{{asset('uploads/def.png')}}" height="50px" width="50px" alt="image"></td>
                                             @endif

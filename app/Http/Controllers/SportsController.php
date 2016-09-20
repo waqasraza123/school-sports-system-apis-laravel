@@ -6,6 +6,7 @@ use App\LevelSport;
 use App\Roster;
 use App\Season;
 use App\Sport;
+use App\SportIcon;
 use App\Year;
 use Illuminate\Http\Request;
 
@@ -21,13 +22,13 @@ class SportsController extends Controller
      */
     public function index()
     {
+
         $school_id = Auth::user()->school_id;
         $sports = Sport::where('school_id', $school_id)->get();
         $seasonsList = Season::lists('name', 'id');
         $seasonsList->prepend('Season');
         $seasons = Season::all();
         $year = '2016';
-        
         return view('sports.show', compact('sports', 'school_id', 'year', 'seasons', 'seasonsList'));
     }
 
@@ -64,11 +65,13 @@ class SportsController extends Controller
      */
     public function create()
     {
+        $sportIcons = SportIcon::all();
+
         $seasons = Season::lists('name', 'id');
 
         $levels = LevelSport::where('school_id', $this->schoolId)->lists('name', 'name');
 
-        return view('sports.add', compact('seasons', 'levels'));
+        return view('sports.add', compact('seasons', 'levels', 'sportIcons'));
     }
     /**
      * Store a newly created resource in storage.
@@ -82,7 +85,8 @@ class SportsController extends Controller
             'name' => 'required|max:255',
             'season_id' => 'required',
             'year' => 'required',
-            'level_id' => 'required'
+            'level_id' => 'required',
+            'selected-text' => 'required'
         ]);
 
         $levels = $request->input('level_id');
@@ -101,17 +105,21 @@ class SportsController extends Controller
             }
         }
 
-        $photo = "";
-        if(Input::file('photo') != null){
-            $uploadPath = 'uploads/sports';
-            $extension = Input::file('photo')->getClientOriginalExtension();
-            $photo = rand(1111, 9999) . '.' . $extension;
-            Input::file('photo')->move($uploadPath, $photo);
-        }
+//        $photo = "";
+//        if(Input::file('photo') != null){
+//            $uploadPath = 'uploads/sports';
+//            $extension = Input::file('photo')->getClientOriginalExtension();
+//            $photo = rand(1111, 9999) . '.' . $extension;
+//            Input::file('photo')->move($uploadPath, $photo);
+//        }
+
+        $icon = SportIcon::where('name','=',$request->input('selected-text'))->first();
+
+
 
         $sport = Sport::create([
             'name' => $request->input('name'),
-            'photo' => $photo,
+            'icon_id' => $icon->id,
             'highlight_video' => $request->input('highlight_video'),
             'record' => $request->input('record'),
             'season_id' => $request->input('season_id'),
@@ -151,8 +159,17 @@ class SportsController extends Controller
         $sports = Sport::where('school_id', $this->schoolId)->where('id', $id)->first();
         $levels = LevelSport::where('school_id', $this->schoolId)->lists('name', 'id');
         $seasons = Season::lists('name', 'id');
+        $sportIcons = SportIcon::all();
+        $indexId = [];
+        $i=0;
+        foreach ($sportIcons as $sportIcon)
+        {
+            $indexId[$sportIcon->id] = $i;
+            $i++;
+        }
+        $iconSelectedIndex = $indexId[$sports->sportIcon()->first()->id];
 
-        return view('sports.update', compact('sports', 'levels', 'seasons'));
+        return view('sports.update', compact('sports', 'levels', 'seasons', 'sportIcons', 'indexId', 'iconSelectedIndex'));
     }
 
     /**
@@ -168,7 +185,8 @@ class SportsController extends Controller
             'name' => 'required|max:255',
             'season_id' => 'required',
             'year' => 'required',
-            'level_id' => 'required'
+            'level_id' => 'required',
+            'selected-text' => 'required'
         ]);
 
         $levels = $request->input('level_id');
@@ -187,17 +205,19 @@ class SportsController extends Controller
             }
         }
 
-        $photo = "";
-        if(Input::file('photo') != null){
-            $uploadPath = 'uploads/sports';
-            $extension = Input::file('photo')->getClientOriginalExtension();
-            $photo = rand(1111, 9999) . '.' . $extension;
-            Input::file('photo')->move($uploadPath, $photo);
-        }
+//        $photo = "";
+//        if(Input::file('photo') != null){
+//            $uploadPath = 'uploads/sports';
+//            $extension = Input::file('photo')->getClientOriginalExtension();
+//            $photo = rand(1111, 9999) . '.' . $extension;
+//            Input::file('photo')->move($uploadPath, $photo);
+//        }
+
+        $icon = SportIcon::where('name','=',$request->input('selected-text'))->first();
 
         $sport = Sport::find($id)->update([
             'name' => $request->input('name'),
-            'photo' => $photo,
+            'icon_id' => $icon->id,
             'highlight_video' => $request->input('highlight_video'),
             'record' => $request->input('record'),
             'season_id' => $request->input('season_id'),

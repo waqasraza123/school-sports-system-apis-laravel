@@ -51,6 +51,40 @@
         </div>
     {!! Form::close() !!}
     </div>
+
+    <div class="container-fluid">
+        <div class="panel panel-primary">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead  style="background-color:#000000; color:white">
+                    <th>Student name</th>
+                    <th>Roster name</th>
+                    <th>Position</th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach($rosterStudents as $rosterStudent)
+                                <tr>
+                                    <td>{{$rosterStudent->name}}</td>
+                                    <td>{{$rosterStudent->rosters()->first()->name}}</td>
+                                    <td class="position">{{$rosterStudent->pivot->position}}</td>
+                                    {!! Form::open(['url' => 'rosters/'.$rosterStudent->rosters()->first()->id.'/students/'.$rosterStudent->id.'/update']) !!}
+                                    <td class="position_input">{!! Form::text('position', $rosterStudent->pivot->position, ['class' => 'fn form-control', 'required' => 'true']) !!}</td>
+                                    <td class="edit_col"><a class="btn btn-primary btn-sm edit" href="">Edit</a></td>
+                                    <td class="update_col">{!! Form::submit('Update', ['class' => 'btn btn-primary']) !!} <a href="" class="btn btn-primary btn-sm cancel">Cancel</a></td>
+                                    {!! Form::close() !!}
+                                    <td>{!! Form::open([    'method' => 'DELETE','route' => ['rosters.students.delete',$rosterStudent->rosters()->first()->id ,$rosterStudent->id]]) !!}{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}{!! Form::close() !!}</td>
+                                </tr>
+
+                        @endforeach
+                </table>
+            </div>
+
+        </div>
+    </div>
 @endsection
 @section('footer')
     @include('partials.error-messages.footer-script')
@@ -60,4 +94,33 @@
         })
     </script>
     <script src="/js/rosters/rosters-js.js"></script>
+    <script>
+        $('.update_col').hide();
+        $(".position_input").hide();
+        $('.edit').click(function(event){
+            event.preventDefault();
+            var $row = $(this).parent().closest("tr");
+            var $edit_col = $row.find(".edit_col");
+            var $update_col = $row.find(".update_col");
+            var $position = $row.find(".position");
+            var $position_input = $row.find(".position_input");
+            $edit_col.hide();
+            $position.hide();
+            $update_col.show();
+            $position_input.show();
+        });
+
+        $('.cancel').click(function(event){
+            event.preventDefault();
+            var $row = $(this).parent().closest("tr");
+            var $edit_col = $row.find(".edit_col");
+            var $update_col = $row.find(".update_col");
+            var $position = $row.find(".position");
+            var $position_input = $row.find(".position_input");
+            $edit_col.show();
+            $position.show();
+            $update_col.hide();
+            $position_input.hide();
+        });
+    </script>
 @endsection

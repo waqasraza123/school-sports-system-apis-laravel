@@ -55,8 +55,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group-sm">
                                         <div class="col-s-3">
-                                            {!! Form::label('title', 'Bio:', ['class' => 'control-label']) !!}
-                                            {!! Form::text('bio', null, ['class' => 'form-control', 'id'=> 'bio']) !!}
+                                            {!! Form::label('title', 'Website:', ['class' => 'control-label']) !!}
+                                            {!! Form::text('website', null, ['class' => 'form-control', 'id'=> 'website']) !!}
                                         </div>
                                     </div>
                                 </div>
@@ -109,8 +109,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group-sm">
                                         <div class="col-s-3">
-                                            {!! Form::label('title', 'Website:', ['class' => 'control-label']) !!}
-                                            {!! Form::text('website', null, ['class' => 'form-control', 'id'=> 'website']) !!}
+                                            <label class="control-label" for="school_email">Email:</label>
+                                            <input type="email" name="school_email" class="form-control" id="school-email">
                                         </div>
                                     </div>
                                 </div>
@@ -119,8 +119,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group-sm">
                                         <div class="col-s-3">
-                                            <label class="control-label" for="school_email">Email:</label>
-                                            <input type="email" name="school_email" class="form-control" id="school-email">
+                                            {!! Form::label('title', 'Bio:', ['class' => 'control-label']) !!}
+                                            {!! Form::textarea('bio', null, ['class' => 'form-control', 'id'=> 'bio']) !!}
                                         </div>
                                     </div>
                                 </div>

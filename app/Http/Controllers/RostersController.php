@@ -42,6 +42,18 @@ class RostersController extends Controller
             compact('sports', 'school_id', 'year', 'rosters', 'sportsList', 'levels', 'levelsList'));
     }
 
+    public function updatePosition(Request $request, $rosterId, $studentId)
+    {
+        Roster::where('id','=',$rosterId)->first()->students()->updateExistingPivot($studentId, ['position' => $request->input('position')]);
+        return redirect()->back()->with('success', 'Position updated successfully');
+    }
+
+    public function deletePosition($rosterId, $studentId)
+    {
+        Roster::where('id','=',$rosterId)->first()->students()->detach($studentId);
+        return redirect()->back();
+    }
+
     /**
      * show sports for a particular year
      * @param Request $request
@@ -301,7 +313,8 @@ class RostersController extends Controller
     public function showAddStudentsForm($rosterId){
         $roster = Roster::find($rosterId);
         $students = Student::where('school_id', $this->schoolId)->lists('name', 'id');
-        return view('rosters.add-students', compact('roster', 'students'));
+        $rosterStudents = Roster::find($rosterId)->students()->get();
+        return view('rosters.add-students', compact('roster', 'students', 'rosterStudents'));
     }
 
     public function storeRosterStudents(Request $request){
