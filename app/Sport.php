@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Sport extends Model
 {
 
-    protected $fillable = ['name', 'highlight_video', 'school_id', 'season_id', 'record', 'photo'];
+    protected $fillable = ['name', 'highlight_video', 'school_id', 'season_id', 'record', 'photo', 'icon_id'];
 
     protected $table = 'sports';
 
@@ -16,6 +16,11 @@ class Sport extends Model
     public function rosters()
     {
         return $this->hasMany('App\Roster', 'sport_id');
+    }
+
+    public function sportIcon()
+    {
+        return $this->hasOne('App\SportIcon', 'id', 'icon_id');
     }
 
     public function positions()

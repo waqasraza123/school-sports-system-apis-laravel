@@ -8,9 +8,9 @@ class School extends Model
 {
     protected $table = 'schools';
     protected $fillable = [
-        'name', 'short_name', 'school_logo', 'bio', 'adress', 'city', 'state', 'zip', 'phone', 'website',
+        'name', 'short_name', 'school_logo', 'bio', 'adress', 'city', 'zip', 'phone', 'website',
         'school_color', 'school_color2', 'school_color3', 'school_tagline', 'app_name', 'school_email',
-        'video', 'photo', 'api_key'
+        'video', 'photo', 'api_key', 'livestream_url', 'state'
     ];
 
     protected $hidden = ['id'];

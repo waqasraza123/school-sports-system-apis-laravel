@@ -8,6 +8,7 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
 
     Route::get('settings', ['as' => 'settings', 'uses' => 'PagesController@settings']);
+    Route::post('settings', ['as' => 'settings', 'uses' => 'PagesController@updateSettings']);
     Route::post('rosters/{rosterId}/students/{studentId}/update', ['as' => 'rosters.students.update', 'uses' => 'RostersController@updatePosition']);
     Route::post('rosters/year', ['as' => 'year-rosters', 'uses' => 'RostersController@yearRosters']);
     Route::get('rosters/{id}/students', ['as' => 'roster-students', 'uses' => 'RostersController@showAddStudentsForm']);
