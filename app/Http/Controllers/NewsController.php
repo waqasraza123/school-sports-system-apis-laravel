@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Games;
 use App\LevelSport;
 use App\News;
+use App\Opponent;
 use App\Roster;
 use App\School;
 use App\Sport;
@@ -34,7 +35,7 @@ class NewsController extends Controller
         $games = [];
         foreach ($games_all as $game)
         {
-            $games[$game->id] = School::where('id','=',$game->opponents_id)->first()->name." ".(new Carbon($game->game_date))->toDateString();
+            $games[$game->id] = Opponent::where('id','=',$game->opponents_id)->first()->name." ".(new Carbon($game->game_date))->toDateString();
         }
         //making list for rosters where key=rooster_id and value= rooster name and surname
         $rosters_all = Roster::where('school_id', $this->schoolId)->get();
@@ -94,7 +95,7 @@ class NewsController extends Controller
         $games = [];
         foreach ($games_all as $game)
         {
-            $games[$game->id] = School::where('id','=',$game->opponents_id)
+            $games[$game->id] = Opponent::where('id','=',$game->opponents_id)
                     ->first()->name." ".(new Carbon($game->game_date))->toDateString();
         }
         //making list for rosters where key=rooster_id and value= rooster name and surname
@@ -164,11 +165,13 @@ class NewsController extends Controller
                 $fileName = rand(11111, 99999) . '.' . $extension; // renameing image
                 Input::file('image')->move($destinationPath, $fileName); // uploading file to given path
                 //create news
-                $news = News::create(array('school_id' => $this->schoolId, 'title' => $file['title'], 'image' => $fileName,  'news_date' => $file['news_date'], 'content' => $file['content'], ));
+                $news = News::create(array('school_id' => $this->schoolId, 'title' => $file['title'],
+                    'image' => $fileName,  'news_date' => $file['news_date'], 'content' => $file['content'], ));
 
             } else {
                 //create news
-                $news = News::create(array('school_id' => $this->schoolId,'title' => $file['title'],  'news_date' => $file['news_date'],  'content' => $file['content']));
+                $news = News::create(array('school_id' => $this->schoolId,'title' => $file['title'],
+                    'news_date' => $file['news_date'],  'content' => $file['content']));
 
             }
 
@@ -177,6 +180,14 @@ class NewsController extends Controller
             {
                 $news->rosters()->attach(array_values($file['roster_id']));
             }
+
+            foreach ($file['roster_id'] as $item){
+                $sport = Sport::join('rosters', 'rosters.sport_id', '=', 'sports.id')->select('sports.id')->first();
+                $level = LevelSport::join('rosters', 'rosters.level_id', '=', 'levels.id')->select('levels.id')->first();
+                $news->sports()->attach($sport->id);
+                $news->levels()->attach($level->id);
+            }
+
             //add students tags
             if (isset($file['student_id']))
             {

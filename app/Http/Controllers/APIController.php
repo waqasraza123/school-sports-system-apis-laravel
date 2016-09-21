@@ -665,19 +665,18 @@ class APIController extends Controller
      * @return string
      */
     public function getNewsList($schoolId, $sportId, $seasonId){
+
         if($schoolId && $sportId){
-            $newsList = Sport::with([
-                        'news_list' => function($q){
-                            $q->select('news.id', 'id as news_id', 'title as news_title', 'intro as news_teaser',
-                                'image as news_photo', 'news_date', 'link as news_url')
-                                ->get();
-                        }
-                        ])
-                        ->select('sports.id', 'sports.school_id')
-                        ->where('school_id', $schoolId)
-                        ->where('sports.id', $sportId)
-                        ->first();
-            return $newsList;
+            $newsList = Sport::join('news_sport', 'news_sport.sport_id', '=', 'sports.id')
+                ->join('news', 'news.id', '=', 'news_sport.news_id')
+                ->select('news.id', 'news.id as news_id', 'title as news_title', 'intro as news_teaser',
+                    'image as news_photo', 'news_date', 'link as news_url', 'news.school_id')
+                ->where('news.school_id', $schoolId)
+                ->where('sports.id', $sportId)
+                ->get();
+
+            $arr = array('news_list' => $newsList);
+            return json_encode($arr);
         }
 
         elseif ($schoolId && $seasonId){
