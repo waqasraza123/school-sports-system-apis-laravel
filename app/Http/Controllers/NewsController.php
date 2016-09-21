@@ -8,6 +8,7 @@ use App\News;
 use App\Opponent;
 use App\Roster;
 use App\School;
+use App\Season;
 use App\Sport;
 use App\Student;
 use App\Year;
@@ -101,9 +102,10 @@ class NewsController extends Controller
         //making list for rosters where key=rooster_id and value= rooster name and surname
         $rosters = Roster::where('school_id', $this->schoolId)->lists('name', 'id');
         $students = Student::where('school_id', $this->schoolId)->lists('name', 'id');
+        $seasons = Season::lists('name', 'id');
 
         //return view for all news
-        return view('news.add', compact('students', 'rosters', 'games'));
+        return view('news.add', compact('students', 'rosters', 'games', 'seasons'));
 
     }
 
@@ -131,8 +133,10 @@ class NewsController extends Controller
 
         $news = News::find($id);
         $students = Student::where('school_id', $this->schoolId)->lists('name', 'id');
+        $seasons = Season::lists('name', 'id');
         //return view for all news
-        return view('news.update', compact('students', 'news','type', 'sports', 'id_sport', 'rosters', 'levelcreate', 'years', 'games', 'schools'));
+        return view('news.update', compact('students', 'news','type', 'sports', 'id_sport',
+            'rosters', 'years', 'games', 'schools', 'seasons'));
     }
 
     /**
@@ -166,12 +170,13 @@ class NewsController extends Controller
                 Input::file('image')->move($destinationPath, $fileName); // uploading file to given path
                 //create news
                 $news = News::create(array('school_id' => $this->schoolId, 'title' => $file['title'],
-                    'image' => $fileName,  'news_date' => $file['news_date'], 'content' => $file['content'], ));
+                    'image' => $fileName,  'news_date' => $file['news_date'], 'content' => $file['content'],
+                    'season_id' => $file['season']));
 
             } else {
                 //create news
                 $news = News::create(array('school_id' => $this->schoolId,'title' => $file['title'],
-                    'news_date' => $file['news_date'],  'content' => $file['content']));
+                    'news_date' => $file['news_date'],  'content' => $file['content'], 'season_id' => $file['season']));
 
             }
 
@@ -230,12 +235,12 @@ class NewsController extends Controller
                 //update
                 News::find($id)
                     ->update(['school_id' => $this->schoolId, 'title' => $file['title'], 'image' => $fileName,
-                        'news_date' => $file['news_date'], 'content' => $file['content']]);
+                        'news_date' => $file['news_date'], 'content' => $file['content'], 'season_id' => $file['season']]);
             } else {
                 //update
                 News::where('id', '=', $id)->first()
                     ->update(['school_id' => $this->schoolId, 'title' => $file['title'],
-                        'news_date' => $file['news_date'], 'content' => $file['content']]);
+                        'news_date' => $file['news_date'], 'content' => $file['content'], 'season_id' => $file['season']]);
             }
             $news = News::where('id', '=', $id)->first();
 

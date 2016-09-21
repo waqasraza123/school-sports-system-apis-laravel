@@ -51,6 +51,15 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-6">
+                <div class="form-group-sm">
+                    <div class="com-sm-6">
+                        {!! Form::label('season', 'Student:', ['class' => 'control-label']) !!}
+                        {{ Form::select('season', $seasons, null,
+                        ['class' => 'form-control', 'id' => 'season_id', 'required'=> 'true']) }}
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="row">
             <div class="col-md-6">
@@ -114,7 +123,7 @@
     <script src="/js/moment-with-locales.js"></script>
     <script src="/js/bootstrap-datetimepicker.js"></script>
     <script type="text/javascript">
-        $('#sport_id').select2();
+        $('#season_id').select2();
         $('#game_id').select2();
         $('#student_id').select2();
         $('#roster_id').select2();

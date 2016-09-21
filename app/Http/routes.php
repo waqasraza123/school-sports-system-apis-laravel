@@ -73,13 +73,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('schedules', 'SchedulesController');
 
     Route::resource('ads', 'AdsController');
+});
 
     //testing purposes
-    Route::get('test', function() {
-        $user = \App\User::select('name')->first();
-        return $user->name;
-    });
-});
 
 
 /**

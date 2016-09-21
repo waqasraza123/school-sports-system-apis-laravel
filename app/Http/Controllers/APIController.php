@@ -13,6 +13,7 @@ use App\Social;
 use App\Sponsor;
 use App\Staff;
 use App\Student;
+use App\Ad;
 use Illuminate\Http\Request;
 use App\School;
 use App\Sport;
@@ -580,9 +581,6 @@ class APIController extends Controller
     /**
      * @param $schoolId
      * @return mixed
-     *
-     * incomplete
-     * ad_details remaining
      */
     public function getRosterList($schoolId){
         $rostersList = Sport::with([
@@ -663,8 +661,45 @@ class APIController extends Controller
      * @param $sportId
      * @param $seasonId
      * @return string
+     *
+     * ad_details remaining
      */
     public function getNewsList($schoolId, $sportId, $seasonId){
+
+        if($schoolId && $sportId && $seasonId){
+            $newsList = News::select('news.id', 'news.id as news_id', 'title as news_title',
+                'intro as news_teaser', 'image as news_photo', 'news_date', 'link as news_url',
+                'news.school_id')
+                ->join('news_sport', 'news_sport.news_id', '=', 'news.id')
+                ->join('sports', 'news_sport.sport_id', '=', 'sports.id')
+                ->where('news.school_id', $schoolId)
+                ->where('news.season_id', $seasonId)
+                ->get();
+
+            foreach ($newsList as $key => $item){
+
+                $adDetails = News::select('ads.id as ad_id', 'ads.name as ad_name', 'ads.url as ad_url',
+                    'ads.image as ad_image', 'sponsors.id as sponsor_id', 'sponsors.name as sponsor_name')
+                    ->join('news_roster', 'news_roster.news_id', '=', 'news.id')
+                    ->join('rosters', 'news_roster.roster_id', '=', 'rosters.id')
+                    ->join('sponsors', 'sponsors.id', '=', 'rosters.news_advertiser')
+                    ->join('ads', 'ads.id', '=', 'sponsors.ad_id')
+                    ->where('news.school_id', $schoolId)
+                    ->where('news.id', $item->news_id)
+                    ->first();
+
+                $arr[$key]["news_id"] = $item->news_id;
+                $arr[$key]["news_title"] = $item->news_title;
+                $arr[$key]["news_teaser"] = $item->news_teaser;
+                $arr[$key]["news_photo"] = $item->news_photo;
+                $arr[$key]["news_date"] = $item->news_date;
+                $arr[$key]["news_url"] = $item->news_url;
+                $arr[$key]["ad_details"] = $adDetails;
+            }
+
+            $arr = array('news_list' => $arr);
+            return response()->json($arr);
+        }
 
         if($schoolId && $sportId){
             $newsList = Sport::join('news_sport', 'news_sport.sport_id', '=', 'sports.id')
@@ -674,38 +709,62 @@ class APIController extends Controller
                 ->where('news.school_id', $schoolId)
                 ->where('sports.id', $sportId)
                 ->get();
+            foreach ($newsList as $key => $item){
 
-            $arr = array('news_list' => $newsList);
-            return json_encode($arr);
+                $adDetails = News::select('ads.id as ad_id', 'ads.name as ad_name', 'ads.url as ad_url',
+                    'ads.image as ad_image', 'sponsors.id as sponsor_id', 'sponsors.name as sponsor_name')
+                    ->join('news_roster', 'news_roster.news_id', '=', 'news.id')
+                    ->join('rosters', 'news_roster.roster_id', '=', 'rosters.id')
+                    ->join('sponsors', 'sponsors.id', '=', 'rosters.news_advertiser')
+                    ->join('ads', 'ads.id', '=', 'sponsors.ad_id')
+                    ->where('news.school_id', $schoolId)
+                    ->where('news.id', $item->news_id)
+                    ->first();
+
+                $arr[$key]["news_id"] = $item->news_id;
+                $arr[$key]["news_title"] = $item->news_title;
+                $arr[$key]["news_teaser"] = $item->news_teaser;
+                $arr[$key]["news_photo"] = $item->news_photo;
+                $arr[$key]["news_date"] = $item->news_date;
+                $arr[$key]["news_url"] = $item->news_url;
+                $arr[$key]["ad_details"] = $adDetails;
+            }
+
+            $arr = array('news_list' => $arr);
+            return response()->json($arr);
         }
 
-        elseif ($schoolId && $seasonId){
-            $newsList = Sport::with([
-                'news_list' => function($q){
-                    $q->select('news.id', 'id as news_id', 'title as news_title', 'intro as news_teaser',
-                        'image as news_photo', 'news_date', 'link as news_url')
-                        ->get();
-                }
-            ])
-                ->select('sports.id', 'sports.school_id')
-                ->where('school_id', $schoolId)
-                ->where('sports.id', $sportId)
-                ->first();
-            return $newsList;
-        }
+        if($schoolId && $seasonId){
+            $newsList = News::select('news.id', 'news.id as news_id', 'title as news_title',
+                    'intro as news_teaser', 'image as news_photo', 'news_date', 'link as news_url',
+                    'news.school_id')
+                ->where('news.school_id', $schoolId)
+                ->where('news.season_id', $seasonId)
+                ->get();
 
-        else{
-            $newsList = Roster::with([
-                            'news_list' => function($q){
-                                $q->select('id as news_id', 'title as news_title', 'intro as news_teaser',
-                                    'image as news_photo', 'news_date', 'link as news_url');
-                            }
-                            ])
-                            ->select()
-                            ->where('school_id', $schoolId)
-                            ->get();
-            $arr = array('news_list' => $newsList);
-            return json_encode($arr);
+            foreach ($newsList as $key => $item){
+
+                $adDetails = News::select('ads.id as ad_id', 'ads.name as ad_name', 'ads.url as ad_url',
+                    'ads.image as ad_image', 'sponsors.id as sponsor_id', 'sponsors.name as sponsor_name')
+                    ->join('news_roster', 'news_roster.news_id', '=', 'news.id')
+                    ->join('rosters', 'news_roster.roster_id', '=', 'rosters.id')
+                    ->join('sponsors', 'sponsors.id', '=', 'rosters.news_advertiser')
+                    ->join('ads', 'ads.id', '=', 'sponsors.ad_id')
+                    ->where('news.school_id', $schoolId)
+                    ->where('news.id', $item->news_id)
+                    ->first();
+
+                $arr[$key]["news_id"] = $item->news_id;
+                $arr[$key]["news_title"] = $item->news_title;
+                $arr[$key]["news_teaser"] = $item->news_teaser;
+                $arr[$key]["news_photo"] = $item->news_photo;
+                $arr[$key]["news_date"] = $item->news_date;
+                $arr[$key]["news_url"] = $item->news_url;
+                $arr[$key]["ad_details"] = $adDetails;
+            }
+
+            $arr = array('news_list' => $arr);
+            return response()->json($arr);
         }
     }
 
