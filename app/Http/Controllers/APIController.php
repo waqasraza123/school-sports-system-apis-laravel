@@ -50,6 +50,7 @@ class APIController extends Controller
         $year = $request->input('yr');
         $newsId = $request->input('news_id');
         $socialName = $request->input('social_name');
+        $albumId = $request->input('album_id');
 
         //create the admin user for requests
         // other then api calls only one time on '/'
@@ -124,6 +125,11 @@ class APIController extends Controller
             if ($action == 'getAlbumList'){
                 return $this->getAlbumList($schoolId, $sportId, $seasonId);
             }
+
+            if($action == 'getAlbum'){
+                return $this->getAlbum($schoolId, $sportId, $seasonId, $albumId);
+            }
+
             if($action == 'getAboutCompany'){
                 return $this->getAboutCompany($schoolId);
             }
@@ -327,7 +333,7 @@ class APIController extends Controller
                 ->select('id', 'id as sport_id', 'name as sport_name',
                     'photo as sport_photo', 'record as sport_record')
 
-                ->where('school_id', $schoolId)->where('id', $sportId)->first();
+                ->where('school_id', $schoolId)->where('id', $sportId);
 
         if($seasonId){
             $sport = $sport->where('season_id', $seasonId);
@@ -340,7 +346,7 @@ class APIController extends Controller
             }
         }
 
-        return response()->json($sport);
+        return response()->json($sport->first());
     }
 
 
@@ -827,21 +833,6 @@ class APIController extends Controller
      */
     public function getAlbumList($schoolId, $sportId, $seasonId){
 
-        //seasonId is optional param
-        if($schoolId && $sportId && $seasonId){
-            $albumsList = Album::select('album.id as album_id', 'album.name as album_name', 'date as album_date',
-                'url as album_url', 'sports.name as sport_name')
-                ->join('album_roster', 'album_roster.album_id', '=', 'album.id')
-                ->join('rosters', 'album_roster.roster_id', '=', 'rosters.id')
-                ->join('sports', 'rosters.sport_id', '=', 'sports.id')
-                ->where('album.school_id', $schoolId)
-                ->where('sports.id', $sportId)
-                ->where('album.season_id', $seasonId)
-                ->get();
-
-            return response()->json($albumsList);
-        }
-
         //both are required params
         if($schoolId && $sportId){
             $albumsList = Album::select('album.id as album_id', 'album.name as album_name', 'date as album_date',
@@ -850,10 +841,41 @@ class APIController extends Controller
                                 ->join('rosters', 'album_roster.roster_id', '=', 'rosters.id')
                                 ->join('sports', 'rosters.sport_id', '=', 'sports.id')
                                 ->where('album.school_id', $schoolId)
-                                ->where('sports.id', $sportId)
-                                ->get();
+                                ->where('sports.id', $sportId);
 
-            return response()->json($albumsList);
+            if($seasonId){
+                $albumsList = $albumsList->where('album.season_id', $seasonId);
+                return response()->json($albumsList->get());
+            }
+            return response()->json($albumsList->get());
+        }
+    }
+
+    /**
+     * @param $schoolId
+     * @param $sportId
+     * @param $seasonId
+     * @param $albumId
+     *
+     * return specific album
+     */
+    public function getAlbum($schoolId, $sportId, $seasonId, $albumId){
+        //both are required params
+        if($schoolId && $sportId && $albumId){
+            $albumsList = Album::select('album.id as album_id', 'album.name as album_name', 'date as album_date',
+                'url as album_url', 'sports.name as sport_name')
+                ->join('album_roster', 'album_roster.album_id', '=', 'album.id')
+                ->join('rosters', 'album_roster.roster_id', '=', 'rosters.id')
+                ->join('sports', 'rosters.sport_id', '=', 'sports.id')
+                ->where('album.school_id', $schoolId)
+                ->where('sports.id', $sportId)
+                ->where('album.id', $albumId);
+
+            if($seasonId){
+                $albumsList = $albumsList->where('album.season_id', $seasonId);
+                return response()->json($albumsList->first());
+            }
+            return response()->json($albumsList->first());
         }
     }
 
