@@ -15,7 +15,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('rosters/students/add', ['as' => 'roster-students-post', 'uses' => 'RostersController@storeRosterStudents']);
     Route::resource('rosters', 'RostersController');
 
-    Route::delete('rosters/{rosterId}/student/{studentId}/delete', ['as' => 'rosters.students.delete', 'uses' => 'RostersController@deletePosition']);
+    Route::delete('rosters/{rosterId}/student/{studentId}/delete',
+        ['as' => 'rosters.students.delete', 'uses' => 'RostersController@deletePosition']);
 
     Route::put('games/', 'GamesController@show_games');
     Route::post('games/filter', 'GamesController@filter');

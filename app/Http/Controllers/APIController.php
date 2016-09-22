@@ -780,7 +780,20 @@ class APIController extends Controller
                     ->where('id', $newsId)
                     ->first();
 
-        return $news;
+        $adDetails = News::select('ads.id as ad_id', 'ads.name as ad_name', 'ads.url as ad_url',
+            'ads.image as ad_image', 'sponsors.id as sponsor_id', 'sponsors.name as sponsor_name')
+            ->join('news_roster', 'news_roster.news_id', '=', 'news.id')
+            ->join('rosters', 'news_roster.roster_id', '=', 'rosters.id')
+            ->join('sponsors', 'sponsors.id', '=', 'rosters.news_advertiser')
+            ->join('ads', 'ads.id', '=', 'sponsors.ad_id')
+            ->where('news.school_id', $schoolId)
+            ->where('news.id', $newsId)
+            ->first();
+
+        if($news){
+            $news->ad_details = $adDetails;
+            return response()->json($news);
+        }
     }
 
     /**
