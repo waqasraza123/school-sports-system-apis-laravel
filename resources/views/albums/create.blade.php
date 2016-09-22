@@ -17,7 +17,7 @@
             {!! Form::label('title', 'Game:', ['class' => 'control-label']) !!}
             {{ Form::select('game_id[]', $games, null, ['class' => 'form-control','id' => 'game_id', 'style' => 'width: 100%', 'multiple']) }}
             {!! Form::label('title', 'Year:', ['class' => 'control-label']) !!}
-            {{ Form::select('year_id[]', $years, null, ['class' => 'form-control','id' => 'year_id', 'style' => 'width: 100%', 'multiple']) }}
+            {!! Form::selectYear('year_id[]', 2005, \Carbon\Carbon::now()->year, \Carbon\Carbon::now()->year, ['class' => 'form-control', 'required' => 'true']) !!}
             {!! Form::label('title', 'Season:', ['class' => 'control-label']) !!}
             {{ Form::select('season_id', $seasons, null, ['class' => 'form-control','id' => 'season_id', 'style' => 'width: 100%']) }}
 

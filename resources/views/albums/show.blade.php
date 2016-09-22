@@ -25,7 +25,7 @@
                 <tr>
                     <td>{{$album->name}}</td>
                     <td>@foreach($album->rosters as $roster_tag)<span class="label label-info" style="color: black; font-weight: lighter; font-size: 10px" >{{$roster_tag->name}}</span> @endforeach
-                        @foreach($album->games as $games_tag)<span class="label label-info" style="color: black; font-weight: lighter; font-size: 10px">{{$schools[$games_tag->opponents_id]." ".$games_tag->game_date}}</span> @endforeach
+                        @foreach($album->games as $games_tag)<span class="label label-info" style="color: black; font-weight: lighter; font-size: 10px">{{$opponents[$games_tag->opponents_id]." ".$games_tag->game_date}}</span> @endforeach
                         @foreach($album->years as $years_tag)<span class="label label-info" style="color: black; font-weight: lighter; font-size: 10px">{{$years_tag->year}}</span> @endforeach
                     </td>
                     <td><a href="{{url('albums/'. $album->id)}}" class="btn btn-primary btn-sm">Show pictures</a></td>

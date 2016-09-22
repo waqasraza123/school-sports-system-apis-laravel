@@ -6,6 +6,7 @@ use App\Album;
 use App\Gallery;
 use App\Games;
 use App\LevelSport;
+use App\Opponent;
 use App\Roster;
 use App\School;
 use App\Season;
@@ -27,19 +28,19 @@ class AlbumController extends Controller
     public function index()
     {
         //Lists for Schools, Sports, Years and Levels with key = id and value = name
-        $years = Year::lists('year', 'id');
         //making list of all games where key=game_id and value= opponent name and date of the game
-        $games_all = Games::all();
-        $games = [];
+        $games_all = Games::where('school_id', $this->schoolId)->get();
+        $games = array();
         foreach ($games_all as $game)
         {
-            $games[$game->id] = School::where('id','=',$game->opponents_id)->first()->name." ".(new Carbon($game->game_date))->toDateString();
+            $games[$game->id] = Opponent::where('id','=',$game->opponents_id)
+                    ->first()->name." ".(new Carbon($game->game_date))->toDateString();
         }
-        $schools = School::where('id', '<>', 1)->lists('name', 'id');
+        $opponents = Opponent::where('school_id', $this->schoolId)->lists('name', 'id');
 
         $albums = Album::where('school_id','=', $this->schoolId)->get();
         //showing view for all photos
-        return view('albums.show', compact('schools', 'games','years', 'albums'));
+        return view('albums.show', compact('opponents', 'games', 'albums'));
     }
 
     public function create()
@@ -52,7 +53,8 @@ class AlbumController extends Controller
         $games = [];
         foreach ($games_all as $game)
         {
-            $games[$game->id] = School::where('id','=',$game->opponents_id)->first()->name." ".(new Carbon($game->game_date))->toDateString();
+            $games[$game->id] = Opponent::where('id', '=', $game->opponents_id)->first()->name . " " . (new Carbon($game->game_date))->toDateString();
+
         }
         return view('albums.create', compact('seasons', 'games','years', 'rosters'));
     }
@@ -171,7 +173,7 @@ class AlbumController extends Controller
         $games = [];
         foreach ($games_all as $game)
         {
-            $games[$game->id] = School::where('id','=',$game->opponents_id)->first()->name." ".(new Carbon($game->game_date))->toDateString();
+            $games[$game->id] = Opponent::where('id','=',$game->opponents_id)->first()->name." ".(new Carbon($game->game_date))->toDateString();
         }
         $album = Album::where('school_id','=', $this->schoolId)->where('id','=', $id)->first();
         return view('albums.edit', compact('seasons', 'games','years', 'album', 'rosters'));
