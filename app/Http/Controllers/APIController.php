@@ -14,6 +14,7 @@ use App\Sponsor;
 use App\Staff;
 use App\Student;
 use App\Ad;
+use App\Company;
 use Illuminate\Http\Request;
 use App\School;
 use App\Sport;
@@ -121,6 +122,9 @@ class APIController extends Controller
 
             if ($action == 'getAlbumList'){
                 return $this->getAlbumList($schoolId, $sportId, $seasonId);
+            }
+            if($action == 'getAboutCompany'){
+                return $this->getAboutCompany($schoolId);
             }
         }
     }
@@ -831,5 +835,22 @@ class APIController extends Controller
         if($schoolId && $sportId && $seasonId){
 
         }
+    }
+
+    /**
+     * @param $schoolId
+     */
+    public function getAboutCompany($schoolId){
+        $company = Company::with([
+                        'company_social' => function($q){
+                            $q->select('facebook as company_facebook', 'twitter as company_twitter',
+                                'instagram as company_instagram');
+                        }
+                        ])
+                        ->select('name as company_name', 'logo as company_logo', 'bio as company_bio',
+                        'url as company_url', 'phone as company_phone')
+                        ->where('school_id', $schoolId)->first();
+
+        return response()->json($company);
     }
 }
