@@ -49,6 +49,7 @@ class APIController extends Controller
         $studentId = $request->input('student_id');
         $year = $request->input('yr');
         $newsId = $request->input('news_id');
+        $socialName = $request->input('social_name');
 
         //create the admin user for requests
         // other then api calls only one time on '/'
@@ -125,6 +126,10 @@ class APIController extends Controller
             }
             if($action == 'getAboutCompany'){
                 return $this->getAboutCompany($schoolId);
+            }
+
+            if($action == 'getSocial'){
+                return $this->getSocial($schoolId, $sportId, $socialName);
             }
         }
     }
@@ -822,19 +827,46 @@ class APIController extends Controller
      */
     public function getAlbumList($schoolId, $sportId, $seasonId){
 
-        //both are required params
-        if($schoolId && $sportId){
-            $albumsList = Album::select('id as album_id', 'name as album_name', 'date as album_date', 'url as album_url',
-                                'sports.name as sport_name')
-                                ->join('sports');
-                                where('school_id', $schoolId)
-                                ->get();
-        }
-
         //seasonId is optional param
         if($schoolId && $sportId && $seasonId){
+            $albumsList = Album::select('album.id as album_id', 'album.name as album_name', 'date as album_date',
+                'url as album_url', 'sports.name as sport_name')
+                ->join('album_roster', 'album_roster.album_id', '=', 'album.id')
+                ->join('rosters', 'album_roster.roster_id', '=', 'rosters.id')
+                ->join('sports', 'rosters.sport_id', '=', 'sports.id')
+                ->where('album.school_id', $schoolId)
+                ->where('sports.id', $sportId)
+                ->where('album.season_id', $seasonId)
+                ->get();
 
+            return response()->json($albumsList);
         }
+
+        //both are required params
+        if($schoolId && $sportId){
+            $albumsList = Album::select('album.id as album_id', 'album.name as album_name', 'date as album_date',
+                                'url as album_url', 'sports.name as sport_name')
+                                ->join('album_roster', 'album_roster.album_id', '=', 'album.id')
+                                ->join('rosters', 'album_roster.roster_id', '=', 'rosters.id')
+                                ->join('sports', 'rosters.sport_id', '=', 'sports.id')
+                                ->where('album.school_id', $schoolId)
+                                ->where('sports.id', $sportId)
+                                ->get();
+
+            return response()->json($albumsList);
+        }
+    }
+
+    /**
+     * @param $schoolId required param
+     * @param $sportId
+     * @param $socialName
+     *incomplete html formatted feed
+     */
+    public function getSocial($schoolId, $sportId, $socialName){
+        $social = Social::select('');
+                        where('socialLinks_id', $schoolId)
+                        ->first();
     }
 
     /**

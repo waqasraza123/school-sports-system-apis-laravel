@@ -18,6 +18,8 @@
             {{ Form::select('game_id[]', $games, $album->games->lists('name','id'), ['class' => 'form-control','id' => 'game_id', 'style' => 'width: 100%', 'multiple']) }}
             {!! Form::label('title', 'Year:', ['class' => 'control-label']) !!}
             {{ Form::select('year_id[]', $years, $album->years->lists('year','id'), ['class' => 'form-control','id' => 'year_id', 'style' => 'width: 100%', 'multiple']) }}
+            {!! Form::label('title', 'Season:', ['class' => 'control-label']) !!}
+            {{ Form::select('season_id', $seasons, null, ['class' => 'form-control','id' => 'season_id', 'style' => 'width: 100%']) }}
 
             <div class="dropzone-previews"></div>
             <button type="submit" class="btn btn-info" id="submitbtn" style="margin-left: 75%; margin-top: 65px; margin-bottom: -70px;">Update album</button>
@@ -30,6 +32,7 @@
     <script src="/dist/js/sb-gallery-2.js"></script>
     <script type="text/javascript">
         $('#roster_id').select2();
+        $('#season_id').select2();
         $('#game_id').select2();
         $('#year_id').select2();
 

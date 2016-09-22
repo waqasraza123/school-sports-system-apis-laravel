@@ -48,12 +48,13 @@ class AlbumController extends Controller
         $rosters = Roster::lists('name', 'id');
         //making list od all games where key=game_id and value= opponent name and date of the game
         $games_all = Games::all();
+        $seasons = Season::lists('name', 'id');
         $games = [];
         foreach ($games_all as $game)
         {
             $games[$game->id] = School::where('id','=',$game->opponents_id)->first()->name." ".(new Carbon($game->game_date))->toDateString();
         }
-        return view('albums.create', compact('games','years', 'rosters'));
+        return view('albums.create', compact('seasons', 'games','years', 'rosters'));
     }
 
     public function store(Request $request)
@@ -79,6 +80,7 @@ class AlbumController extends Controller
                 'name' => $request->input('name'),
                 'date' => Carbon::now()->utc,
                 'school_id' => $this->schoolId,
+                'season_id' => $request->input('season_id')
             ]);
 
             //add roster tags
@@ -119,7 +121,8 @@ class AlbumController extends Controller
             Album::where('id', '=', $id)->update([
                 'name' => $file['name'],
                 'date' => Carbon::now()->utc,
-                'school_id' => $this->schoolId
+                'school_id' => $this->schoolId,
+                'season_id' => $file['season_id']
             ]);
 
             $album = Album::find($id);
@@ -164,13 +167,14 @@ class AlbumController extends Controller
         $rosters = Roster::lists('name', 'id');
         //making list od all games where key=game_id and value= opponent name and date of the game
         $games_all = Games::all();
+        $seasons = Season::lists('name', 'id');
         $games = [];
         foreach ($games_all as $game)
         {
             $games[$game->id] = School::where('id','=',$game->opponents_id)->first()->name." ".(new Carbon($game->game_date))->toDateString();
         }
         $album = Album::where('school_id','=', $this->schoolId)->where('id','=', $id)->first();
-        return view('albums.edit', compact('games','years', 'album', 'rosters'));
+        return view('albums.edit', compact('seasons', 'games','years', 'album', 'rosters'));
     }
 
     public function show($id)
