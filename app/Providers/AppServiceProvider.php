@@ -8,6 +8,7 @@ use App\School;
 use App\Social;
 use App\Season;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -36,32 +37,20 @@ class AppServiceProvider extends ServiceProvider
      */
     public function createAdmin(){
 
-        $user = User::where('email', 'admin@gmail.com')->first();
-        $school = School::where('school_email', 'admin@gmail.com')->first();
-        $social = Social::where('socialLinks_type', 'Admin')->first();
-        if(!($user)){
+        $school = School::firstOrCreate([
+            'school_email' => 'admin@gmail.com',
+            'name' => 'Admin',
+            'school_logo' => 'https://lh3.googleusercontent.com/YGqr3CRLm45jMF8eM8eQxc1VSERDTyzkv1CIng0qjcenJZxqV5DBgH5xlRTawnqNPcOp=w300'
 
-            $school = School::where('school_email', 'admin@gmail.com')->first();
-            if(!($school)){
-                $school = School::create(array(
-                    'id' => 1,
-                    'name' => 'Admin',
-                    'school_email' => 'admin@gmail.com',
-                    'school_logo' => 'https://lh3.googleusercontent.com/YGqr3CRLm45jMF8eM8eQxc1VSERDTyzkv1CIng0qjcenJZxqV5DBgH5xlRTawnqNPcOp=w300'
-                ));
-            }
-            $user = User::create(array(
-                'name' => 'Admin',
-                'email' => 'admin@gmail.com',
-                'password' => bcrypt('admin'),
-                'school_id' => $school->id,
-            ));
+        ]);
 
-            $social = Social::create(array(
-                'socialLinks_id' => $school->id,
-                'socialLinks_type' => 'Admin'
-            ));
-        }
+        $user = User::firstOrCreate([
+            'name' => 'Admin',
+            'email' => 'admin@gmail.com',
+            'school_id' => $school->id
+        ]);
+        $user->password = bcrypt('admin');
+        $user->save();
 
         $seasons = Season::where('name', 'Fall')->first();
         $now = Carbon::now('utc')->toDateTimeString();

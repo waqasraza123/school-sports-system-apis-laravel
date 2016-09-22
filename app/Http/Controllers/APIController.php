@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Album;
+use App\Gallery;
 use App\Games;
 use App\LevelSport;
 use App\News;
@@ -870,6 +871,11 @@ class APIController extends Controller
                 ->where('album.school_id', $schoolId)
                 ->where('sports.id', $sportId)
                 ->where('album.id', $albumId);
+
+            $photos = Gallery::select('id as photo_id', 'thumb')
+                                ->where('album_id', $albumId)->where('type', 'image')->get();
+            $albumsList->photos = $photos;
+            dd($albumsList->photos);
 
             if($seasonId){
                 $albumsList = $albumsList->where('album.season_id', $seasonId);

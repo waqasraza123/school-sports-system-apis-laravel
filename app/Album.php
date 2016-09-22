@@ -13,8 +13,7 @@ class Album extends Model
         'date',
         'url',
         'created_at',
-        'updated_at',
-
+        'updated_at'
     ];
 
     public function rosters()
@@ -38,6 +37,4 @@ class Album extends Model
     {
         return $this->hasMany('App\Gallery');
     }
-
-
 }
