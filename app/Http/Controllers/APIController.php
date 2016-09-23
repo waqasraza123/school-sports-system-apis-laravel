@@ -296,8 +296,7 @@ class APIController extends Controller
                     ->select('sports.id as sport_id', 'sports.id', 'sports.name as sport_name',
                         'sports.record as sport_record', 'season_id', 'sports.photo as sport_photo')
                             ->where('school_id', $schoolId)
-                            ->where('sports.id', $sportId)
-                            ->first();
+                            ->where('sports.id', $sportId);
 
         $lastGame = Games::select('games.id as game_id', 'our_score as school_score',
                             'result as game_result', 'home_away as game_vs_at', 'opponents.name as opp_name',
@@ -345,25 +344,113 @@ class APIController extends Controller
                                 ->where('sports.school_id', $schoolId)
                                 ->first();
 
+        $arr = array();
+        if($seasonId && $levelId){
+
+            $sport = Sport::with([
+                'sport_levels' => function($q) use ($levelId){
+                    $q->select('levels.id as level_id', 'levels.name as level_name')
+                        ->where('levels.id', $levelId)
+                        ->get();
+                },
+                'season_list' => function($q){
+                    $q->select('seasons.id as season_id', 'seasons.name as season_name', 'seasons.id')
+                        ->get();
+                },
+                'latest_news' => function($q){
+                    $q->select('news.id', 'news.id as news_id', 'news.title as news_title', 'news.intro as news_teaser',
+                        'news.image as news_photo', 'news.link as news_url', 'news_date')
+                        ->orderBy('news_date', 'DESC')
+                        ->limit(5)
+                        ->get();
+                }
+            ])
+                ->select('sports.id as sport_id', 'sports.id', 'sports.name as sport_name',
+                    'sports.record as sport_record', 'season_id', 'sports.photo as sport_photo')
+                ->where('school_id', $schoolId)
+                ->where('season_id', $seasonId)
+                ->where('sports.id', $sportId);
+
+            if($sport->first() != null){
+                if(!$sport->first()->sport_levels->isEmpty()) {
+                    $arr['sport_id'] = $sport->first()->sport_id;
+                    $arr['sport_name'] = $sport->first()->sport_name;
+                    $arr['sport_record'] = $sport->first()->sport_record;
+                    $arr['sport_photo'] = $sport->first()->sport_photo;
+                    $arr['latest_news'] = $sport->first()->latest_news;
+                    $arr['season_list'] = $sport->first()->season_list;
+                    $arr['sport_levels'] = $sport->first()->sport_levels;
+                    $arr['last_game'] = $lastGame;
+                    $arr['next_game'] = $lastGame;
+                    $arr['latest_video'] = $latestVideo;
+                    $arr['latest_photos'] = $latestPhotos;
+                }
+            }
+            return response()->json($arr);
+
+        }
+
         //optional param
         if($seasonId){
+
             $sport = $sport->where('season_id', $seasonId);
+
+
+            if($sport->first() != null){
+
+                $arr['sport_id'] = $sport->first()->sport_id;
+                $arr['sport_name'] = $sport->first()->sport_name;
+                $arr['sport_record'] = $sport->first()->sport_record;
+                $arr['sport_photo'] = $sport->first()->sport_photo;
+                $arr['latest_news'] = $sport->first()->latest_news;
+                $arr['season_list'] = $sport->first()->season_list;
+                $arr['sport_levels'] = $sport->first()->sport_levels;
+                $arr['last_game'] = $lastGame;
+                $arr['next_game'] = $lastGame;
+                $arr['latest_video'] = $latestVideo;
+                $arr['latest_photos'] = $latestPhotos;
+            }
+            return response()->json($arr);
+
         }
 
         //optional param
         if($levelId){
-            $sportWithLevel = $sport->levels()->where('level_id', $levelId)->first();
-            if (!($sportWithLevel)){
-                return response()->json();
+            $sport = $sport->where('level_id', $levelId);
+
+
+            if($sport->first() != null){
+
+                $arr['sport_id'] = $sport->first()->sport_id;
+                $arr['sport_name'] = $sport->first()->sport_name;
+                $arr['sport_record'] = $sport->first()->sport_record;
+                $arr['sport_photo'] = $sport->first()->sport_photo;
+                $arr['latest_news'] = $sport->first()->latest_news;
+                $arr['season_list'] = $sport->first()->season_list;
+                $arr['sport_levels'] = $sport->first()->sport_levels;
+                $arr['last_game'] = $lastGame;
+                $arr['next_game'] = $lastGame;
+                $arr['latest_video'] = $latestVideo;
+                $arr['latest_photos'] = $latestPhotos;
             }
+            return response()->json($arr);
         }
 
-        $sport->last_game = $lastGame;
-        $sport->next_game = $nextGame;
-        $sport->latest_photos = $latestPhotos;
-        $sport->latest_video = $latestVideo;
+        if($sport->first() != null){
 
-        return response()->json($sport);
+            $arr['sport_id'] = $sport->first()->sport_id;
+            $arr['sport_name'] = $sport->first()->sport_name;
+            $arr['sport_record'] = $sport->first()->sport_record;
+            $arr['sport_photo'] = $sport->first()->sport_photo;
+            $arr['latest_news'] = $sport->first()->latest_news;
+            $arr['season_list'] = $sport->first()->season_list;
+            $arr['sport_levels'] = $sport->first()->sport_levels;
+            $arr['last_game'] = $lastGame;
+            $arr['next_game'] = $lastGame;
+            $arr['latest_video'] = $latestVideo;
+            $arr['latest_photos'] = $latestPhotos;
+        }
+        return response()->json($arr);
     }
 
 
@@ -567,19 +654,14 @@ class APIController extends Controller
      *
      */
     public function getGame($schoolId, $sportId, $levelId, $seasonId, $gameId){
+
+        //all params are required
         if(!($schoolId && $sportId && $levelId && $seasonId && $gameId)){
             return response()->json();
         }
+
         else{
-            $game = Games::with(['game_news'=> function($q){
-                $q->select('news.id as news_id', 'news.title as news_title', 'news.intro as news_teaser',
-                    'news.image as news_photo', 'news_date', 'link as news_url')->get();
-            },
-            'game_photos' =>function($q){
-                $q->get();
-            }
-            ])
-            ->select('games.id as game_id',
+            $game = Games::select('games.id as game_id',
                     'game_date',
                     'game_date as game_time',
                     'locations.name as game_location',
@@ -598,14 +680,47 @@ class APIController extends Controller
                 ->join('locations', 'games.locations_id', '=', 'locations.id')
                 ->join('schools', 'schools.id', '=', 'games.school_id')
                 ->join('opponents', 'opponents.id', '=', 'games.opponents_id')
+                ->join('rosters', 'rosters.id', '=', 'games.roster_id')
+                ->join('sports', 'rosters.sport_id', '=', 'sports.id')
+                ->join('levels-sports', 'levels-sports.sport_id', '=', 'sports.id')
+                ->join('levels', 'levels-sports.level_id', '=', 'levels.id')
                 ->where([
                     ['games.school_id' , $schoolId],
-                    ['games.sport_id' , $sportId],
-                    ['games.level_id' , $levelId],
+                    ['sports.id' , $sportId],
+                    ['levels.id' , $levelId],
                     ['games.season_id' , $seasonId],
                     ['games.id' , $gameId],
             ])->first();
 
+            if($game) {
+
+                $news = Games::find($gameId)->game_news()->select('news.id as news_id', 'news.title as news_title',
+                        'news.intro as news_teaser', 'news.image as news_photo', 'news_date', 'link as news_url',
+                        'news.id')
+                        ->get();
+
+                $gamePhotos = Games::select('photos.id as photo_id', 'photos.large as photo_large',
+                    'photos.thumb as photo_thumb')
+                    ->join('album_games', 'album_games.games_id', '=', 'games.id')
+                    ->join('album', 'album.id', '=', 'album_games.album_id')
+                    ->join('photos', 'photos.album_id', '=', 'album.id')
+                    ->orderBy('photos.created_at', 'DESC')
+                    ->where('games.school_id', $schoolId)
+                    ->get();
+
+                $gameVideo = Games::select('videos.id as video_id', 'videos.title as video_title',
+                    'videos.date as video_date', 'videos.url as video_url')
+                    ->join('album_games', 'album_games.games_id', '=', 'games.id')
+                    ->join('album', 'album.id', '=', 'album_games.album_id')
+                    ->join('videos', 'videos.album_id', '=', 'album.id')
+                    ->orderBy('videos.created_at', 'DESC')
+                    ->where('games.school_id', $schoolId)
+                    ->get();
+
+                $game->game_video = $gameVideo;
+                $game->game_news = $news;
+                $game->game_photos = $gamePhotos;
+            }
             return $game;
         }
     }
