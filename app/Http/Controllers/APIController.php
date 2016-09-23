@@ -859,6 +859,7 @@ class APIController extends Controller
      * @param $albumId
      *
      * return specific album
+     * incomplete, return photos for that album
      */
     public function getAlbum($schoolId, $sportId, $seasonId, $albumId){
         //both are required params

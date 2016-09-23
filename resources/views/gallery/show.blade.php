@@ -62,9 +62,14 @@
                         <div class="sss" style="position: relative; background-image: url('{{asset('uploads/gallery/tmb/'.$photo->name ) }}'); background-repeat: no-repeat; background-size: cover; width: 200px;height: 200px;">
                             <div class="info" style="color: white; background: rgba(0,0,0,0.5); height: 200px;">
 
-                                {!! Form::open([    'method' => 'DELETE','route' => ['gallery.destroy', $photo->id]]) !!}{!! Form::submit('X', array('style' => 'background: none; border: none; font-size:24px;position: absolute;top: 3px;right: 5px; font-weight: 700;')) !!}{!! Form::close() !!}
+                                {!! Form::open([    'method' => 'DELETE','route' => ['gallery.destroy', $photo->id]]) !!}
+                                {!! Form::submit('X', array('style' => 'background: none; border: none; font-size:24px;position: absolute;
+                                top: 3px;right: 5px; font-weight: 700;')) !!}{!! Form::close() !!}
                                 <button align="right" style="position: absolute;top: 5px;right: 5px; background: transparent;border: none; font-size: 24px;"></button>
-                                <button data-id="{{ $photo->id}}" data-toggle="modal" class="edit_gallery" data-target="#galleryModal" align="right" style="position: absolute;top: 5px;right: 35px; background: transparent;border: none; font-size: 24px;"><span class="glyphicon glyphicon glyphicon-edit" aria-hidden="true"></span></button>
+                                <button data-id="{{ $photo->id}}" data-toggle="modal" class="edit_gallery" data-target="#galleryModal"
+                                        align="right" style="position: absolute;top: 5px;right: 35px; background: transparent;border: none; font-size: 24px;">
+                                    <span class="glyphicon glyphicon glyphicon-edit" aria-hidden="true"></span>
+                                </button>
                                 <p class="id" style="display: none;" >{{ $photo->id}}</p>
                                 <div>
                                     <p class="students_ids" style="display: none;" >{{ json_encode($photo->students->lists('id'))}} </p>

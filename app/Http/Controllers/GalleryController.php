@@ -6,6 +6,7 @@ use App\Album;
 use App\Gallery;
 use App\Games;
 use App\LevelSport;
+use App\Photo;
 use App\Roster;
 use App\School;
 use App\Sport;
@@ -25,7 +26,6 @@ class GalleryController extends Controller
 {
     public function index()
     {
-
         //Lists for Schools, Sports, Years and Levels with key = id and value = name
         $schools = School::where('id', '<>', '1')->lists('name', 'id');
         $sports = Sport::lists('name', 'id');
@@ -53,15 +53,16 @@ class GalleryController extends Controller
         {
         //give picture name timestamp + original name
         $name = time() . $file->getClientOriginalName();
-        //save image in publi/uploads/gallery
+        //save image in public/uploads/gallery
         $file->move('uploads/gallery', $name);
             //create thumbnail of the image in publi/uploads/gallery/tmb
             Image::make('uploads/gallery/'.$name)->fit(200)->save('uploads/gallery/tmb/'.$name);
             //save image name to db
-            $gallery = Gallery::create(array('name' => $name));
-            $gallery->album_id = $id;
-            $gallery->type = 'image';
-            $gallery->save();
+            Photo::create([
+                'thumb' => asset('uploads/gallery/tmb/'.$name),
+                'large' => asset('uploads/gallery/'.$name),
+                'album_id' => $id
+            ]);
         }
         Session::flash('success', 'Created successfully');
         return Redirect::back();
