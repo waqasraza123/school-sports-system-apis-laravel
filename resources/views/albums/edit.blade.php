@@ -12,7 +12,7 @@
             {!! Form::label('title', 'Album name:', ['class' => 'control-label']) !!}
             {!! Form::text('name', $album->name, ['class' => 'fn form-control']) !!}
                     <!-- Now setup your input fields -->
-            {!! Form::label('title', 'Player:', ['class' => 'control-label']) !!}
+            {!! Form::label('title', 'Roster:', ['class' => 'control-label']) !!}
             {{ Form::select('roster_id[]', $rosters, $album->rosters->lists('name','id'), ['class' => 'form-control','id' => 'roster_id', 'style' => 'width: 100%', 'multiple']) }}
             {!! Form::label('title', 'Game:', ['class' => 'control-label']) !!}
             {{ Form::select('game_id[]', $games, $album->games->lists('name','id'), ['class' => 'form-control','id' => 'game_id', 'style' => 'width: 100%', 'multiple']) }}

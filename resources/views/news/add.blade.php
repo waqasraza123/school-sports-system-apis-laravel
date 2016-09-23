@@ -58,7 +58,7 @@
             <div class="col-md-6">
                 <div class="form-group-sm">
                     <div class="com-sm-6">
-                        {!! Form::label('season', 'Student:', ['class' => 'control-label']) !!}
+                        {!! Form::label('season', 'Season:', ['class' => 'control-label']) !!}
                         {{ Form::select('season', $seasons, null,
                         ['class' => 'form-control', 'id' => 'season_id', 'required'=> 'true']) }}
                     </div>

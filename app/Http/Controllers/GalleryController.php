@@ -10,6 +10,7 @@ use App\Photo;
 use App\Roster;
 use App\School;
 use App\Sport;
+use App\Video;
 use App\Year;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
@@ -77,10 +78,12 @@ class GalleryController extends Controller
         {
             if(str_contains($key, 'url'))
             {
-                $gallery = Gallery::create(array('url' => $value));
-                $gallery->type = 'video';
-                $gallery->album_id = $id;
-                $gallery->save();
+                Video::create([
+                    'date' => Carbon::now()->toDateString(),
+                    'title' => '',
+                    'url' => $value,
+                    'album_id' => $id
+                ]);
             }
         }
 

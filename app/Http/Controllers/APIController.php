@@ -275,79 +275,95 @@ class APIController extends Controller
      * @return string
      */
     public function getSport($schoolId, $levelId, $seasonId, $sportId){
-        $lastGameOpp = null;
-        $nextGameOpp = null;
 
         $sport = Sport::with([
+                        'sport_levels' => function($q){
+                            $q->select('levels.id as level_id', 'levels.name as level_name')
+                                ->get();
+                        },
+                        'season_list' => function($q){
+                            $q->select('seasons.id as season_id', 'seasons.name as season_name', 'seasons.id')
+                                ->get();
+                        },
+                        'latest_news' => function($q){
+                            $q->select('news.id', 'news.id as news_id', 'news.title as news_title', 'news.intro as news_teaser',
+                                'news.image as news_photo', 'news.link as news_url', 'news_date')
+                                ->orderBy('news_date', 'DESC')
+                                ->limit(5)
+                                ->get();
+                        }
+                    ])
+                    ->select('sports.id as sport_id', 'sports.id', 'sports.name as sport_name',
+                        'sports.record as sport_record', 'season_id', 'sports.photo as sport_photo')
+                            ->where('school_id', $schoolId)
+                            ->where('sports.id', $sportId)
+                            ->first();
 
-            'sport_social' => function($q){
-                $q->select('id', 'socialLinks_id', 'facebook as facebook_url', 'twitter as twitter_url',
-                    'instagram as instagram_url')->first();
-            },
+        $lastGame = Games::select('games.id as game_id', 'our_score as school_score',
+                            'result as game_result', 'home_away as game_vs_at', 'opponents.name as opp_name',
+                            'nick as opp_nick', 'opponents.photo as opp_logo', 'opponents_score as opp_score')
+                            ->join('opponents', 'games.opponents_id', '=', 'opponents.id')
+                            ->join('rosters', 'rosters.id', '=', 'games.roster_id')
+                            ->join('sports', 'sports.id', '=', 'rosters.sport_id')
+                            ->where('sports.id', $sportId)
+                            ->where('sports.school_id', $schoolId)
+                            ->where('game_date', '<=' ,new DateTime())
+                            ->orderBy('game_date', 'DESC')
+                            ->first();
 
-            'season_list' => function($q){
-                $q->select('id', 'id as season_id', 'name as season_name')->get();
-            },
+        $nextGame = Games::select('games.id as game_id', 'our_score as school_score',
+                            'home_away as game_vs_at', 'opponents.name as opp_name', 'nick as opp_nick', 'game_date', 'game_time',
+                            'opponents.photo as opp_logo', 'opponents_score as opp_score')
+                            ->join('opponents', 'games.opponents_id', '=', 'opponents.id')
+                            ->join('rosters', 'rosters.id', '=', 'games.roster_id')
+                            ->join('sports', 'sports.id', '=', 'rosters.sport_id')
+                            ->where('sports.id', $sportId)
+                            ->where('sports.school_id', $schoolId)
+                            ->where('game_date', '>' , new DateTime())
+                            ->orderBy('game_date', 'DESC')
+                            ->first();
 
-            'sport_levels' => function($q) use ($sportId, $schoolId){
-                $q->select('levels.id', 'name');
-            },
+        $latestPhotos = Roster::select('photos.id as photo_id', 'photos.large as photo_large',
+                                'photos.thumb as photo_thumb')
+                                ->join('album_roster', 'album_roster.roster_id', '=', 'rosters.id')
+                                ->join('album', 'album.id', '=', 'album_roster.album_id')
+                                ->join('sports', 'sports.id', '=', 'rosters.sport_id')
+                                ->join('photos', 'photos.album_id', '=', 'album.id')
+                                ->orderBy('photos.created_at', 'DESC')
+                                ->where('sports.id', $sportId)
+                                ->where('sports.school_id', $schoolId)
+                                ->get();
 
-            'latest_video' => function($q){
-                $q->select('id', 'id as video_id', 'title as video_title', 'date as video_date', 'url as video_url')
-                    ->orderBy('date', 'desc')->first();
-            },
+        $latestVideo = Roster::select('videos.id as video_id', 'videos.title as video_title',
+                                'videos.url as video_url', 'videos.date as video_date')
+                                ->join('album_roster', 'album_roster.roster_id', '=', 'rosters.id')
+                                ->join('album', 'album.id', '=', 'album_roster.album_id')
+                                ->join('sports', 'sports.id', '=', 'rosters.sport_id')
+                                ->join('videos', 'videos.album_id', '=', 'album.id')
+                                ->orderBy('videos.date', 'DESC')
+                                ->where('sports.id', $sportId)
+                                ->where('sports.school_id', $schoolId)
+                                ->first();
 
-            'latest_news' => function($q){
-                $q->select('id as news_id', 'title as news_title', 'intro as news_teaser', 'image as news_photo',
-                    'news_date', 'link as news_url')->orderBy('news_date', 'desc')->first();
-            },
-
-            'latest_photos' => function($q){
-                $q->select('photos.id', 'photos.id as photo_id', 'thumb as photo_thumb', 'large as photo_large')->get();
-            },
-
-            'last_game' => function($q) use ($sportId){
-                $currentDate = Carbon::now()->utc;
-                $lastGameId = $q->select('games.id as game_id', 'sport_id', 'our_score as school_score', 'result as game_result',
-                    'game_date as game_vs_at', 'name as opp_name', 'nick as opp_nick', 'opponents.photo as opp_logo',
-                    'opponents_score as opp_score')
-                    ->join('opponents', 'games.opponents_id', '=', 'opponents.id')
-                    ->where('sport_id', $sportId)
-                    ->where('game_date', '<=' ,new DateTime())
-                    ->orderBy('game_date', 'DESC')->first();
-                },
-
-            'next_game' => function($q) use ($sportId){
-                $currentDate = Carbon::now()->utc;
-                $nextGameId = $q->select('games.id as game_id', 'sport_id', 'our_score as school_score', 'result as game_result',
-                    'game_date as game_vs_at', 'name as opp_name', 'nick as opp_nick', 'opponents.photo as opp_logo',
-                    'opponents_score as opp_score')
-                    ->join('opponents', 'games.opponents_id', '=', 'opponents.id')
-                    ->where('sport_id', $sportId)
-                    ->where('game_date', '>', new DateTime())
-                    ->orderBy('game_date', 'asc')->first();
-            }
-            ]
-        )
-
-                ->select('id', 'id as sport_id', 'name as sport_name',
-                    'photo as sport_photo', 'record as sport_record')
-
-                ->where('school_id', $schoolId)->where('id', $sportId);
-
+        //optional param
         if($seasonId){
             $sport = $sport->where('season_id', $seasonId);
         }
 
+        //optional param
         if($levelId){
             $sportWithLevel = $sport->levels()->where('level_id', $levelId)->first();
             if (!($sportWithLevel)){
-                return '{}';
+                return response()->json();
             }
         }
 
-        return response()->json($sport->first());
+        $sport->last_game = $lastGame;
+        $sport->next_game = $nextGame;
+        $sport->latest_photos = $latestPhotos;
+        $sport->latest_video = $latestVideo;
+
+        return response()->json($sport);
     }
 
 
