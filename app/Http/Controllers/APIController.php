@@ -797,11 +797,145 @@ class APIController extends Controller
      * pro sports, videos, photos remaining
      *
      */
-    public function getStudent($schoolId, $studentId, $sportId, $levelId, $seasonId, $year){
+    public function getStudent($schoolId, $studentId, $sportId, $levelId, $seasonId, $schoolYear){
 
         //both are required param
-        if($schoolId && $studentId){
+        if($schoolId && $studentId) {
+            $student = Student::select('students.id', 'students.id as student_id', 'students.name as student_name',
+                'students.number as student_number', 'students.photo as student_photo',
+                DB::raw('CONCAT(students.height_feet, " ", students.height_inches) AS student_height'),
+                'rosters_students.position as student_position', 'weight as student_weight', 'pro_flag',
+                'pro_cover_photo', 'pro_head_photo')
+                ->join('rosters_students', 'rosters_students.student_id', '=', 'students.id')
+                ->where('students.school_id', $schoolId)
+                ->where('students.id', $studentId)
+                ->groupBy('rosters_students.student_id');
 
+        }
+
+        if($schoolYear){
+            $academicYear[1] = 'Freshman';
+            $academicYear[2] = 'Sophomore';
+            $academicYear[3] = 'Junior';
+            $academicYear[4] = 'Senior';
+
+            $student = $student->where('academic_year', $academicYear[$schoolYear]);
+        }
+
+        if($seasonId){
+            $student = $student->join('rosters', 'rosters.id', '=', 'rosters_students.roster_id')
+                                ->join('seasons', 'seasons.id', '=', 'rosters.season_id')
+                                ->where('seasons.id', $seasonId);
+        }
+
+        if($levelId){
+            $student = $student->join('rosters', 'rosters.id', '=', 'rosters_students.roster_id')
+                                ->join('sports', 'sports.id', '=', 'rosters.sport_id')
+                                ->join('levels-sports', 'levels-sports.sport_id', '=', 'sports.id')
+                                ->join('levels', 'levels.id', '=', 'levels-sports.level_id')
+                                ->where('levels.id', $levelId);
+        }
+
+        if($sportId){
+            $student = $student->join('rosters', 'rosters.id', '=', 'rosters_students.roster_id')
+                ->join('sports', 'sports.id', '=', 'rosters.sport_id')
+                ->where('sports.id', $sportId);
+        }
+
+
+        if($student->first()){
+            //student custom fields
+            $school = School::select('name')->where('id', $schoolId)->first();
+            $tableName = strtolower(str_replace(' ', '_', $school->name)) . '_custom_students';
+            $customData = DB::table($tableName)
+                ->select('custom_label', 'custom_data')
+                ->where('school_id', $schoolId)
+                ->where('student_id', $student->first()->student_id)
+                ->get();
+
+            //select sports related to that student
+            $proSports = Sport::select('sports.id', 'sports.id as sport_id', 'sports.name as sport_name', 'highlight_video')
+                ->join('rosters', 'rosters.sport_id', '=', 'sports.id')
+                ->join('rosters_students', 'rosters_students.roster_id', '=', 'rosters.id')
+                ->join('students', 'students.id', '=', 'rosters_students.student_id')
+                ->where('students.id', $student->first()->student_id)
+                ->where('students.school_id', $schoolId)
+                ->get();
+
+            $photosArr = array();
+            $newsArr = array();
+            $videosArr = array();
+
+            if($proSports->first()){
+                foreach ($proSports as $key => $item){
+                    $sportPhotos = Roster::select('photos.id as photo_id', 'photos.large as photo_large',
+                        'photos.thumb as photo_thumb')
+                        ->join('album_roster', 'album_roster.roster_id', '=', 'rosters.id')
+                        ->join('album', 'album.id', '=', 'album_roster.album_id')
+                        ->join('sports', 'sports.id', '=', 'rosters.sport_id')
+                        ->join('photos', 'photos.album_id', '=', 'album.id')
+                        ->orderBy('photos.created_at', 'DESC')
+                        ->where('sports.id', $item->sport_id)
+                        ->where('sports.school_id', $schoolId)
+                        ->get();
+
+                    $sportVideos = Roster::select('videos.id as video_id', 'videos.title as video_title',
+                        'videos.url as video_url', 'videos.date as video_date')
+                        ->join('album_roster', 'album_roster.roster_id', '=', 'rosters.id')
+                        ->join('album', 'album.id', '=', 'album_roster.album_id')
+                        ->join('sports', 'sports.id', '=', 'rosters.sport_id')
+                        ->join('videos', 'videos.album_id', '=', 'album.id')
+                        ->orderBy('videos.date', 'DESC')
+                        ->where('sports.id', $item->sport_id)
+                        ->where('sports.school_id', $schoolId)
+                        ->get();
+
+                    $sportNews = News::select('news.id', 'news.id as news_id', 'news.title as news_title',
+                        'news.intro as news_teaser', 'news.image as news_photo', 'news.link as news_url', 'news_date')
+                        ->join('news_sport', 'news_sport.news_id', '=', 'news.id')
+                        ->join('sports', 'sports.id', '=', 'news_sport.sport_id')
+                        ->orderBy('news_date', 'DESC')
+                        ->where('sports.id', $item->sport_id)
+                        ->where('sports.school_id', $schoolId)
+                        ->get();
+
+                    if($sportNews->first()){
+                        array_push($newsArr, $sportNews);
+                    }
+                    if($sportPhotos->first()){
+                        array_push($photosArr, $sportPhotos);
+                    }
+                    if($sportVideos->first()){
+                        array_push($videosArr, $sportVideos);
+                    }
+                }
+            }
+
+            foreach ($proSports as $key => $item){
+                $sports[$key]['sport_id'] = $item->sport_id;
+                $sports[$key]['sport_name'] = $item->sport_name;
+                $sports[$key]['highlight_video'] = $item->highlight_video;
+                $sports[$key]['photos'] = $photosArr;
+                $sports[$key]['news'] = $newsArr;
+                $sports[$key]['videos'] = $videosArr;
+            }
+        }
+
+        if($student->first()){
+            $arr['student_id'] = $student->first()->student_id;
+            $arr['student_name'] = $student->first()->student_name;
+            $arr['student_photo'] = $student->first()->student_photo;
+            $arr['student_number'] = $student->first()->student_number;
+            $arr['student_position'] = $student->first()->student_position;
+            $arr['student_weight'] = $student->first()->student_weight;
+            $arr['student_height'] = $student->first()->student_height;
+            $arr['custom_fields'] = $customData;
+            $arr['pro_flag'] = $student->first()->pro_flag;
+            $arr['pro_head_photo'] = $student->first()->pro_head_photo;
+            $arr['pro_cover_photo'] = $student->first()->pro_cover_photo;
+            $arr['pro_sports'] = $sports;
+
+            return response()->json($arr);
         }
     }
 
