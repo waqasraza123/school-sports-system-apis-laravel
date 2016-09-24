@@ -955,31 +955,229 @@ class APIController extends Controller
      *
      */
     public function getMedia($schoolId, $sportId, $seasonId, $studentId){
+
         $media = Album::with([
-                    'photos' => function($q){
-                        $q->select('photos.id', 'photos.id as photo_id', 'photos.thumb as photo_thumb',
-                            'photos.large as photo_large', 'photos.album_id')
-                            ->get();
-                    }
-                ])
+            'photos' => function($q){
+                $q->select('photos.id', 'photos.id as photo_id', 'photos.thumb as photo_thumb',
+                    'photos.large as photo_large', 'photos.album_id')
+                    ->get();
+            }
+            ])
+            ->select('album.id as album_id', 'album.name as album_name', 'album.date as album_date',
+                'album.url as album_url', 'album.id')
+            ->where('album.school_id', $schoolId);
+
+        if($schoolId && $sportId && $seasonId && $studentId){
+            $media = Album::with([
+                'photos' => function($q){
+                    $q->select('photos.id', 'photos.id as photo_id', 'photos.thumb as photo_thumb',
+                        'photos.large as photo_large', 'photos.album_id')
+                        ->get();
+                }
+            ])
                 ->select('album.id as album_id', 'album.name as album_name', 'album.date as album_date',
                     'album.url as album_url', 'album.id')
-                ->where('school_id', $schoolId)
+                ->join('album_roster', 'album_roster.album_id', '=', 'album.id')
+                ->join('rosters', 'album_roster.roster_id', '=', 'rosters.id')
+                ->join('sports', 'rosters.sport_id', '=', 'sports.id')
+                ->join('rosters_students', 'rosters.id', '=', 'rosters_students.roster_id')
+                ->join('students', 'students.id', '=', 'rosters_students.student_id')
+                ->where('album.school_id', $schoolId)
+                ->where('sports.id', $sportId)
+                ->where('album.season_id', $seasonId)
+                ->where('students.id', $studentId)
                 ->get();
 
-        $vid = array();
-        foreach ($media as $key=>$item){
-            $videos = Video::select('videos.id as video_id', 'videos.title as video_title', 'videos.date as video_date',
-                            'videos.url as video_url')
-                            ->where('album_id', $item->album_id)
-                            ->get();
-            if(!$videos->isEmpty()){
-                array_push($vid, $videos);
+            $vid = array();
+            foreach ($media as $key=>$item){
+                $videos = Video::select('videos.id as video_id', 'videos.title as video_title', 'videos.date as video_date',
+                    'videos.url as video_url')
+                    ->where('album_id', $item->album_id)
+                    ->get();
+                if(!$videos->isEmpty()){
+                    array_push($vid, $videos);
+                }
+            }
+
+            $arr = array('albums'=> array('album' => $media, 'videos' => $vid));
+            return response()->json($arr);
+        }
+
+        if($schoolId && $sportId && $seasonId){
+
+            if($media){
+
+                $media = $media->join('album_roster', 'album_roster.album_id', '=', 'album.id')
+                    ->join('rosters', 'album_roster.roster_id', '=', 'rosters.id')
+                    ->join('sports', 'rosters.sport_id', '=', 'sports.id')
+                    ->where('sports.id', $sportId)
+                    ->where('album.season_id', $sportId)
+                    ->get();
+
+                $vid = array();
+                foreach ($media as $key=>$item){
+                    $videos = Video::select('videos.id as video_id', 'videos.title as video_title', 'videos.date as video_date',
+                        'videos.url as video_url')
+                        ->where('album_id', $item->album_id)
+                        ->get();
+                    if(!$videos->isEmpty()){
+                        array_push($vid, $videos);
+                    }
+                }
+
+                $arr = array('albums'=> array('album' => $media, 'videos' => $vid));
+                return response()->json($arr);
+            }
+
+        }
+
+        if($schoolId && $sportId && $studentId){
+
+            if($media) {
+                $media = $media->join('album_roster', 'album_roster.album_id', '=', 'album.id')
+                    ->join('rosters', 'album_roster.roster_id', '=', 'rosters.id')
+                    ->join('sports', 'rosters.sport_id', '=', 'sports.id')
+                    ->join('rosters_students', 'album_roster.roster_id', '=', 'rosters_students.roster_id')
+                    ->join('students', 'students.id', '=', 'rosters_students.student_id')
+                    ->where('sports.id', $sportId)
+                    ->where('students.id', $studentId)
+                    ->get();
+
+                $vid = array();
+                foreach ($media as $key => $item) {
+                    $videos = Video::select('videos.id as video_id', 'videos.title as video_title', 'videos.date as video_date',
+                        'videos.url as video_url')
+                        ->where('album_id', $item->album_id)
+                        ->get();
+                    if (!$videos->isEmpty()) {
+                        array_push($vid, $videos);
+                    }
+                }
+
+                $arr = array('albums' => array('album' => $media, 'videos' => $vid));
+                return response()->json($arr);
             }
         }
 
-        $arr = array('albums'=> array('album' => $media, 'videos' => $vid));
-        return response()->json($arr);
+        if($schoolId && $seasonId && $studentId){
+            if($media) {
+                $media = $media->join('album_roster', 'album_roster.album_id', '=', 'album.id')
+                    ->join('rosters_students', 'album_roster.roster_id', '=', 'rosters_students.roster_id')
+                    ->join('students', 'students.id', '=', 'rosters_students.student_id')
+                    ->where('season_id', $seasonId)
+                    ->where('students.id', $studentId)
+                    ->get();
+
+                $vid = array();
+                foreach ($media as $key => $item) {
+                    $videos = Video::select('videos.id as video_id', 'videos.title as video_title', 'videos.date as video_date',
+                        'videos.url as video_url')
+                        ->where('album_id', $item->album_id)
+                        ->get();
+                    if (!$videos->isEmpty()) {
+                        array_push($vid, $videos);
+                    }
+                }
+
+                $arr = array('albums' => array('album' => $media, 'videos' => $vid));
+                return response()->json($arr);
+            }
+        }
+
+        if($schoolId && $sportId){
+            $media = Album::with([
+                'photos' => function($q){
+                    $q->select('photos.id', 'photos.id as photo_id', 'photos.thumb as photo_thumb',
+                        'photos.large as photo_large', 'photos.album_id')
+                        ->get();
+                }
+            ])
+                ->select('album.id as album_id', 'album.name as album_name', 'album.date as album_date',
+                    'album.url as album_url', 'album.id')
+                ->join('album_roster', 'album_roster.album_id', '=', 'album.id')
+                ->join('rosters', 'album_roster.roster_id', '=', 'rosters.id')
+                ->join('sports', 'rosters.sport_id', '=', 'sports.id')
+                ->where('album.school_id', $schoolId)
+                ->where('sports.id', $sportId)
+                ->get();
+
+            $vid = array();
+            foreach ($media as $key=>$item){
+                $videos = Video::select('videos.id as video_id', 'videos.title as video_title', 'videos.date as video_date',
+                    'videos.url as video_url')
+                    ->where('album_id', $item->album_id)
+                    ->get();
+                if(!$videos->isEmpty()){
+                    array_push($vid, $videos);
+                }
+            }
+
+            $arr = array('albums'=> array('album' => $media, 'videos' => $vid));
+            return response()->json($arr);
+        }
+
+        if($schoolId && $seasonId){
+            $media = Album::with([
+                'photos' => function($q){
+                    $q->select('photos.id', 'photos.id as photo_id', 'photos.thumb as photo_thumb',
+                        'photos.large as photo_large', 'photos.album_id')
+                        ->get();
+                }
+            ])
+                ->select('album.id as album_id', 'album.name as album_name', 'album.date as album_date',
+                    'album.url as album_url', 'album.id')
+                ->where('album.school_id', $schoolId)
+                ->where('album.season_id', $seasonId)
+                ->get();
+
+            $vid = array();
+            foreach ($media as $key=>$item){
+                $videos = Video::select('videos.id as video_id', 'videos.title as video_title', 'videos.date as video_date',
+                    'videos.url as video_url')
+                    ->where('album_id', $item->album_id)
+                    ->get();
+                if(!$videos->isEmpty()){
+                    array_push($vid, $videos);
+                }
+            }
+
+            $arr = array('albums'=> array('album' => $media, 'videos' => $vid));
+            return response()->json($arr);
+        }
+
+        if($schoolId && $studentId){
+            $media = Album::with([
+                'photos' => function($q){
+                    $q->select('photos.id', 'photos.id as photo_id', 'photos.thumb as photo_thumb',
+                        'photos.large as photo_large', 'photos.album_id')
+                        ->get();
+                }
+            ])
+                ->select('album.id as album_id', 'album.name as album_name', 'album.date as album_date',
+                    'album.url as album_url', 'album.id')
+                ->join('album_roster', 'album_roster.album_id', '=', 'album.id')
+                ->join('rosters_students', 'album_roster.roster_id', '=', 'rosters_students.roster_id')
+                ->join('students', 'students.id', '=', 'rosters_students.student_id')
+                ->where('album.school_id', $schoolId)
+                ->where('students.id', $studentId)
+                ->get();
+
+
+            $vid = array();
+            foreach ($media as $key=>$item){
+                $videos = Video::select('videos.id as video_id', 'videos.title as video_title', 'videos.date as video_date',
+                    'videos.url as video_url')
+                    ->where('album_id', $item->album_id)
+                    ->get();
+                if(!$videos->isEmpty()){
+                    array_push($vid, $videos);
+                }
+            }
+
+            $arr = array('albums'=> array('album' => $media, 'videos' => $vid));
+            return response()->json($arr);
+
+        }
     }
 
     /**
@@ -1016,10 +1214,10 @@ class APIController extends Controller
      * @param $albumId
      *
      * return specific album
-     * incomplete, return photos for that album
      */
     public function getAlbum($schoolId, $sportId, $seasonId, $albumId){
-        //both are required params
+
+        //all are required params
         if($schoolId && $sportId && $albumId){
             $albumsList = Album::select('album.id as album_id', 'album.name as album_name', 'date as album_date',
                 'url as album_url', 'sports.name as sport_name')
@@ -1030,16 +1228,23 @@ class APIController extends Controller
                 ->where('sports.id', $sportId)
                 ->where('album.id', $albumId);
 
-            $photos = Gallery::select('id as photo_id', 'thumb')
-                                ->where('album_id', $albumId)->where('type', 'image')->get();
-            $albumsList->photos = $photos;
-            dd($albumsList->photos);
-
+            //optional param
             if($seasonId){
                 $albumsList = $albumsList->where('album.season_id', $seasonId);
-                return response()->json($albumsList->first());
             }
-            return response()->json($albumsList->first());
+
+            $photos = Photo::select('id as photo_id', 'thumb',  'large as photo_large', 'thumb as photo_thumb')
+                ->where('album_id', $albumId)
+                ->get();
+
+            $arr['album_id'] = $albumsList->first()->album_id;
+            $arr['album_name'] = $albumsList->first()->album_name;
+            $arr['album_date'] = $albumsList->first()->album_date;
+            $arr['album_url'] = $albumsList->first()->album_url;
+            $arr['sport_name'] = $albumsList->first()->sport_name;
+            $arr['photos'] = $photos;
+
+            return response()->json($arr);
         }
     }
 
