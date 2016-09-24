@@ -7,6 +7,12 @@
         </div>
         <br>
     @endif
+    @if ($errors->has())
+        <div class="alert alert-danger">
+            All fields are required!
+        </div>
+    @endif
+
     {!! Form::open(array('url'=>'/settings/', 'method'=>'POST', 'files'=>true)) !!}
     <div class="container" style="width: 100% !important;">
         <h3>Settings</h3>
@@ -29,7 +35,7 @@
                                             {{ Form::hidden('school_invisible_id', $school->id, ['id' => 'school_invisible_id']) }}
 
                                             {!! Form::label('title', 'Name:', ['class' => 'control-label']) !!}
-                                            {!! Form::text('name', $school->name, ['class' => 'form-control', 'id'=> 'name', 'required'=> 'true']) !!}
+                                            {!! Form::text('name', $school->name, ['class' => 'form-control', 'id'=> 'name']) !!}
                                         </div>
                                     </div>
                                 </div>
@@ -38,7 +44,7 @@
                                     <div class="form-group-sm">
                                         <div class="col-s-3">
                                             {!! Form::label('title', 'School Nick:', ['class' => 'control-label']) !!}
-                                            {!! Form::text('short_name', $school->short_name, ['class' => 'form-control', 'id'=> 'short_name', 'required'=> 'true']) !!}
+                                            {!! Form::text('short_name', $school->short_name, ['class' => 'form-control', 'id'=> 'short_name']) !!}
                                         </div>
                                     </div>
                                 </div>
@@ -66,7 +72,7 @@
                                     <div class="form-group-sm">
                                         <div class="col-s-3">
                                             {!! Form::label('title', 'Address :', ['class' => 'control-label']) !!}
-                                            {!! Form::text('adress', $school->adress, ['class' => 'form-control', 'id'=> 'adress', 'required'=> 'true']) !!}
+                                            {!! Form::text('adress', $school->adress, ['class' => 'form-control', 'id'=> 'adress']) !!}
                                         </div>
                                     </div>
                                 </div>
@@ -74,7 +80,7 @@
                                     <div class="form-group-sm">
                                         <div class="col-s-3">
                                             {!! Form::label('title', 'City:', ['class' => 'control-label']) !!}
-                                            {!! Form::text('city', $school->city, ['class' => 'form-control', 'id'=> 'city', 'required'=> 'true']) !!}
+                                            {!! Form::text('city', $school->city, ['class' => 'form-control', 'id'=> 'city']) !!}
                                         </div>
                                     </div>
                                 </div>
@@ -84,7 +90,7 @@
                                     <div class="form-group-sm">
                                         <div class="col-s-3">
                                             {!! Form::label('title', 'State:', ['class' => 'control-label']) !!}
-                                            {!! Form::text('state', $school->state, ['class' => 'form-control', 'id'=> 'state', 'required'=> 'true']) !!}
+                                            {!! Form::text('state', $school->state, ['class' => 'form-control', 'id'=> 'state']) !!}
                                         </div>
                                     </div>
                                 </div>
@@ -92,7 +98,7 @@
                                     <div class="form-group-sm">
                                         <div class="col-s-3">
                                             {!! Form::label('title', 'Zip:', ['class' => 'control-label']) !!}
-                                            {!! Form::text('zip', $school->zip, ['class' => 'form-control', 'id'=> 'zip', 'required'=> 'true']) !!}
+                                            {!! Form::text('zip', $school->zip, ['class' => 'form-control', 'id'=> 'zip']) !!}
                                         </div>
                                     </div>
                                 </div>
@@ -236,7 +242,7 @@
                                             <div class="control-group">
                                                 <img src="{{$school->school_logo}}">
                                                 <div class="controls">
-                                                    {!! Form::label('title', 'School logo:', ['class' => 'control-label', 'required'=>'required']) !!}
+                                                    {!! Form::label('title', 'School logo:', ['class' => 'control-label']) !!}
                                                     {!! Form::file('school_logo') !!}
                                                 </div>
                                             </div>
@@ -283,15 +289,6 @@
                             <div class="form-group-sm">
                                 <div class="col-s-3">
                                     <br>
-                                    @if ($errors->has())
-                                        <div class="alert alert-danger">
-
-
-                                            @foreach(Session::get('message') as $er)
-                                                {{ $er }} <br>
-                                            @endforeach
-                                        </div>
-                                    @endif
 
                                     {!! Form::submit('Update settings', ['class' => 'submit_school_modal btn btn-primary']) !!}
                                 </div>

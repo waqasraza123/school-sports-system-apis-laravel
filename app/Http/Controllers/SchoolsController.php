@@ -69,7 +69,22 @@ class SchoolsController extends Controller
             'adress' => 'required',
             'city' => 'required',
             'state' => 'required',
-            'zip' => 'required'
+            'zip' => 'required',
+            'short_name' => 'required',
+            'bio' => 'required',
+            'phone' => 'required',
+            'website' => 'required',
+            'school_color' => 'required',
+            'school_color2' => 'required',
+            'school_color3' => 'required',
+            'school_tagline' => 'required',
+            'app_name' => 'required',
+            'school_email' => 'required',
+            'livestream_url' => 'required',
+            'api_key' => 'required',
+            'school_logo' => 'required',
+            'photo' => 'required',
+            'phone' => 'required',
         );
 
         $validator = Validator::make(Input::all(), $rules);
