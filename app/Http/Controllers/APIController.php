@@ -14,8 +14,10 @@ use App\Social;
 use App\Sponsor;
 use App\Staff;
 use App\Student;
+use App\Photo;
 use App\Ad;
 use App\Company;
+use App\Video;
 use Illuminate\Http\Request;
 use App\School;
 use App\Sport;
@@ -949,11 +951,35 @@ class APIController extends Controller
      * @param $seasonId
      * @param $studentId
      *
-     * incomplete
+     * school_id is required param
      *
      */
     public function getMedia($schoolId, $sportId, $seasonId, $studentId){
+        $media = Album::with([
+                    'photos' => function($q){
+                        $q->select('photos.id', 'photos.id as photo_id', 'photos.thumb as photo_thumb',
+                            'photos.large as photo_large', 'photos.album_id')
+                            ->get();
+                    }
+                ])
+                ->select('album.id as album_id', 'album.name as album_name', 'album.date as album_date',
+                    'album.url as album_url', 'album.id')
+                ->where('school_id', $schoolId)
+                ->get();
 
+        $vid = array();
+        foreach ($media as $key=>$item){
+            $videos = Video::select('videos.id as video_id', 'videos.title as video_title', 'videos.date as video_date',
+                            'videos.url as video_url')
+                            ->where('album_id', $item->album_id)
+                            ->get();
+            if(!$videos->isEmpty()){
+                array_push($vid, $videos);
+            }
+        }
+
+        $arr = array('albums'=> array('album' => $media, 'videos' => $vid));
+        return response()->json($arr);
     }
 
     /**

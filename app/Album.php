@@ -37,4 +37,12 @@ class Album extends Model
     {
         return $this->hasMany('App\Gallery');
     }
+
+    public function photos(){
+        return $this->hasMany('App\Photo', 'album_id');
+    }
+
+    public function videos(){
+        return $this->hasMany('App\Video', 'album_id');
+    }
 }

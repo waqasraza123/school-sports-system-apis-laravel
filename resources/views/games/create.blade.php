@@ -9,7 +9,7 @@
 
         @if($rosters->isEmpty())
             <div class="alert alert-danger">
-                Please add some <a href="/sports/create">sports</a> first.
+                Please add a <a href="/sports/create">Roster</a> first.
             </div>
         @else
             {!! Form::open(['url' => '/games', 'files' =>true]) !!}
