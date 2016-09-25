@@ -150,7 +150,7 @@
                                     <div class="form-group-sm">
                                         <div class="col-s-3">
                                             {!! Form::label('title', 'Vimeo:', ['class' => 'control-label']) !!}
-                                            {!! Form::text('vimeo', $social->vimeo, ['class' => 'form-control', 'id'=> 'vimeo']) !!}
+                                            {!! Form::text('vimeo',$social ? $social->vimeo : "", ['class' => 'form-control', 'id'=> 'vimeo']) !!}
                                         </div>
                                     </div>
                                 </div>
@@ -161,7 +161,7 @@
                                     <div class="form-group-sm">
                                         <div class="col-s-3">
                                             {!! Form::label('title', 'Twitter:', ['class' => 'control-label']) !!}
-                                            {!! Form::text('twitter', $social->twitter, ['class' => 'form-control', 'id'=> 'twitter']) !!}
+                                            {!! Form::text('twitter',$social ? $social->twitter: "", ['class' => 'form-control', 'id'=> 'twitter']) !!}
                                         </div>
                                     </div>
                                 </div>
@@ -169,7 +169,7 @@
                                     <div class="form-group-sm">
                                         <div class="col-s-3">
                                             {!! Form::label('title', 'Facebook:', ['class' => 'control-label']) !!}
-                                            {!! Form::text('facebook', $social->facebook, ['class' => 'form-control', 'id'=> 'facebook']) !!}
+                                            {!! Form::text('facebook',$social ? $social->facebook: "", ['class' => 'form-control', 'id'=> 'facebook']) !!}
                                         </div>
                                     </div>
                                 </div>
@@ -179,7 +179,7 @@
                                     <div class="form-group-sm">
                                         <div class="col-s-3">
                                             {!! Form::label('title', 'Instagram:', ['class' => 'control-label']) !!}
-                                            {!! Form::text('instagram', $social->instagram, ['class' => 'form-control', 'id'=> 'instagram']) !!}
+                                            {!! Form::text('instagram',$social ? $social->instagram: "", ['class' => 'form-control', 'id'=> 'instagram']) !!}
                                         </div>
                                     </div>
                                 </div>
@@ -187,7 +187,7 @@
                                     <div class="form-group-sm">
                                         <div class="col-s-3">
                                             {!! Form::label('title', 'Youtube:', ['class' => 'control-label']) !!}
-                                            {!! Form::text('youtube', $social->youtube, ['class' => 'form-control', 'id'=> 'youtube']) !!}
+                                            {!! Form::text('youtube',$social ? $social->youtube: "", ['class' => 'form-control', 'id'=> 'youtube']) !!}
                                         </div>
                                     </div>
                                 </div>
