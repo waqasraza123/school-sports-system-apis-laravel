@@ -6,7 +6,6 @@
 
             {!! Form::open(['route' => 'year-sports']) !!}
 
-
             <div class="col-sm-3" style="width:50%" >
                 {!! Form::selectYear('year', 2005, \Carbon\Carbon::now()->year,
                 \Carbon\Carbon::now()->year, [

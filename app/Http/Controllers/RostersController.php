@@ -115,8 +115,7 @@ class RostersController extends Controller
         $sports = Sport::where('school_id', $this->schoolId)->lists('name', 'id');
         $levels = LevelSport::where('school_id', $this->schoolId)->lists('name', 'id');
         $seasons = Season::lists('name', 'id');
-        $sponsors = Sponsor::lists('name', 'id')->toArray();
-        array_unshift($sponsors, '--select--');
+        $sponsors = Sponsor::lists('name', 'id');
 
         return View('rosters.create', compact('sports', 'levels', 'seasons', 'sponsors'));
     }
@@ -227,8 +226,7 @@ class RostersController extends Controller
         $sports = Sport::lists('name', 'id');
         $levels = LevelSport::lists('name', 'id');
         $seasons = Season::lists('name', 'id');
-        $sponsors = Sponsor::lists('name', 'id')->toArray();
-        array_unshift($sponsors, '--select--');
+        $sponsors = Sponsor::lists('name', 'id');
 
         return view('rosters.update', compact('sports', 'levels', 'seasons', 'rosters', 'sponsors'));
     }
@@ -258,6 +256,7 @@ class RostersController extends Controller
             'level_id' => $request->input('level_id')
         ]);
 
+        $roster = Roster::where('id', $id)->first();
         if($request->input('roster_advertiser') != '--select')
         {
             $roster->rosters_advertiser = $request->input('roster_advertiser');
@@ -275,7 +274,7 @@ class RostersController extends Controller
 
         $roster->save();
 
-        Year::create([
+        Year::where('year_id', $id)->where('year_type', 'App\Roster')->update([
             'year' => $request->input('year_id'),
             'year_id' => $id,
             'year_type' => 'App\Roster'

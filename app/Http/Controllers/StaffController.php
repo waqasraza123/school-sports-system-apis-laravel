@@ -141,8 +141,7 @@ class StaffController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:staff,email,'.$id,
             'year' => 'required',
-            'phone' => 'required|max:15',
-            'photo' => 'required'
+            'phone' => 'required|max:15'
         ]);
 
         $fileName = "";

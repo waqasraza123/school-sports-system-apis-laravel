@@ -81,18 +81,9 @@
                 </div>
                 <div class="row">
 
-                    <div class="col-md-6">
+                    <div class="col-md-12 col-md-offset-5">
                         <div class="form-group-sm">
-                            <div class="col-s-3">
-                                <br>
-                                @if ($errors->has())
-                                    <div class="alert alert-danger">
-                                        @foreach(Session::get('message') as $er)
-                                            {{ $er }} <br>
-                                        @endforeach
-                                    </div>
-                                @endif
-
+                            <div class="col-s-3" style="margin-top: 30px">
                                 {!! Form::submit('Add Location', ['class' => 'submit_location_modal btn btn-primary']) !!}
                             </div>
                         </div>

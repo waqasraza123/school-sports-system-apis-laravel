@@ -27,9 +27,6 @@
                 <a href="{{url('rosters/create')}}"><button class="btn btn-primary">Add Roster</button></a>
 </p>
                 <br>
-
-                @include('partials.error-messages.success')
-                @include('partials.error-messages.error')
                 <div class="panel panel-primary">
                     <div class="table-responsive">
                         <table class="table table-hover">

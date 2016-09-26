@@ -224,7 +224,7 @@ class SportsController extends Controller
             'school_id' => $this->schoolId,
         ]);
 
-        Year::create([
+        Year::where('year_id', $id)->where('year_type', 'App\Sport')->update([
             'year' => $request->input('year'),
             'year_id' => $id,
             'year_type' => 'App\Sport'
