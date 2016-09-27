@@ -20,7 +20,6 @@
                                 <th></th>
                                 <th>Name</th>
                                 <th>Url</th>
-                                <th>Sponsor</th>
                                 <th>&nbsp;</th>
                                 <th>&nbsp;</th>
                             </tr>
@@ -33,7 +32,6 @@
                                             <td><img src="{{$ad->image}}" width="50px" height="50px"></td>
                                             <td>{{$ad->name}}</td>
                                             <td>{{$ad->url}}</td>
-                                            <td>{{$ad->sponsor->name}}</td>
                                             <td><a class="btn btn-sm btn-default" href='{{url("/ads/".$ad->id."/edit")}}'>Edit</a></td>
                                             <td>
                                                 {!! Form::open(['url' => 'ads/'.$ad->id, 'method' => 'DELETE']) !!}

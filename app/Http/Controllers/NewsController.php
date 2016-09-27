@@ -184,15 +184,14 @@ class NewsController extends Controller
             if (isset($file['roster_id']))
             {
                 $news->rosters()->attach(array_values($file['roster_id']));
-            }
+                foreach ($file['roster_id'] as $item){
+                    $sport = Sport::join('rosters', 'rosters.sport_id', '=', 'sports.id')->select('sports.id')->first();
+                    $level = LevelSport::join('rosters', 'rosters.level_id', '=', 'levels.id')->select('levels.id')->first();
+                    $news->sports()->attach($sport->id);
+                    $news->levels()->attach($level->id);
+                }
 
-            foreach ($file['roster_id'] as $item){
-                $sport = Sport::join('rosters', 'rosters.sport_id', '=', 'sports.id')->select('sports.id')->first();
-                $level = LevelSport::join('rosters', 'rosters.level_id', '=', 'levels.id')->select('levels.id')->first();
-                $news->sports()->attach($sport->id);
-                $news->levels()->attach($level->id);
             }
-
             //add students tags
             if (isset($file['student_id']))
             {

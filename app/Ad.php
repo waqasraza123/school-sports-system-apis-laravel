@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Ad extends Model
 {
-    protected $fillable = ['name', 'url', 'image', 'school_id'];
+    protected $fillable = ['name', 'url', 'image', 'school_id', 'sponsor_id'];
     protected $table = 'ads';
 
     public function sponsor(){

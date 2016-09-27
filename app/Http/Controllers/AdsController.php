@@ -19,7 +19,7 @@ class AdsController extends Controller
      */
     public function index()
     {
-        $ads = Ad::with('sponsor')->where('school_id', $this->schoolId)->get();
+        $ads = Ad::where('school_id', $this->schoolId)->get();
         $sponsors = Sponsor::where('school_id', $this->schoolId)->get();
 
         return view('ads.show', compact('ads', 'sponsors'));
@@ -52,7 +52,7 @@ class AdsController extends Controller
             'url' => 'required'
         ]);
 
-        $sponsorName = $request->input('sponsor_name');
+        /*$sponsorName = $request->input('sponsor_name');*/
 
         if(Input::file('image') != null){
             $uploadPath = 'uploads/ads';
@@ -64,14 +64,15 @@ class AdsController extends Controller
             'name' => $request->input('name'),
             'url' => $request->input('url'),
             'image' => asset('uploads/ads/'.$image),
-            'school_id' => $this->schoolId
+            'school_id' => $this->schoolId,
+            'sponsor_id' => $request->input('sponsor_id')
         ]);
 
-        Sponsor::create([
+        /*Sponsor::create([
             'name' => $sponsorName,
             'ad_id' => $ad->id,
             'school_id' => $this->schoolId
-        ]);
+        ]);*/
 
         return redirect('/ads')->with('success', 'Ad created Successfully');
 
@@ -132,14 +133,15 @@ class AdsController extends Controller
             'name' => $request->input('name'),
             'url' => $request->input('url'),
             'image' => $image == ""? $currentImage : asset('uploads/ads/'.$image),
-            'school_id' => $this->schoolId
+            'school_id' => $this->schoolId,
+            'sponsor_id' => $request->input('sponsor_id')
         ]);
 
-        Sponsor::where('ad_id', $id)->update([
+        /*Sponsor::where('ad_id', $id)->update([
             'name' => $sponsorName,
             'ad_id' => $id,
             'school_id' => $this->schoolId
-        ]);
+        ]);*/
 
         return redirect('/ads')->with('success', 'Ad Updated Successfully');
     }
@@ -152,7 +154,6 @@ class AdsController extends Controller
      */
     public function destroy($id)
     {
-        Sponsor::where('ad_id', $id)->first()->delete();
         Ad::find($id)->delete();
 
         return Redirect::back()->with('success', 'Ad Deleted Successfully');

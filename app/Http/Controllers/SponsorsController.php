@@ -78,9 +78,9 @@ class SponsorsController extends Controller
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'phone' => $request->input('phone'),
-            'logo' => asset('uploads/sponsors/'.$logo),
-            'logo2' => asset('uploads/sponsors/'.$logo2),
-            'photo' => asset('uploads/sponsors/'.$photo),
+            'logo' => $logo == '' ? '' : asset('uploads/sponsors/'.$logo),
+            'logo2' => $logo2 == '' ? '' :asset('uploads/sponsors/'.$logo2),
+            'photo' => $photo == '' ? '' :asset('uploads/sponsors/'.$photo),
             'address' => $request->input('address'),
             'school_id' => $this->schoolId,
             'color' => $request->input('color'),
@@ -89,7 +89,7 @@ class SponsorsController extends Controller
             'video' => $request->input('video'),
             'tagline' => $request->input('tagline'),
             'bio' => $request->input('bio'),
-            'url' => $request->input('website')
+            'url' => $request->input('url')
         ]);
 
         Social::create([
@@ -153,49 +153,60 @@ class SponsorsController extends Controller
 
         $checkImages = Sponsor::where('id', $id)->first();
 
-        if($checkImages->photo != null){
+        //if user added new image while updating
+        if(Input::file('photo') != null){
 
-            if(Input::file('photo') != null){
-                $destinationPath = 'uploads/sponsors'; // upload path
-                $extension = Input::file('photo')->getClientOriginalExtension();
-                $photo = rand(1111, 9999) . '.' . $extension;
-                Input::file('photo')->move($destinationPath, $photo);
+            $destinationPath = 'uploads/sponsors'; // upload path
+            $extension = Input::file('photo')->getClientOriginalExtension();
+            $photo = rand(1111, 9999) . '.' . $extension;
+            Input::file('photo')->move($destinationPath, $photo);
+            $photo = asset('uploads/sponsors/'.$photo);
+        }
 
-                $photo = asset('uploads/sponsors/'.$photo);
-            }
-            else{
+        //check if image is already in db
+        else{
+            if($checkImages->photo != null){
                 $photo = $checkImages->photo;
             }
+            else{
+                $photo = null;
+            }
         }
 
-        if($checkImages->logo2 != null){
-
-            if(Input::file('logo2') != null){
-                $destinationPath = 'uploads/sponsors'; // upload path
-                $extension = Input::file('logo2')->getClientOriginalExtension();
-                $logo2 = rand(1111, 9999) . '.' . $extension;
-                Input::file('logo2')->move($destinationPath, $logo2);
-                $logo2 = asset('uploads/sponsors/'.$logo2);
-            }
-
-            else{
+        if(Input::file('logo2') != null){
+            $destinationPath = 'uploads/sponsors'; // upload path
+            $extension = Input::file('logo2')->getClientOriginalExtension();
+            $logo2 = rand(1111, 9999) . '.' . $extension;
+            Input::file('logo2')->move($destinationPath, $logo2);
+            $logo2 = asset('uploads/sponsors/'.$logo2);
+        }
+        //check if image is already in db
+        else{
+            if($checkImages->logo2 != null){
                 $logo2 = $checkImages->logo2;
             }
+            else{
+                $logo2 = null;
+            }
         }
 
-        if ($checkImages->logo != null) {
+        if (Input::file('logo') != null) {
 
-            if(Input::file('logo') != null){
-                $destinationPath = 'uploads/sponsors'; // upload path
-                $extension = Input::file('logo')->getClientOriginalExtension();
-                $logo = rand(1111, 9999) . '.' . $extension;
-                Input::file('logo')->move($destinationPath, $logo);
+            $destinationPath = 'uploads/sponsors'; // upload path
+            $extension = Input::file('logo')->getClientOriginalExtension();
+            $logo = rand(1111, 9999) . '.' . $extension;
+            Input::file('logo')->move($destinationPath, $logo);
 
-                $logo = asset('uploads/sponsors/'.$logo);
-            }
+            $logo = asset('uploads/sponsors/'.$logo);
 
-            else{
+        }
+        //check if image is already in db
+        else{
+            if($checkImages->logo != null){
                 $logo = $checkImages->logo;
+            }
+            else{
+                $logo = null;
             }
         }
 

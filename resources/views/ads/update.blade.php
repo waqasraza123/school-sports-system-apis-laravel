@@ -9,7 +9,7 @@
 
         <div class="row" style="margin: 0 auto; width: 200px;" >
             <p style="text-align: center">
-                <h3 style="text-align: center; margin-bottom: 50px;">Add Sponsor</h3>
+                <h3 style="text-align: center; margin-bottom: 50px;">Update Ad</h3>
                 <img src="{{$ad->image}}" width="200px" height="200">
             </p>
         </div>
@@ -40,16 +40,7 @@
                 'id' => 'sponsor_select']) !!}
             </div>
             <div class="col-md-6">
-                {!! Form::label('') !!}
-                <div class="row">
-                    <div class="col-md-9">
-                        {!! Form::text('sponsor_name', null, ['placeholder' => 'Sponsor Name',
-                         'class' => 'form-control', 'id' => 'sponsor_name_field']) !!}
-                    </div>
-                    <div class="col-md-3">
-                        {!! Form::button('Add Sponsor?', ['class' => 'btn btn-default', 'id' => 'add_sponsor_btn']) !!}
-                    </div>
-                </div>
+
             </div>
         </div>
 
