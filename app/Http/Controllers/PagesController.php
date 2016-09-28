@@ -32,8 +32,11 @@ class PagesController extends Controller
 
     public function settings()
     {
+
         $school = School::where('id','=', $this->schoolId)->first();
+
         $social = School::where('id','=', $this->schoolId)->first()->social()->first();
+
         return view('pages.settings', compact('school','social'));
     }
 
