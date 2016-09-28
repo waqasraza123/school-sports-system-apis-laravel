@@ -1222,7 +1222,6 @@ class APIController extends Controller
                 ->where('students.id', $studentId)
                 ->get();
 
-
             $vid = array();
             foreach ($media as $key=>$item){
                 $videos = Video::select('videos.id as video_id', 'videos.title as video_title', 'videos.date as video_date',

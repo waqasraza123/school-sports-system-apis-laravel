@@ -95,4 +95,8 @@ Route::controllers([
  */
 Route::get('/', 'APIController@handle');
 
+Route::get('test', function(){
+    dd(env('APP_DEBUG'));
+});
+
 

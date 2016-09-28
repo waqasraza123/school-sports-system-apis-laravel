@@ -75,7 +75,7 @@ class OpponentController extends Controller
         $opponent = Opponent::create([
            'name' => $request->input('name'),
            'nick' => $request->input('nick'),
-           'photo' => $fileName,
+           'photo' => asset('uploads/opponents/'.$fileName),
             'school_id' => $schoolId
         ]);
 
@@ -143,7 +143,7 @@ class OpponentController extends Controller
         Opponent::find($id)->update([
             'name' => $request->input('name'),
             'nick' => $request->input('nick'),
-            'photo' => $fileName,
+            'photo' => asset('uploads/opponents/'.$fileName),
             'school_id' => $schoolId
         ]);
 
