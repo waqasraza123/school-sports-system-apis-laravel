@@ -81,7 +81,6 @@ class SchoolsController extends Controller
             'app_name' => 'required',
             'school_email' => 'required',
             'livestream_url' => 'required',
-            'api_key' => 'required',
             'school_logo' => 'required',
             'photo' => 'required',
             'phone' => 'required',

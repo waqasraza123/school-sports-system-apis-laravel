@@ -44,7 +44,7 @@
                                         <tr>
                                             <td>{{$s->id}}</td>
                                             @if($s->photo)
-                                                <td><img src="{{asset('uploads/opponents/'.$s->photo)}}" height="50px" width="50px" alt="image"></td>
+                                                <td><img src="{{$s->photo}}" height="50px" width="50px" alt="image"></td>
                                             @else
                                                 <td><img src="{{asset('uploads/def.png')}}" height="50px" width="50px" alt="image"></td>
                                             @endif

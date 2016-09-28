@@ -86,7 +86,7 @@ class SportsController extends Controller
             'season_id' => 'required',
             'year' => 'required',
             'level_id' => 'required',
-            'selected-text' => 'required'
+            /*'selected-text' => 'required'*/
         ]);
 
         $levels = $request->input('level_id');
@@ -119,7 +119,7 @@ class SportsController extends Controller
 
         $sport = Sport::create([
             'name' => $request->input('name'),
-            'icon_id' => $icon->id,
+            'icon_id' => $icon == null ? "" : $icon->id,
             'highlight_video' => $request->input('highlight_video'),
             'record' => $request->input('record'),
             'season_id' => $request->input('season_id'),

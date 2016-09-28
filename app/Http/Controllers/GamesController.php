@@ -134,9 +134,9 @@ class GamesController extends Controller
                 'home_away' => $file['home_or_away'],
                 'our_score' => $file['our_score'], 'opponents_score' => $file['opponents_score'],
                 'result' =>  $result,
-                'photo' => $fileName, 'game_time' => $file['game_time']));
+                'game_time' => $file['game_time']));
 
-            Year::create([
+            Year::where('year_id', $id)->where('year_type', 'App\Game')->update([
                 'year' => $request->input('year_id'),
                 'year_id' => $id,
                 'year_type' => 'App\Games'
@@ -156,7 +156,7 @@ class GamesController extends Controller
                 'result' => $result,
                 'game_time' => $file['game_time']));
 
-            Year::create([
+            Year::where('year_id', $id)->where('year_type', 'App\Game')->update([
                 'year' => $request->input('year_id'),
                 'year_id' => $id,
                 'year_type' => 'App\Games'
@@ -218,7 +218,7 @@ class GamesController extends Controller
                 'home_away' => $file['home_or_away'],
                 'our_score' => $request->input('our_score'), 'opponents_score' => $file['opponents_score'],
                 'result' => $result,
-                'photo' => $fileName, 'game_time' => $file['game_time']));
+                'game_time' => $file['game_time']));
 
             Year::create([
                 'year' => $request->input('year_id'),
