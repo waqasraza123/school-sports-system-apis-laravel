@@ -159,7 +159,6 @@ class APIController extends Controller
             ])->select('app_name', 'id as school_id', 'name as school_name', 'school_logo',
             'school_color', 'school_color2', 'school_color3', 'id')
             ->where('schools.id', $schoolId)
-            ->where('schools.api_key', $apiKey)
             ->first();
 
         return response()->json($schools);
@@ -715,17 +714,14 @@ class APIController extends Controller
         }
 
         if($levelId){
-            $student = $student->join('rosters', 'rosters.id', '=', 'rosters_students.roster_id')
-                                ->join('sports', 'sports.id', '=', 'rosters.sport_id')
+            $student = $student->join('sports', 'sports.id', '=', 'rosters.sport_id')
                                 ->join('levels-sports', 'levels-sports.sport_id', '=', 'sports.id')
                                 ->join('levels', 'levels.id', '=', 'levels-sports.level_id')
                                 ->where('levels.id', $levelId);
         }
 
         if($sportId){
-            $student = $student->join('rosters', 'rosters.id', '=', 'rosters_students.roster_id')
-                ->join('sports', 'sports.id', '=', 'rosters.sport_id')
-                ->where('sports.id', $sportId);
+            $student = $student->where('sports.id', $sportId);
         }
 
 
@@ -1339,6 +1335,8 @@ class APIController extends Controller
 
     /**
      * @param $schoolId
+     *
+     * not implemented yet;
      */
     public function getAboutCompany($schoolId){
         $company = Company::with([
