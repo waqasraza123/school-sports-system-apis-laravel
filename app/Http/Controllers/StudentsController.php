@@ -201,7 +201,7 @@ class StudentsController extends Controller
 
         $student = Student::create([
             'name' => $request->input('name'),
-            'photo' => $fileName,
+            'photo' => asset('uploads/students/'.$fileName),
             'pro_flag' => $pro_flag,
             'pro_cover_photo' => $pro_cover_photo,
             'pro_head_photo' => $pro_head_photo,
@@ -385,7 +385,7 @@ class StudentsController extends Controller
 
         Student::find($id)->update([
             'name' => $request->input('name'),
-            'photo' => $fileName,
+            'photo' => asset('uploads/students/'.$fileName),
             'pro_flag' => $pro_flag,
             'pro_cover_photo' => $pro_cover_photo,
             'pro_head_photo' => $pro_head_photo,
