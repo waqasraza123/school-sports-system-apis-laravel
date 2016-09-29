@@ -170,7 +170,7 @@ class NewsController extends Controller
                 Input::file('image')->move($destinationPath, $fileName); // uploading file to given path
                 //create news
                 $news = News::create(array('school_id' => $this->schoolId, 'title' => $file['title'],
-                    'image' => $fileName,  'news_date' => $file['news_date'], 'content' => $file['content'],
+                    'image' => asset('uploads/news/'.$fileName),  'news_date' => $file['news_date'], 'content' => $file['content'],
                     'season_id' => $file['season']));
 
             } else {
@@ -233,7 +233,7 @@ class NewsController extends Controller
                 Input::file('image')->move($destinationPath, $fileName); // uploading file to given path
                 //update
                 News::find($id)
-                    ->update(['school_id' => $this->schoolId, 'title' => $file['title'], 'image' => $fileName,
+                    ->update(['school_id' => $this->schoolId, 'title' => $file['title'], 'image' => asset('uploads/news/'.$fileName),
                         'news_date' => $file['news_date'], 'content' => $file['content'], 'season_id' => $file['season']]);
             } else {
                 //update
