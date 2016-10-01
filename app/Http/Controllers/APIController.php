@@ -8,6 +8,7 @@ use App\Games;
 use App\LevelSport;
 use App\News;
 use App\Opponent;
+use stdClass;
 use App\Roster;
 use App\Season;
 use App\Social;
@@ -139,6 +140,9 @@ class APIController extends Controller
 
             if($action == 'getSocial'){
                 return $this->getSocial($schoolId, $sportId, $socialName);
+            }
+            if($action == 'getAboutCompany'){
+                return $this->getAboutCompany();
             }
         }
     }
@@ -1339,16 +1343,19 @@ class APIController extends Controller
      * not implemented yet;
      */
     public function getAboutCompany($schoolId){
-        $company = Company::with([
-                        'company_social' => function($q){
-                            $q->select('facebook as company_facebook', 'twitter as company_twitter',
-                                'instagram as company_instagram');
-                        }
-                        ])
-                        ->select('name as company_name', 'logo as company_logo', 'bio as company_bio',
-                        'url as company_url', 'phone as company_phone')
-                        ->where('school_id', $schoolId)->first();
+        $company = array();
+        $social = new stdClass();
 
+        $company['company_name'] = 'REPIT';
+        $company['company_logo'] = 'http://www.repitsports.com/wp-content/uploads/repit_h.png';
+        $company['company_bio'] = 'Repit provides a complete digital ecosystem specifically designed for high school and college athletic programs. At the center of the experience is the iOS and Android mobile app which drives unlimited revenue, builds fan engagement and is a powerful recruiting tool for student athletes.';
+        $company['company_url'] = 'http://www.repitsports.com/';
+        $company['company_phone'] = '(760) 593-7779';
+
+        $social->facebook_url = 'http://https//www.facebook.com/gosideline';
+        $social->twitter_url = 'http://https//twitter.com/gosideline';
+        $social->instagram_url = 'http://https//www.instagram.com/gosideline';
+        $company['company_social'] = $social;
         return response()->json($company);
     }
 }
