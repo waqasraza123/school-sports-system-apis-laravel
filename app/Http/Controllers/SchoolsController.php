@@ -231,10 +231,8 @@ class SchoolsController extends Controller
 
         else{
             //get the api key
-            $api = $this->apiKey();
-            if (School::where('api_key', $api)->first()){
-                $api = $this->apiKey();
-            }
+            $apiKey = School::select('api_key')->where('id', $id)->first();
+            $apiKey = $apiKey->api_key;
             $fileName = "";
             $fileName2 = "";
 
@@ -279,7 +277,7 @@ class SchoolsController extends Controller
                     'app_name'=>$file['app_name'],
                     'school_email'=>$file['school_email'],
                     'video'=>$file['video'],
-                    'api_key'=>$api,
+                    'api_key'=>$apiKey,
                     'livestream_url'=>$file['livestream_url'],
                     'school_logo' => asset('uploads/schools/'.$fileName),
                     'photo' => asset('uploads/schools/'.$fileName2)));
