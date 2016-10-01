@@ -339,6 +339,7 @@ class RostersController extends Controller
         );
 
         return Response::json($response);
+        
     }
 
 }
