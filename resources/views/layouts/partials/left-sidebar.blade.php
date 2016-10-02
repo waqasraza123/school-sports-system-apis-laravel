@@ -19,8 +19,12 @@
                   Dashboard</a>
           </li>
             <li>
-                <a href="/home"><i class="fa fa-cogs fa-fw"></i>
+                <a href="/settings"><i class="fa fa-cogs fa-fw"></i>
                     Settings</a>
+            </li>
+            <li>
+                <a href="/sponsors"><i class="fa fa-cogs fa-fw"></i>
+                    Add sponsor</a>
             </li>
             @if(Auth::check())
                 @if(Auth::user()->email != 'admin@gmail.com')

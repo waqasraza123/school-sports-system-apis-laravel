@@ -37,6 +37,7 @@ class StudentsController extends Controller
             $levels = $d->levels;
             $rosters = $d->rosters;
             $students = $d->students;
+
         }
 
         $sportsList = $sports->lists('name', 'id');

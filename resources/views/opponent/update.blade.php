@@ -10,7 +10,7 @@
             <h3 style="text-align: center; margin-bottom: 50px;">Update Opponent</h3>
         {!! Form::model($opponent,['method' => 'put', 'url' => '/opponents/'.$opponent->id, 'files' => true]) !!}
         @if($opponent->photo)
-            <img style="margin: 20px auto; display: block" src="{{asset('uploads/opponents/'.$opponent->photo)}}" alt="image" width="200px" height="200px">
+            <img style="margin: 20px auto; display: block" src="{{$opponent->photo}}" alt="image" width="200px" height="200px">
         @else
             <img style="margin: 20px auto; display: block" src="{{asset('uploads/def.png')}}" height="200px" width="200px" alt="image">
         @endif
