@@ -115,7 +115,7 @@
                                 <input value="{{$customField->custom_label}}" readonly type="text" name="custom-field-name[]" class="form-control col-md-3">
                             </div>
                             <div class="col-md-6">
-                                <input type="text" value="" name="custom-field-value[]" class="form-control col-md-3" placeholder="Value">
+                                <input type="text" value="{{$customField->custom_data}}" name="custom-field-value[]" class="form-control col-md-3" placeholder="Value">
                             </div>
                         </div>
                     </div>
@@ -135,4 +135,9 @@
 @section('footer')
     @include('partials.error-messages.footer-script')
     @include('students.partials.footer')
+
+    <script>
+        var element = document.getElementById('pro_free_');
+        element.value = "{{$student->pro_free}}";
+    </script>
 @endsection
