@@ -58,7 +58,7 @@
                                 display: flex;
                             }
                         </style>
-                        {{--<img src="{{asset('uploads/gallery/tmp/'.$photo->name ) }}" class="img-responsive">--}}
+                        <img src="{{$photo->thumb}}" class="img-responsive">
                         <div class="sss" style="position: relative; background-image: url('{{asset('uploads/gallery/tmb/'.$photo->name ) }}'); background-repeat: no-repeat; background-size: cover; width: 200px;height: 200px;">
                             <div class="info" style="color: white; background: rgba(0,0,0,0.5); height: 200px;">
 
@@ -72,11 +72,11 @@
                                 </button>
                                 <p class="id" style="display: none;" >{{ $photo->id}}</p>
                                 <div>
-                                    <p class="students_ids" style="display: none;" >{{ json_encode($photo->students->lists('id'))}} </p>
+                                    {{--<p class="students_ids" style="display: none;" >{{ json_encode($photo->students->lists('id'))}} </p>--}}
                                 </div>
-                                <p style="position: absolute;bottom: 0; right:10px; left:10px">
+                                <p style="position: absolute;bottom: 0; right:10px; left:10px">{{--
                                     @foreach($photo->students as $student_tag)<span class="label label-info" style="color: black; font-weight: lighter; font-size: 10px">{{$student_tag->name}}</span> @endforeach
-                                </p>
+                                --}}</p>
                             </div>
                         </div>
                     </div>
@@ -97,11 +97,11 @@
                 @foreach($gallery_videos as $video)
                     <tr>
                         <td><a href="{{ $video->url}}">{{$video->url}}</a></td>
-                        <td>@foreach($video->students as $student_tag) <label>{{$student_tag->name}}, </label> @endforeach
+                        <td>{{--@foreach($video->students as $student_tag) <label>{{$student_tag->name}}, </label> @endforeach--}}
                         </td>
                         <td><button data-id="{{ $video->id}}" data-toggle="modal" class="edit_video btn btn-info" data-target="#galleryModal" align="right" >edit</button></td>
                         <td>{!! Form::open([    'method' => 'DELETE','route' => ['gallery.destroy', $video->id]]) !!}{!! Form::submit('Delete', array('class' => 'btn btn-danger')) !!}{!! Form::close() !!}</td>
-                        <td><p class="video_students_ids" style="display: none;" >{{ json_encode($video->students->lists('id'))}} </p></td>
+                        {{--<td><p class="video_students_ids" style="display: none;" >{{ json_encode($video->students->lists('id'))}} </p></td>--}}
                     </tr>
                 @endforeach
                     </tbody>

@@ -7,11 +7,13 @@ use App\Gallery;
 use App\Games;
 use App\LevelSport;
 use App\Opponent;
+use App\Photo;
 use App\Roster;
 use App\School;
 use App\Season;
 use App\Sport;
 use App\Student;
+use App\Video;
 use App\Year;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -183,8 +185,8 @@ class AlbumController extends Controller
     {
         $album_id = $id;
         $students = Student::where('school_id','=', $this->schoolId)->get()->lists('name','id');
-        $gallery_images = Gallery::where('album_id','=', $album_id)->where('type', '=', 'image')->get();
-        $gallery_videos = Gallery::where('album_id','=', $album_id)->where('type', '=', 'video')->get();
+        $gallery_images = Photo::where('album_id','=', $album_id)->get();
+        $gallery_videos = Video::where('album_id','=', $album_id)->get();
         //showing view for all photos
         return view('gallery.show', compact('gallery_images', 'gallery_videos', 'students', 'album_id'));
 //        return view('albums.add-photos', compact('gallery_images', 'gallery_videos', 'rosters', 'album_id'));
