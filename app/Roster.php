@@ -26,6 +26,7 @@ class Roster extends Model
     /**
      * polymorphic relation with years table
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     * one roster has only one year
      */
     public function years()
     {

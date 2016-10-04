@@ -1,4 +1,3 @@
-
 @if($rosters != null)
     @foreach($rosters->students as $student)
 

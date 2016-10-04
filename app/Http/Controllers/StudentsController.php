@@ -24,7 +24,8 @@ class StudentsController extends Controller
      */
     public function index()
     {
-        $yearId = $year = '2016';
+        $year = 'All';
+        $yearId = 0;
         $sportId = null;
         $levelId = null;
         $rosterId = null;
@@ -136,8 +137,6 @@ class StudentsController extends Controller
     public function store(Request $request)
     {
 
-        /*dd($request->input('roster_id'))*/;
-
         $custom = false;
         if($request->input('custom-field-name')){
             $this->validate($request, [
@@ -152,7 +151,8 @@ class StudentsController extends Controller
         else{
             $this->validate($request, [
                 'name' => 'required|max:255',
-                'academic_year' => 'required'
+                'academic_year' => 'required',
+                'photo'
             ]);
         }
 
@@ -224,7 +224,6 @@ class StudentsController extends Controller
         $tableName = strtolower(str_replace(' ', '_', $school->name)).'_custom_students';
 
         if($custom){
-
             $labels = $request->input('custom-field-name');
             $values = $request->input('custom-field-value');
 

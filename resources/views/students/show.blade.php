@@ -3,7 +3,7 @@
     <div class="container-fluid">
         @include('partials.error-messages.success')
         @include('partials.error-messages.error')
-        <h2 style="text-align: center">All Students of year ({{$year}})</h2>
+        <h2 style="text-align: center">All Students {{$year == 'Select Year' ? '' : ('for year '. $year)}}</h2>
         <div class="row">
             @include('students.filters.form')
         </div>
@@ -27,19 +27,14 @@
                     </tr>
                     </thead>
                     <tbody>
-                        @if($yearId)
-
-                            @if($sportId)
-                                @include('students.filters.sport')
-
-                            @elseif($levelId)
-                                @include('students.filters.level')
-
-                            @elseif($rosterId)
+                        @if($yearId != 0)
+                            @if($rosterId)
                                 @include('students.filters.roster')
                             @else
                                 @include('students.filters.year')
                             @endif
+                        @else
+                            @include('students.filters.all')
                         @endif
                     </tbody>
                 </table>
@@ -51,6 +46,7 @@
 @section('footer')
     @include('partials.error-messages.footer-script')
     <script>
-        $("#select_year_id").val(<?php echo $year?>);
+        $("#select_year_id").prepend('<option value="0">All</option>');
+        $("#select_year_id").val(<?php echo $year == 'All' ? 0 : $year?>);
     </script>
 @endsection
