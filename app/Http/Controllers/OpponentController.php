@@ -143,7 +143,7 @@ class OpponentController extends Controller
         Opponent::find($id)->update([
             'name' => $request->input('name'),
             'nick' => $request->input('nick'),
-            'photo' => asset('uploads/opponents/'.$fileName),
+            'photo' => $fileName,
             'school_id' => $schoolId
         ]);
 

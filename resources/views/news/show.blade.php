@@ -61,7 +61,7 @@
                                     <div class="col-lg-2">
                                         @if($new->image)
                                             <img class="col-lg-12" id="photo1" height="100"
-                                                 src="{{asset('uploads/news/'.$new->image ) }}">
+                                                 src="{{ $new->image }}">
                                         @else
                                             <img class="col-lg-12" id="photo1" height="100"
                                                  src="{{asset('uploads/def.png') }}">
