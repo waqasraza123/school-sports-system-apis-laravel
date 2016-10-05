@@ -67,8 +67,7 @@
                  ['class' => 'fn form-control', 'id'=>'pro_free_', 'onchange' => 'return pro()', 'required' => true]) !!}
             </div>
             <div class="col-md-6">
-                {!! Form::label('pro_flag', 'Pro Flag:', ['class' => 'control-label hide-pro']) !!}
-                {!! Form::file('pro_flag', ['class' => 'fn form-control hide-pro']) !!}
+
             </div>
         </div>
 
