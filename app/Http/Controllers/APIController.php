@@ -692,7 +692,7 @@ class APIController extends Controller
         if($schoolId && $studentId) {
             $student = Student::select('students.id', 'students.id as student_id', 'students.name as student_name',
                 'students.number as student_number', 'students.photo as student_photo',
-                DB::raw('CONCAT(students.height_feet, " ", students.height_inches) AS student_height'),
+                DB::raw('CONCAT(students.height_feet, "\'", students.height_inches, "\"") AS student_height'),
                 'rosters_students.position as student_position', 'weight as student_weight', 'pro_flag',
                 'pro_cover_photo', 'pro_head_photo')
                 ->join('rosters_students', 'rosters_students.student_id', '=', 'students.id')
