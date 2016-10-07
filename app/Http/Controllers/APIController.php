@@ -471,7 +471,7 @@ class APIController extends Controller
     public function getSchedule($schoolId, $sportId, $levelId, $seasonId){
         $schedule = Games::select('games.id as game_id', 'rosters.sport_id', 'our_score as school_score', 'result as game_result',
                         'home_away as game_vs_at', 'opponents.name as opp_name', 'nick as opp_nick', 'opponents.photo as opp_logo',
-                        'opponents_score as opp_score', 'roster_id')
+                        'opponents_score as opp_score', 'roster_id', 'game_date', 'game_time')
                         ->join('opponents', 'games.opponents_id', '=', 'opponents.id')
                         ->join('rosters', 'rosters.id', '=', 'games.roster_id')
                         ->where('games.school_id', $schoolId);
@@ -508,6 +508,13 @@ class APIController extends Controller
                             ->where('rosters.id', $item->roster_id)
                             ->first();
 
+            $future = 1;
+            //dd($item->game_data);
+            if($item->game_date < Carbon::now()->toDateString()){
+                //game was in the past
+                $future = 0;
+            }
+
             $arr[$key]["game_id"] = $item->game_id;
             $arr[$key]["game_date"] = $item->game_date;
             $arr[$key]["game_location"] = $item->game_location;
@@ -519,6 +526,7 @@ class APIController extends Controller
             $arr[$key]["opp_nick"] = $item->opp_nick;
             $arr[$key]["opp_logo"] = $item->opp_logo;
             $arr[$key]["opp_score"] = $item->opp_score;
+            $arr[$key]["future"] = $future;
             $arr[$key]["ad_details"] = $adDetails;
         }
 
