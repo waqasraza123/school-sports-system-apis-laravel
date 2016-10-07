@@ -305,7 +305,7 @@ class APIController extends Controller
                             ->where('school_id', $schoolId)
                             ->where('sports.id', $sportId);
 
-        $lastGame = Games::select('games.id as game_id', 'our_score as school_score',
+        $lastGame = Games::select('games.id as game_id', 'our_score as school_score', 'game_date',
                             'result as game_result', 'home_away as game_vs_at', 'opponents.name as opp_name',
                             'nick as opp_nick', 'opponents.photo as opp_logo', 'opponents_score as opp_score')
                             ->join('opponents', 'games.opponents_id', '=', 'opponents.id')
@@ -657,7 +657,7 @@ class APIController extends Controller
                     'number as student_number', 'photo as student_photo',
                     'rosters_students.position as student_position',
                     DB::raw('CONCAT(students.height_feet, " ", students.height_inches) AS student_height'),
-                    'students.weight as student_weight', 'students.academic_year as student_year',
+                    'students.weight as student_weight', 'students.academic_year as student_year',  'students.academic_year as pLevel',
                     'rosters.id as roster_id')
                 ->where('rosters.school_id', $schoolId)
                 ->where('rosters.sport_id', $sportId)
@@ -700,7 +700,7 @@ class APIController extends Controller
         if($schoolId && $studentId) {
             $student = Student::select('students.id', 'students.id as student_id', 'students.name as student_name',
                 'students.number as student_number', 'students.photo as student_photo',
-                DB::raw('CONCAT(students.height_feet, " ", students.height_inches) AS student_height'),
+                DB::raw('CONCAT(students.height_feet, "\'", students.height_inches, "\"") AS student_height'),
                 'rosters_students.position as student_position', 'weight as student_weight', 'pro_flag',
                 'pro_cover_photo', 'pro_head_photo')
                 ->join('rosters_students', 'rosters_students.student_id', '=', 'students.id')
