@@ -341,9 +341,15 @@ class StudentsController extends Controller
 
         //store images
         $fileName = "";
+        $fileNameInDB = "";
         $pro_flag = "";
         $pro_cover_photo = "";
+        $pro_cover_photoInDB = "";
         $pro_head_photo = "";
+        $pro_head_photoInDB = "";
+
+        $checkPhotos = Student::where('id', $id)->first();
+
         if($request->input('pro_free') == 0){
 
             if(Input::file('photo') != null){
@@ -351,6 +357,9 @@ class StudentsController extends Controller
                 $extension = Input::file('photo')->getClientOriginalExtension();
                 $fileName = rand(1111, 9999) . '.' . $extension;
                 Input::file('photo')->move($destinationPath, $fileName);
+            }
+            else{
+                $fileNameInDB = $checkPhotos->photo;
             }
         }
         elseif ($request->input('pro_free') == 1){
@@ -360,12 +369,8 @@ class StudentsController extends Controller
                 $fileName = rand(1111, 9999) . '.' . $extension;
                 Input::file('photo')->move($destinationPath, $fileName);
             }
-
-            if(Input::file('pro_flag') != null){
-                $destinationPath = 'uploads/students'; // upload path
-                $extension = Input::file('pro_flag')->getClientOriginalExtension();
-                $pro_flag = rand(1111, 9999) . '.' . $extension;
-                Input::file('pro_flag')->move($destinationPath, $pro_flag);
+            else{
+                $fileNameInDB = $checkPhotos->photo;
             }
 
             if(Input::file('pro_cover_photo') != null){
@@ -374,6 +379,9 @@ class StudentsController extends Controller
                 $pro_cover_photo = rand(1111, 9999) . '.' . $extension;
                 Input::file('pro_cover_photo')->move($destinationPath, $pro_cover_photo);
             }
+            else{
+                $pro_cover_photoInDB = $checkPhotos->pro_cover_photo;
+            }
 
             if(Input::file('pro_head_photo') != null){
                 $destinationPath = 'uploads/students'; // upload path
@@ -381,14 +389,18 @@ class StudentsController extends Controller
                 $pro_head_photo = rand(1111, 9999) . '.' . $extension;
                 Input::file('pro_head_photo')->move($destinationPath, $pro_head_photo);
             }
+            else{
+                $pro_head_photoInDB = $checkPhotos->pro_head_photo;
+            }
+
         }
 
         Student::find($id)->update([
             'name' => $request->input('name'),
-            'photo' => asset('uploads/students/'.$fileName),
+            'photo' => $fileName == null ? $fileNameInDB : asset('uploads/students/'.$fileName),
             'pro_flag' => $request->input('pro_free') == 0 ? 0 : 1,
-            'pro_cover_photo' => asset('uploads/students/'.$pro_cover_photo),
-            'pro_head_photo' => asset('uploads/students/'.$pro_head_photo),
+            'pro_cover_photo' => $pro_cover_photo == null ? $pro_cover_photoInDB : asset('uploads/students/'.$pro_cover_photo),
+            'pro_head_photo' => $pro_head_photo == null ? $pro_head_photoInDB : asset('uploads/students/'.$pro_head_photo),
             'academic_year' => $request->input('academic_year'),
             'height_feet' => $request->input('height_feet'),
             'height_inches' => $request->input('height_inches'),
