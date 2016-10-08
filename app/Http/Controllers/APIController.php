@@ -527,6 +527,7 @@ class APIController extends Controller
             $arr[$key]["opp_logo"] = $item->opp_logo;
             $arr[$key]["opp_score"] = $item->opp_score;
             $arr[$key]["future"] = $future;
+            $arr[$key]["day_of_week"] = date('l', strtotime( $item->game_date));
             $arr[$key]["ad_details"] = $adDetails;
         }
 
