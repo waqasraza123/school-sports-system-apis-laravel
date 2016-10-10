@@ -340,7 +340,7 @@ class APIController extends Controller
                                 ->where('sports.school_id', $schoolId)
                                 ->get();
 
-        $latestVideo = Roster::select('videos.id as video_id', 'videos.title as video_title',
+        $latestVideo = Roster::select('videos.id as video_id', 'videos.title as video_title', 'videos.video_cover as video_video_cover', 
                                 'videos.url as video_url', 'videos.date as video_date')
                                 ->join('album_roster', 'album_roster.roster_id', '=', 'rosters.id')
                                 ->join('album', 'album.id', '=', 'album_roster.album_id')
