@@ -115,8 +115,6 @@ class SportsController extends Controller
 
         $icon = SportIcon::where('name','=',$request->input('selected-text'))->first();
 
-
-
         $sport = Sport::create([
             'name' => $request->input('name'),
             'icon_id' => $icon == null ? "" : $icon->id,

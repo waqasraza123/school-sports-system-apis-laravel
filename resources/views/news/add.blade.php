@@ -122,7 +122,7 @@
     <script>
         // Replace the <textarea id="editor1"> with a CKEditor
         // instance, using default configuration.
-        CKEDITOR.replace( 'content' );
+        //CKEDITOR.replace( 'content' );
     </script><script src="/js/moment-with-locales.js"></script>
     <script src="/js/bootstrap-datetimepicker.js"></script>
 

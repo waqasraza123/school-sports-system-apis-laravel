@@ -50,8 +50,6 @@
             <div class="col-md-6">
               <div class="form-group-sm">
                   <div class="col-s-3">
-                {!!Form::label('record', 'Record:', ['class' => 'control-label']) !!}
-                {!! Form::text('record', null, ['class' => 'form-control']) !!}
             </div>
           </div>
           </div>
