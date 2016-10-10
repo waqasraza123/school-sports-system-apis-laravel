@@ -14,28 +14,58 @@
         </div><!-- /.user-panel -->
 
         <ul class="sidebar-menu" id="side-menu">
+          @if(Auth::check())
+              @if(Auth::user()->email != 'admin@gmail.com')
+
+              @else
+                  <li>
+                      <a href="/schools"><i class="fa fa-dashboard fa-fw"></i>
+                          Add School</a>
+                  </li>
+              @endif
+          @endif
           <li>
               <a href="/home"><i class="fa fa-dashboard fa-fw"></i>
                   Dashboard</a>
           </li>
             <li>
+                <a href="/settings"><i class="fa fa-comment-o fa-fw"></i>
+                    Push Notifications</a>
+            </li>
+            <li>
+                <a href="/games"><i class="fa fa-calendar fa-fw"></i>
+                    Schedules</a>
+            </li>
+            <li>
+                <a href="/rosters"><i class="fa fa-users fa-fw"></i>
+                    Rosters</a>
+            </li>
+            <li>
+                <a href="/news"><i class="fa fa-newspaper-o fa-fw"></i>
+                    News</a>
+            </li>
+            <li>
+                <a href="/albums"><i class="fa fa-camera-retro fa-fw"></i>
+                    Media</a>
+            </li>
+            <li>
+                <a href="/sports"><i class="fa fa-futbol-o fa-fw"></i>
+                    Sports</a>
+            </li>
+            <li>
+                <a href="/staff"><i class="fa fa-user-plus fa-fw"></i>
+                    Staff</a>
+            </li>
+            <li>
                 <a href="/settings"><i class="fa fa-cogs fa-fw"></i>
                     Settings</a>
             </li>
+<!--
             <li>
                 <a href="/sponsors"><i class="fa fa-cogs fa-fw"></i>
                     Add sponsor</a>
             </li>
-            @if(Auth::check())
-                @if(Auth::user()->email != 'admin@gmail.com')
 
-                @else
-                    <li>
-                        <a href="/schools"><i class="fa fa-dashboard fa-fw"></i>
-                            Add School</a>
-                    </li>
-                @endif
-            @endif
 
             <li>
                 <a href="/ads"><i class="fa fa-edit fa-fw"></i>
@@ -56,10 +86,7 @@
                     Sports</a>
             </li>
 
-            <li>
-                <a href="/games"><i class="fa fa-edit fa-fw"></i>
-                    Games</a>
-            </li>
+
             <li>
                 <a href="/sports-levels"><i class="fa fa-edit fa-fw"></i>
                     Sports Levels</a>
@@ -75,19 +102,14 @@
                     Students</a>
             </li>
 
-            <li>
-                <a href="/albums"><i class="fa fa-edit fa-fw"></i>
-                    Albums</a>
-            </li>
+
 
             <li>
                 <a href="/locations"><i class="fa fa-edit fa-fw"></i>
                     Schedule Locations</a>
             </li>
-            <li>
-                <a href="/news"><i class="fa fa-edit fa-fw"></i>
-                    News</a>
-            </li>
+
+-->
 
         </ul>
     </div>

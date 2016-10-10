@@ -340,7 +340,7 @@ class APIController extends Controller
                                 ->where('sports.school_id', $schoolId)
                                 ->get();
 
-        $latestVideo = Roster::select('videos.id as video_id', 'videos.title as video_title',
+        $latestVideo = Roster::select('videos.id as video_id', 'videos.title as video_title', 'videos.video_cover as video_video_cover',
                                 'videos.url as video_url', 'videos.date as video_date')
                                 ->join('album_roster', 'album_roster.roster_id', '=', 'rosters.id')
                                 ->join('album', 'album.id', '=', 'album_roster.album_id')
@@ -993,7 +993,7 @@ class APIController extends Controller
      */
     public function getNews($schoolId, $newsId){
         $news = News::select('id as news_id', 'title as news_title', 'intro as news_teaser',
-                    'image as news_photo', 'news_date', 'link as news_url', 'credit as news_credit')
+                    'image as news_photo', 'news_date', 'link as news_url', 'credit as news_credit', 'content as news_content')
                     ->where('school_id', $schoolId)
                     ->where('id', $newsId)
                     ->first();
