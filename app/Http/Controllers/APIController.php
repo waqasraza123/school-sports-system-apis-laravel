@@ -1273,23 +1273,39 @@ class APIController extends Controller
      */
     public function getAlbumList($schoolId, $sportId, $seasonId){
 
-        //both are required params
-        if($schoolId && $sportId){
+
             $albumsList = Album::select('album.id as album_id', 'album.name as album_name', 'date as album_date',
                                 'url as album_url', 'sports.name as sport_name')
                                 ->join('album_roster', 'album_roster.album_id', '=', 'album.id')
                                 ->join('rosters', 'album_roster.roster_id', '=', 'rosters.id')
                                 ->join('sports', 'rosters.sport_id', '=', 'sports.id')
                                 ->where('album.school_id', $schoolId)
-                                ->where('sports.id', $sportId);
+                              ->where('sports.id', $sportId);
+ $arr = array();
+  foreach ($albumsList->get() as $key => $item){
+    $photos = Photo::select('id as photo_id', 'thumb',  'large as photo_large', 'thumb as photo_thumb')
+                      ->where('album_id', $item->album_id)
+                      ->get();
+                       $arr[$key]["album_id"] = $item->album_id;
+                        $arr[$key]["album_name"] = $item->album_name;
+                        $arr[$key]["album_date"] = $item->album_date;
+                        $arr[$key]["album_url"] = $item->album_url;
+                        $arr[$key]["sport_name"] = $item->sport_name;
 
-            if($seasonId){
-                $albumsList = $albumsList->where('album.season_id', $seasonId);
-                return response()->json($albumsList->get());
-            }
-            return response()->json($albumsList->get());
-        }
-    }
+                        $arr[$key]["photos"] = $photos;
+  }
+
+return response()->json($arr);
+
+
+
+
+}
+
+
+
+
+
 
     /**
      * @param $schoolId
