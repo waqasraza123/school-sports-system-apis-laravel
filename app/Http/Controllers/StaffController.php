@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Season;
 use App\Staff;
 use App\Year;
+use App\Roster;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Validator;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
 
 class StaffController extends Controller
 {
@@ -48,9 +50,11 @@ class StaffController extends Controller
      */
     public function create()
     {
+        $rosters = Roster::lists('name', 'id');
         $seasons = Season::lists('name', 'id');
-        return view('staff.add', compact('seasons'));
+        return view('staff.add', compact('seasons', 'rosters'));
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -65,7 +69,7 @@ class StaffController extends Controller
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|email|unique:staff,email',
-            'year' => 'required',
+
             'phone' => 'required|max:15',
             'photo' => 'required'
         ]);
@@ -90,9 +94,13 @@ class StaffController extends Controller
             'photo' => $fileName == ""? null : asset('/uploads/staff/'.$fileName),
             'season_id' => $request->input('season_id')
         ]);
+        if (true)
+        {
+            $staff->rosters()->attach(array_values($request->input('roster_id')));
+        }
 
         $year = Year::create([
-            'year' => $request->input('year'),
+            'year' => date("Y"),
             'year_id' => $staff->id,
             'year_type' => 'App\Staff'
         ]);
@@ -122,8 +130,9 @@ class StaffController extends Controller
     {
         $staff = Staff::findOrFail($id);
         $seasons = Season::lists('name', 'id');
+            $rosters = Roster::lists('name', 'id');
 
-        return view('staff.update', compact('staff', 'seasons'));
+        return view('staff.update', compact('staff', 'seasons', 'rosters'));
     }
 
     /**
@@ -133,8 +142,61 @@ class StaffController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
+  public function update(Request $request, $id)
+     {
+
+         $file = Input::all();
+         $rules = array();
+         $schoolId = Auth::user()->school_id;
+         $validator = Validator::make(Input::all(), $rules);
+         if ($validator->fails()) {
+             //setting errors message
+             Session::flash('message', $validator->errors()->all());
+
+             // send back to the page with the input data and errors
+             return Redirect::back()->withInput()->withErrors($validator);
+         }
+         else
+         {
+           if (Input::file('photo') != null) {
+    $destinationPath = 'uploads/staff'; // upload path
+    $extension = Input::file('photo')->getClientOriginalExtension(); // getting image extension
+    $fileName = rand(11111, 99999) . '.' . $extension; // renameing image
+    Input::file('photo')->move($destinationPath, $fileName); // uploading file to given path
+    //update
+           Staff::where('id', $id)->update(array('name' => $file['name'], 'email' => $file['email'],
+         'phone' => $file['phone'], 'description' => $file['description'], 'title' => $file['title'],
+       'description' => $file['description'], 'school_id' => $schoolId,              'photo' => asset('/uploads/staff/'.$fileName) ));
+  } else {
+    Staff::where('id', $id)->update(array('name' => $file['name'], 'email' => $file['email'],
+  'phone' => $file['phone'], 'description' => $file['description'], 'title' => $file['title'],
+'description' => $file['description'], 'school_id' => $schoolId,   ));
+}
+  $staff = Staff::where('id', '=', $id)->first();
+
+if (isset($file['roster_id']))
+         {
+             $staff->rosters()->sync(array_values($file['roster_id']));
+         }
+         else
+         {
+             $staff->rosters()->sync([]);
+         }
+
+           Session::flash('success', 'Updated successfully');
+           return Redirect::back();
+
+
+         }
+       }
+
+
+
+        /**
+
     public function update(Request $request, $id)
-    {
+    {$fileName == ""? $fileNameOld:
         $schoolId = Auth::user()->school_id;
 
         $this->validate($request, [
@@ -178,7 +240,7 @@ class StaffController extends Controller
         return redirect('/staff');
     }
 
-    /**
+
      * Remove the specified resource from storage.
      *
      * @param  int  $id

@@ -28,3 +28,6 @@
   background-color: #4D4F4F;
   border-color: #000000;
 }
+
+.select2-selection--multiple .select2-selection__choice {
+  color:black !important;

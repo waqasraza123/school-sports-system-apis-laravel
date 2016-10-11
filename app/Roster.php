@@ -42,6 +42,10 @@ class Roster extends Model
     {
         return $this->belongsToMany('App\News');
     }
+    public function staff()
+    {
+        return $this->belongsToMany('App\Staff');
+    }
 
     public function galleries()
     {

@@ -15,6 +15,10 @@ class Staff extends Model
     public function years(){
         return $this->morphMany('App\Year', 'year');
     }
+    public function rosters()
+    {
+        return $this->belongsToMany('App\Roster');
+    }
 
     /**
      * relationship with school

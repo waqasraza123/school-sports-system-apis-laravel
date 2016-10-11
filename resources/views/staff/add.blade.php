@@ -61,10 +61,10 @@
                         </div>
                 <div class="col-md-6">
                   <div class="form-group-sm">
-                      <div class="col-s-3">
-                    {!!Form::label('website', 'Website:', ['class' => 'control-label']) !!}
-                    {!! Form::text('website', null, ['class' => 'form-control']) !!}
-                </div>
+
+                {!! Form::label('title', 'Roster:', ['class' => 'control-label']) !!}
+                {{ Form::select('roster_id[]', $rosters, null, ['class' => 'form-control','id' => 'roster_id', 'style' => 'width: 100%', 'multiple']) }}
+                  <div class="dropzone-previews"></div>
                     </div>
                         </div>
             </div>
@@ -73,23 +73,12 @@
                 <div class="col-md-6">
                   <div class="form-group-sm">
                       <div class="col-s-3">
-                    {!!Form::label('description', 'Description:', ['class' => 'control-label']) !!}
+                    {!!Form::label('description', 'Bio:', ['class' => 'control-label']) !!}
                     {!! Form::textarea('description', null, ['class' => 'form-control']) !!}
                 </div>
               </div>
           </div>
-                <div class="col-md-6">
-                  <div class="form-group-sm">
-                      <div class="col-s-3">
-                    {!! Form::label('year', 'Year', ['class' => 'control-label']) !!}
-                    {!! Form::selectYear('year', 2005, \Carbon\Carbon::now()->year, \Carbon\Carbon::now()->year, [
-                    'class' => 'form-control', 'required' => true]) !!}
 
-                    {!! Form::label('season_id', 'Season', ['class' => 'control-label']) !!}
-                    {!! Form::select('season_id', $seasons, null, ['class' => 'form-control', 'required' => true]) !!}
-                  </div>
-              </div>
-                </div>
             </div>
 
             <div class="row">
@@ -108,5 +97,12 @@
 
 @endsection
 @section('footer')
+  <script type="text/javascript">
+      $('#roster_id').select2();
+      $('#season_id').select2();
+      $('#game_id').select2();
+      $('#year_id').select2();
+
+  </script>
     @include('partials.error-messages.footer-script')
 @stop
