@@ -46,7 +46,11 @@
             </li>
             <li>
                 <a href="/albums"><i class="fa fa-camera-retro fa-fw"></i>
-                    Media</a>
+                    Photos</a>
+            </li>
+            <li>
+                <a href="/videos"><i class="fa fa-video-camera fa-fw"></i>
+                    Videos</a>
             </li>
             <li>
                 <a href="/sports"><i class="fa fa-futbol-o fa-fw"></i>
