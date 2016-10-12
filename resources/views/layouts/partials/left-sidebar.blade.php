@@ -57,6 +57,10 @@
                     Staff</a>
             </li>
             <li>
+                <a href="/sponsors"><i class="fa fa-money  fa-fw"></i>
+                    Sponsors</a>
+            </li>
+            <li>
                 <a href="/settings"><i class="fa fa-cogs fa-fw"></i>
                     Settings</a>
             </li>
