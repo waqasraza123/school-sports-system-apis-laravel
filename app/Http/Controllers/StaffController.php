@@ -6,6 +6,7 @@ use App\Season;
 use App\Staff;
 use App\Year;
 use App\Roster;
+use App\RosterStaff;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -131,8 +132,9 @@ class StaffController extends Controller
         $staff = Staff::findOrFail($id);
         $seasons = Season::lists('name', 'id');
             $rosters = Roster::lists('name', 'id');
+            $selected = RosterStaff::where('staff_id', '=', $id)->lists('roster_id');
 
-        return view('staff.update', compact('staff', 'seasons', 'rosters'));
+        return view('staff.update', compact('staff', 'seasons', 'rosters', 'selected'));
     }
 
     /**
