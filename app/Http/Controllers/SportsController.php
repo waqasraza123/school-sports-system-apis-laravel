@@ -89,30 +89,6 @@ class SportsController extends Controller
             /*'selected-text' => 'required'*/
         ]);
 
-        $levels = $request->input('level_id');
-        $levelsArray = array();
-        foreach ($levels as $level){
-            $exist = LevelSport::where('name', $level)->first();
-            if(!($exist)) {
-                $levelsSports = LevelSport::create([
-                    'name' => $level,
-                    'school_id' => $this->schoolId
-                ]);
-                array_push($levelsArray, $levelsSports->id);
-            }
-            else{
-                array_push($levelsArray, $exist->id);
-            }
-        }
-
-//        $photo = "";
-//        if(Input::file('photo') != null){
-//            $uploadPath = 'uploads/sports';
-//            $extension = Input::file('photo')->getClientOriginalExtension();
-//            $photo = rand(1111, 9999) . '.' . $extension;
-//            Input::file('photo')->move($uploadPath, $photo);
-//        }
-
         $icon = SportIcon::where('name','=',$request->input('selected-text'))->first();
 
         $sport = Sport::create([
@@ -130,7 +106,65 @@ class SportsController extends Controller
             'year_type' => 'App\Sport'
         ]);
 
+        $levels = $request->input('level_id');
+        $levelsArray = array();
+        foreach ($levels as $level){
+            $exist = LevelSport::where('name', $level)->first();
+            if(!($exist)) {
+                $levelsSports = LevelSport::create([
+                    'name' => $level,
+                    'school_id' => $this->schoolId
+                ]);
+
+                $roster = Roster::create([
+                    'name' => $sport->name. '_roster',
+                    'sport_id' => $sport->id,
+                    'school_id' => $this->schoolId,
+                    'season_id' => $sport->season_id,
+                    'level_id' => $levelsSports->id,
+                ]);
+
+                Year::create([
+                    'year' => $request->input('year'),
+                    'year_id' => $roster->id,
+                    'year_type' => 'App\Roster'
+                ]);
+
+                $roster->save();
+                array_push($levelsArray, $levelsSports->id);
+            }
+            else{
+
+                $roster = Roster::create([
+                    'name' => $sport->name. '_roster',
+                    'sport_id' => $sport->id,
+                    'school_id' => $this->schoolId,
+                    'season_id' => $sport->season_id,
+                    'level_id' => $exist->id,
+                ]);
+
+                Year::create([
+                    'year' => $request->input('year'),
+                    'year_id' => $roster->id,
+                    'year_type' => 'App\Roster'
+                ]);
+
+                $roster->save();
+                array_push($levelsArray, $exist->id);
+            }
+        }
+
+//        $photo = "";
+//        if(Input::file('photo') != null){
+//            $uploadPath = 'uploads/sports';
+//            $extension = Input::file('photo')->getClientOriginalExtension();
+//            $photo = rand(1111, 9999) . '.' . $extension;
+//            Input::file('photo')->move($uploadPath, $photo);
+//        }
+
         $sport->levels()->sync($levelsArray);
+
+        //create the roster
 
         return redirect('/sports')->with('success', 'Sport Added Successfully');
     }
@@ -189,31 +223,10 @@ class SportsController extends Controller
 
         $levels = $request->input('level_id');
         $levelsArray = array();
-        foreach ($levels as $level){
-            $exist = LevelSport::where('name', $level)->first();
-            if(!($exist)) {
-                $levelsSports = LevelSport::create([
-                    'name' => $level,
-                    'school_id' => $this->schoolId
-                ]);
-                array_push($levelsArray, $levelsSports->id);
-            }
-            else{
-                array_push($levelsArray, $exist->id);
-            }
-        }
-
-//        $photo = "";
-//        if(Input::file('photo') != null){
-//            $uploadPath = 'uploads/sports';
-//            $extension = Input::file('photo')->getClientOriginalExtension();
-//            $photo = rand(1111, 9999) . '.' . $extension;
-//            Input::file('photo')->move($uploadPath, $photo);
-//        }
 
         $icon = SportIcon::where('name','=',$request->input('selected-text'))->first();
 
-        $sport = Sport::find($id)->update([
+        Sport::find($id)->update([
             'name' => $request->input('name'),
             'icon_id' => $icon->id,
             'highlight_video' => $request->input('highlight_video'),
@@ -227,6 +240,85 @@ class SportsController extends Controller
             'year_id' => $id,
             'year_type' => 'App\Sport'
         ]);
+
+        $sport = Sport::findOrFail($id);
+        foreach ($levels as $level){
+            $exist = LevelSport::where('name', $level)->first();
+            if(!($exist)) {
+                $levelsSports = LevelSport::create([
+                    'name' => $level,
+                    'school_id' => $this->schoolId
+                ]);
+
+                $roster = Roster::create([
+                    'name' => $sport->name. '_roster',
+                    'sport_id' => $id,
+                    'school_id' => $this->schoolId,
+                    'season_id' => $sport->season_id,
+                    'level_id' => $levelsSports->id,
+                ]);
+
+                Year::where('year_id', $roster->id)->where('year_type', 'App\Roster')->update([
+                    'year' => $request->input('year'),
+                    'year_id' => $roster->id,
+                    'year_type' => 'App\Roster'
+                ]);
+
+                $roster->save();
+                array_push($levelsArray, $levelsSports->id);
+            }
+            else{
+                //if the level exists does not mean that roster also exists for that
+                //check for that particular roster else create it.
+                $roster = Roster::where('sport_id', $id)->where('level_id', $exist->id)->first();
+                if($roster){
+
+                    Roster::where('sport_id', $id)->where('level_id', $exist->id)->update([
+                        'name' => $sport->name. '_roster',
+                        'sport_id' => $id,
+                        'school_id' => $this->schoolId,
+                        'season_id' => $sport->season_id,
+                        'level_id' => $exist->id,
+                    ]);
+
+                    Year::where('year_id', $roster->id)->where('year_type', 'App\Roster')->update([
+                        'year' => $request->input('year'),
+                        'year_id' => $roster->id,
+                        'year_type' => 'App\Roster'
+                    ]);
+
+                    $roster->save();
+                }
+
+                //if roster does not exists
+                else{
+                    $roster = Roster::create([
+                        'name' => $sport->name. '_roster',
+                        'sport_id' => $id,
+                        'school_id' => $this->schoolId,
+                        'season_id' => $sport->season_id,
+                        'level_id' => $exist->id,
+                    ]);
+
+                    Year::create([
+                        'year' => $request->input('year'),
+                        'year_id' => $roster->id,
+                        'year_type' => 'App\Roster'
+                    ]);
+
+                    $roster->save();
+                }
+                array_push($levelsArray, $exist->id);
+            }
+        }
+
+//        $photo = "";
+//        if(Input::file('photo') != null){
+//            $uploadPath = 'uploads/sports';
+//            $extension = Input::file('photo')->getClientOriginalExtension();
+//            $photo = rand(1111, 9999) . '.' . $extension;
+//            Input::file('photo')->move($uploadPath, $photo);
+//        }
 
         $sport = Sport::find($id);
         $sport->levels()->sync($levelsArray);
