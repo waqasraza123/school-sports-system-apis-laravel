@@ -9,3 +9,5 @@ Homestead.json
 behat.yml
 /.idea/*
 !/storage/imports
+.production.env
+.local.env
