@@ -55,9 +55,9 @@
                                         <td class="text-center">{{ $i++ }}</td>
                                         <td class="text-center">
                                             @if($stu->photo == "")
-                                                <img src="{{ asset('img/' . 'no_image.jpg') }}" width="60" height="40">
+                                                <img src="{{ asset('uploads/' . 'def.png') }}" width="60" height="40">
                                             @else
-                                                <img src="{{ asset('images/' . $pproperty->picture) }}" width="60" height="40">
+                                                <img src="{{$stu->photo}}" width="60" height="40">
                                             @endif
                                         </td>
                                         <td>{{ $stu->name }}</td>
