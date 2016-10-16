@@ -32,6 +32,16 @@ class Student extends Model
         return $this->belongsToMany('App\Album');
     }
 
+    public function galleries()
+    {
+        return $this->belongsToMany('App\Gallery');
+    }
+
+    public function videos()
+    {
+        return $this->belongsToMany('App\Video');
+    }
+
     public function news_list(){
         return $this->belongsToMany('App\News', 'news_student', 'student_id', 'news_id');
     }

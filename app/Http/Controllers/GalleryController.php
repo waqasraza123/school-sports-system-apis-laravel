@@ -69,7 +69,7 @@ class GalleryController extends Controller
         return Redirect::back();
     }
 
-    public function uploadUrl($id)
+    public function uploadUrl()
     {
         //get all inputs
         $data =Input::all();
@@ -81,14 +81,64 @@ class GalleryController extends Controller
                 Video::create([
                     'date' => Carbon::now()->toDateString(),
                     'title' => '',
-                    'url' => $value,
-                    'album_id' => $id
+                    'url' => $value
                 ]);
             }
         }
 
         Session::flash('success', 'Created successfully');
         return Redirect::back();
+    }
+
+    public function videoTagsUpdate()
+    {
+        $file = Input::all();
+        $rules = array();
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails()) {
+            //setting errors message
+            Session::flash('message', $validator->errors()->all());
+
+            // send back to the page with the input data and errors
+            return Redirect::back()->withInput()->withErrors($validator);
+        }
+        else
+        {
+            $video = Video::where('id', '=', $file['video_invisible_id'])->first();
+
+            //add student tags
+            if (isset($file['student_modal_id']))
+            {
+                $video->students()->sync(array_values($file['student_modal_id']));
+            }
+            else
+            {
+                $video->students()->sync([]);
+            }
+
+            //add roster tags
+            if (isset($file['roster_modal_id']))
+            {
+                $video->rosters()->sync(array_values($file['roster_modal_id']));
+            }
+            else
+            {
+                $video->rosters()->sync([]);
+            }
+
+            Session::flash('success', 'Updated successfully');
+            return Redirect::back();
+        }
+
+    }
+
+    public function videoDelete($id)
+    {
+        $video = Video::findOrFail($id);
+        $video->delete();
+        Session::flash('flash_message_s', 'Vidoe successfully deleted!');
+        return redirect()->back();
     }
 
 //    //delete picture (needs to implement to delete the image and thumbnail from the storage of the app)
@@ -116,16 +166,16 @@ class GalleryController extends Controller
         }
         else
         {
-            $gallery = Gallery::where('id', '=', $file['gallery_invisible_id'])->first();
+            $photo = Photo::where('id', '=', $file['gallery_invisible_id'])->first();
 
             //add student tags
             if (isset($file['student_modal_id']))
             {
-                $gallery->students()->sync(array_values($file['student_modal_id']));
+                $photo->students()->sync(array_values($file['student_modal_id']));
             }
             else
             {
-                $gallery->students()->sync([]);
+                $photo->students()->sync([]);
             }
 
             Session::flash('success', 'Updated successfully');

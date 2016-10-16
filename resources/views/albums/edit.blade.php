@@ -13,9 +13,9 @@
             {!! Form::text('name', $album->name, ['class' => 'fn form-control']) !!}
                     <!-- Now setup your input fields -->
             {!! Form::label('title', 'Roster:', ['class' => 'control-label']) !!}
-            {{ Form::select('roster_id[]', $rosters, $album->rosters->lists('name','id'), ['class' => 'form-control','id' => 'roster_id', 'style' => 'width: 100%', 'multiple']) }}
+            {{ Form::select('roster_id[]', $rosters, $rostersTags, ['class' => 'form-control','id' => 'roster_id', 'style' => 'width: 100%', 'multiple']) }}
             {!! Form::label('title', 'Game:', ['class' => 'control-label']) !!}
-            {{ Form::select('game_id[]', $games, $album->games->lists('name','id'), ['class' => 'form-control','id' => 'game_id', 'style' => 'width: 100%', 'multiple']) }}
+            {{ Form::select('game_id[]', $games, $gameTags, ['class' => 'form-control','id' => 'game_id', 'style' => 'width: 100%', 'multiple']) }}
             {!! Form::label('title', 'Year:', ['class' => 'control-label']) !!}
             {!! Form::selectYear('year_id[]', 2005, \Carbon\Carbon::now()->year, \Carbon\Carbon::now()->year, ['class' => 'form-control', 'required' => 'true']) !!}
             {!! Form::label('title', 'Season:', ['class' => 'control-label']) !!}

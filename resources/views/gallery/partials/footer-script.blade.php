@@ -8,25 +8,6 @@
         document.getElementById("form1").submit();
         document.getElementById("form2").submit();
     }
-
-    var scntDiv = $('#inputs');
-    var i = $('#inputs p').size() + 1;
-    $('#addInput').click(function() {
-
-        $('<p><label for="title" class="control-label">Video url:</label><input type="text" class="fn form-control" id="url' + i +'" size="20" name="url' + i +'" value="" placeholder="Input Value" /></label> <a href="#" id="remInput" class="btn btn-danger" onclick="removeMe('+ i +')">Remove</a> ').appendTo('#inputs');
-
-        i++;
-        return false;
-    });
-
-    removeMe = function(id){
-        if( i > 1 ) {
-            $('#url'+id+'').parents('p').remove();
-            i--;
-        }
-        return false;
-    };
-
 </script>
 <script>
 

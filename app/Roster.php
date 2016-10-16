@@ -52,6 +52,11 @@ class Roster extends Model
         return $this->belongsToMany('App\Gallery');
     }
 
+    public function videos()
+    {
+        return $this->belongsToMany('App\Video');
+    }
+
     public function games(){
         return $this->hasMany('App\Games', 'roster_id');
     }

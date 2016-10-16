@@ -32,6 +32,7 @@
                     <td><a href="{{url('albums/'. $album->id. '/edit')}}" class="btn btn-primary btn-sm">Edit</a></td>
                     <td>{!! Form::open(['method' => 'DELETE','route' => ['albums.destroy', $album->id]]) !!}{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}{!! Form::close() !!}</td>
                 </tr>
+
             @endforeach
             </tbody>
         </table>

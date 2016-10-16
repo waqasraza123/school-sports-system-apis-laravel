@@ -48,10 +48,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('albums/add-photos', ['as' => 'upload-photos-post', 'uses' => 'ImageController@storePhotos']);
     Route::resource('albums', 'AlbumController');
 
+    Route::get('/videos', 'AlbumController@videosShow');
+
 //    Route::get('gallery', 'GalleryController@show');
     Route::get('gallery/{id}', 'GalleryController@show');
     Route::resource('gallery', 'GalleryController');
-    Route::post('albums/{id}/url-upload', ['as' => 'albums.url-upload', 'uses' => 'GalleryController@uploadUrl']);
+    Route::post('videos/url-upload', ['as' => 'videos.url-upload', 'uses' => 'GalleryController@uploadUrl']);
+    Route::post('videos/', 'GalleryController@videoTagsUpdate');
+    Route::delete('videos/{id}/destroy', ['as' => 'videos.destroy', 'uses' => 'GalleryController@videoDelete']);
     Route::post('image/upload', 'GalleryController@uploadImage');
 
     Route::post('staff/year', ['as' => 'year-staff', 'uses' => 'StaffController@yearStaff']);
