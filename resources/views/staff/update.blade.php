@@ -68,8 +68,10 @@
             <div class="col-md-6">
               <div class="form-group-sm">
 
+
+
             {!! Form::label('title', 'Roster:', ['class' => 'control-label']) !!}
-            {{ Form::select('roster_id[]', $rosters, null, ['class' => 'form-control','id' => 'roster_id', 'style' => 'width: 100%', 'multiple']) }}
+            {!! Form::select('roster_id[]', $rosters,   $rostersTags, ['class' => 'form-control','id' => 'roster_id', 'style' => 'width: 100%', 'multiple']) !!}
               <div class="dropzone-previews"></div>
                 </div>
                     </div>

@@ -133,8 +133,11 @@ class StaffController extends Controller
         $seasons = Season::lists('name', 'id');
             $rosters = Roster::lists('name', 'id');
             $selected = RosterStaff::where('staff_id', '=', $id)->lists('roster_id');
+              $rostersTags = [];
+              foreach ($selected as $select) { $rostersTags[] = $select;
+               }
 
-        return view('staff.update', compact('staff', 'seasons', 'rosters', 'selected'));
+        return view('staff.update', compact('staff', 'seasons', 'rosters', 'selected', 'rostersTags' ));
     }
 
     /**

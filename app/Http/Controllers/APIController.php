@@ -1285,7 +1285,7 @@ class APIController extends Controller
   foreach ($albumsList->get() as $key => $item){
     $photos = Photo::select('id as photo_id', 'thumb',  'large as photo_large', 'thumb as photo_thumb')
                       ->where('album_id', $item->album_id)
-                      ->get();
+                      ->take(7)->get();
                        $arr[$key]["album_id"] = $item->album_id;
                         $arr[$key]["album_name"] = $item->album_name;
                         $arr[$key]["album_date"] = $item->album_date;
@@ -1356,10 +1356,12 @@ return response()->json($arr);
      * @param $socialName
      *incomplete html formatted feed
      */
-    public function getSocial($schoolId, $sportId, $socialName){
-        $social = Social::select('');
-                        where('socialLinks_id', $schoolId)
+    public function getSocial($schoolId){
+        $social = Social::select('facebook as facebook', 'instagram', 'twitter')
+                      ->where('socialLinks_id', $schoolId)
                         ->first();
+  return response()->json($social);
+
     }
 
     /**
