@@ -33,14 +33,16 @@
                             <thead  style="background-color:#000000; color:white">
 
                             <tr>
-                                <th class="text-center" style="width: 5%;">#</th>
-                                <th class="text-center" style="width: 7%;">Thumb</th>
-                                <th style="width: 31%;">Name</th>
-                                <th style="width: 30%;">Roster</th>
-                                <th style="width: 6%;">Year</th>
-                                <th style="width: 6%;">Edit</th>
-                                <th style="width: 8%;">Quick Edit</th>
-                                <th style="width: 7%;">Delete</th>
+                                <th>#</th>
+                                <th>Photo</th>
+                                <th>Name</th>
+                                <th>Level</th>
+                                <th>Sport</th>
+                                <th>Roster</th>
+                                <th>Year</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -50,7 +52,6 @@
 
                             @foreach($rosters as $r)
                                 @foreach($r->students as $stu)
-
                                     <tr>
                                         <td class="text-center">{{ $i++ }}</td>
                                         <td class="text-center">
@@ -61,6 +62,16 @@
                                             @endif
                                         </td>
                                         <td>{{ $stu->name }}</td>
+                                        @foreach($levels as $level)
+                                            @if($level->id == $r->level_id)
+                                                <td>{{ $level->name }}</td>
+                                            @endif
+                                        @endforeach
+                                        @foreach($sports as $sport)
+                                            @if($sport->id == $r->sport_id)
+                                                <td>{{ $sport->name }}</td>
+                                            @endif
+                                        @endforeach
                                         <td>{{ $r->name }}</td>
                                         <td>{{ $stu->academic_year }}</td>
                                         <td>
@@ -77,7 +88,6 @@
                                             </form>
                                         </td>
                                     </tr>
-
                                 @endforeach
                             @endforeach
                             </tbody>
