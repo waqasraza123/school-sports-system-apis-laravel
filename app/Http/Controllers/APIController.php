@@ -24,6 +24,7 @@ use App\School;
 use App\Sport;
 use DateTime;
 use App\User;
+use App\SportIcon;
 use Carbon\Carbon;
 use App\Http\Requests;
 use Illuminate\Http\Response;
@@ -158,8 +159,10 @@ class APIController extends Controller
         $schools = School::
             with([
                 'sport_list' => function($q){
-                    $q->select('name as sport_name', 'id as sport_id', 'school_id');
-                }
+                    $q->select('sports.name as sport_name', 'sports.id as sport_id', 'school_id', 'sport_icon.path')
+                      ->join('sport_icon', 'sports.icon_id', '=', 'sport_icon.id');
+                },
+
             ])->select('app_name', 'id as school_id', 'name as school_name', 'school_logo',
             'school_color', 'school_color2', 'school_color3', 'id')
             ->where('schools.id', $schoolId)
@@ -268,7 +271,7 @@ class APIController extends Controller
         ])->select('id', 'id as school_id', 'name as school_name', 'school_logo', 'school_color',
             'school_color2', 'school_tagline', 'bio as school_bio', 'photo as school_photo',
             'video as school_video', 'adress as school_address', 'website as school_url',
-            'phone as school_phone', 'school_email')->where('id', $schoolId)->first();
+            'phone as school_phone', 'video_cover','school_email')->where('id', $schoolId)->first();
 
         return $school;
     }
@@ -288,6 +291,7 @@ class APIController extends Controller
                             $q->select('levels.id as level_id', 'levels.name as level_name')
                                 ->get();
                         },
+
                         'season_list' => function($q){
                             $q->select('seasons.id as season_id', 'seasons.name as season_name', 'seasons.id')
                                 ->get();
@@ -629,6 +633,8 @@ class APIController extends Controller
                                 'seasons.id')
                                 ->get();
                         }
+
+
                     ])
                     ->select('sports.id as sport_id', 'sports.name as sport_name', 'sports.id', 'sports.season_id')
                     ->where('sports.school_id', $schoolId)
@@ -1285,7 +1291,7 @@ class APIController extends Controller
   foreach ($albumsList->get() as $key => $item){
     $photos = Photo::select('id as photo_id', 'thumb',  'large as photo_large', 'thumb as photo_thumb')
                       ->where('album_id', $item->album_id)
-                      ->get();
+                      ->take(7)->get();
                        $arr[$key]["album_id"] = $item->album_id;
                         $arr[$key]["album_name"] = $item->album_name;
                         $arr[$key]["album_date"] = $item->album_date;
@@ -1356,10 +1362,12 @@ return response()->json($arr);
      * @param $socialName
      *incomplete html formatted feed
      */
-    public function getSocial($schoolId, $sportId, $socialName){
-        $social = Social::select('');
-                        where('socialLinks_id', $schoolId)
+    public function getSocial($schoolId){
+        $social = Social::select('facebook as facebook', 'instagram', 'twitter')
+                      ->where('socialLinks_id', $schoolId)
                         ->first();
+  return response()->json($social);
+
     }
 
     /**
