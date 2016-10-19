@@ -14,6 +14,7 @@ use App\Http\Requests;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
+use Intervention\Image\Facades\Image;
 
 class StaffController extends Controller
 {
@@ -67,10 +68,11 @@ class StaffController extends Controller
     {
         $schoolId = Auth::user()->school_id;
 
+        $json = json_decode(Input::get('image_scale'), true);
+
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|email|unique:staff,email',
-
             'phone' => 'required|max:15',
             'photo' => 'required'
         ]);
@@ -81,6 +83,18 @@ class StaffController extends Controller
             $extension = Input::file('photo')->getClientOriginalExtension();
             $fileName = rand(1111, 9999) . '.' . $extension;
             Input::file('photo')->move($destinationPath, $fileName);
+
+            $img = Image::make($destinationPath."/".$fileName);
+            $img->widen((int) ($img->width() * $json['scale']));
+            $img->crop((int)$json['w'], (int)$json['h'], (int)$json['x'], (int)$json['y']);
+            $img->encode();
+            $img->save($destinationPath."/".$fileName);
+
+
+//            $img = Image::make($destinationPath."/".$fileName)->rotate((float)$json['angle']);
+//            $img->widen((int)($img->width()*$json['scale']));
+//            $img->crop((int)$json['w'], (int)$json['h'], (int)$json['x'], (int)$json['y']);
+//            $img->save($destinationPath."/".$fileName);
         }
 
 
@@ -97,7 +111,7 @@ class StaffController extends Controller
         ]);
         if (true)
         {
-            $staff->rosters()->attach(array_values($request->input('roster_id')));
+            //$staff->rosters()->attach(array_values($request->input('roster_id')));
         }
 
         $year = Year::create([
