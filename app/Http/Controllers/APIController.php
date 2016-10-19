@@ -24,6 +24,7 @@ use App\School;
 use App\Sport;
 use DateTime;
 use App\User;
+use App\SportIcon;
 use Carbon\Carbon;
 use App\Http\Requests;
 use Illuminate\Http\Response;
@@ -158,8 +159,10 @@ class APIController extends Controller
         $schools = School::
             with([
                 'sport_list' => function($q){
-                    $q->select('name as sport_name', 'id as sport_id', 'school_id');
-                }
+                    $q->select('sports.name as sport_name', 'sports.id as sport_id', 'school_id', 'sport_icon.path')
+                      ->join('sport_icon', 'sports.icon_id', '=', 'sport_icon.id');
+                },
+
             ])->select('app_name', 'id as school_id', 'name as school_name', 'school_logo',
             'school_color', 'school_color2', 'school_color3', 'id')
             ->where('schools.id', $schoolId)
@@ -629,6 +632,8 @@ class APIController extends Controller
                                 'seasons.id')
                                 ->get();
                         }
+
+
                     ])
                     ->select('sports.id as sport_id', 'sports.name as sport_name', 'sports.id', 'sports.season_id')
                     ->where('sports.school_id', $schoolId)
