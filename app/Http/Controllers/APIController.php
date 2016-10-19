@@ -271,7 +271,7 @@ class APIController extends Controller
         ])->select('id', 'id as school_id', 'name as school_name', 'school_logo', 'school_color',
             'school_color2', 'school_tagline', 'bio as school_bio', 'photo as school_photo',
             'video as school_video', 'adress as school_address', 'website as school_url',
-            'phone as school_phone', 'school_email')->where('id', $schoolId)->first();
+            'phone as school_phone', 'video_cover','school_email')->where('id', $schoolId)->first();
 
         return $school;
     }
@@ -291,6 +291,7 @@ class APIController extends Controller
                             $q->select('levels.id as level_id', 'levels.name as level_name')
                                 ->get();
                         },
+
                         'season_list' => function($q){
                             $q->select('seasons.id as season_id', 'seasons.name as season_name', 'seasons.id')
                                 ->get();
