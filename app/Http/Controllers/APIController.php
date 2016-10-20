@@ -309,7 +309,7 @@ class APIController extends Controller
                             ->where('school_id', $schoolId)
                             ->where('sports.id', $sportId);
 
-        $lastGame = Games::select('games.id as game_id', 'our_score as school_score', 'game_date',
+        $lastGame = Games::select('games.id as game_id', 'our_score as school_score', 'game_date', DB::raw('LEFT(DATE_FORMAT(game_date,\'%W\'), 3) as day_of_week'),
                             'result as game_result', 'home_away as game_vs_at', 'opponents.name as opp_name',
                             'nick as opp_nick', 'opponents.photo as opp_logo', 'opponents_score as opp_score')
                             ->join('opponents', 'games.opponents_id', '=', 'opponents.id')
@@ -322,7 +322,7 @@ class APIController extends Controller
                             ->first();
 
         $nextGame = Games::select('games.id as game_id', 'our_score as school_score',
-                            'home_away as game_vs_at', 'opponents.name as opp_name', 'nick as opp_nick', 'game_date', 'game_time',
+                            'home_away as game_vs_at', 'opponents.name as opp_name', 'nick as opp_nick', 'game_date',DB::raw('LEFT(DATE_FORMAT(game_date,\'%W\'), 3) as day_of_week'),  'game_time',
                             'opponents.photo as opp_logo', 'opponents_score as opp_score')
                             ->join('opponents', 'games.opponents_id', '=', 'opponents.id')
                             ->join('rosters', 'rosters.id', '=', 'games.roster_id')
@@ -395,6 +395,7 @@ class APIController extends Controller
                     $arr['next_game'] = $nextGame;
                     $arr['latest_video'] = $latestVideo;
                     $arr['latest_photos'] = $latestPhotos;
+
                 }
             }
             return response()->json($arr);
