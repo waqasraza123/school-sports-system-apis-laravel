@@ -117,6 +117,8 @@ class StudentsController extends Controller
         $tableName = strtolower(str_replace(' ', '_', $school->name)).'_custom_students';
         $rosters = Roster::where('school_id', $this->schoolId)->lists('name', 'id');
         $school = School::select('name')->where('id', $this->schoolId)->first();
+      //  $sports = DB::table('sports')->get();
+        $sports = \DB::table('sports')->lists('name', 'id');
 
         $customFields = "";
         if (Schema::hasTable($tableName)){
@@ -125,7 +127,7 @@ class StudentsController extends Controller
 
         /*$columnNames = \DB::connection()->getSchemaBuilder()->getColumnListing("custom_students");*/
 
-        return View('students.create', compact('rosters', 'school', 'customFields', 'columnNames'));
+        return View('students.create', compact('rosters', 'school', 'customFields', 'columnNames', 'sports'));
     }
 
     /**

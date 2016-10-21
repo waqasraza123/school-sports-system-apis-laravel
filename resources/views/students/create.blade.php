@@ -83,13 +83,19 @@
 
         <div class="row">
             <div class="col-md-6">
-
+                {!! Form::label('sport_title', 'Sport:', ['class' => 'control-label']) !!}
+                {!! Form::select('sport_title', 
+                        (['0' => 'Select a Sport'] + $sports), 
+                        null, 
+                        ['class' => 'form-control']) 
+                !!}
             </div>
             <div class="col-md-6">
 
             </div>
 
         </div>
+        <!--
         <div class="row" style="margin: 20px 20px 20px 0px">
             <div class="col-md-12">
                 <b>{{$school->name}} Custom Fields: </b>
@@ -120,6 +126,7 @@
                     </div>
             @endforeach
         @endif
+        -->
         <div class="row" style="margin: 0 auto; width: 300px; padding: 10px">
             <div class="" style="margin-top: 20px; margin-left: 10px !important; float: left;">
                 {!! Form::submit('Create Student', ['class' => 'btn btn-primary']) !!}
