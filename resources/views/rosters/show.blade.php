@@ -169,5 +169,6 @@
     @include('partials.error-messages.footer-script')
     <script>
         $("#select_year_id").val(<?php echo $year?>);
+        
     </script>
 @endsection
