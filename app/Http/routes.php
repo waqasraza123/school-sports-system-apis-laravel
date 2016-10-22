@@ -82,7 +82,10 @@ Route::group(['middleware' => ['auth']], function () {
 });
 
     //testing purposes
-
+    
+    Route::get('rosterajax', 'Ajax@index');
+    Route::post('ajaxsave', 'Ajax@save');
+     Route::get('ajaxshow', 'Ajax@show');
 
 /**
  * Authentication routes for the applications

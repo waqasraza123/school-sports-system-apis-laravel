@@ -159,6 +159,8 @@ class StudentsController extends Controller
             $this->validate($request, [
                 'title' => 'required|max:255',
                 'academic_year' => 'required',
+                'position' => 'required|min:2|max:255',
+                //   'students_id' => 'required',
                 'photo'
             ]);
         }
@@ -224,8 +226,30 @@ class StudentsController extends Controller
             'school_id' => $this->schoolId
         ]);
         
-     //   dd($student);
-        $student->rosters()->sync($request->input('roster_title'), false);
+        
+        $stuId = $student->id;
+    //    $stuJ = $student->jersy;
+    //    $stuP = $student->position;
+        
+        
+        $position = $_POST['position'];
+        $students = array($stuId);
+        $rosterId = $_POST['roster'];
+        $jersy = $_POST['jersy'];
+
+       // dd($students);
+        
+        $roster = Roster::find($rosterId);
+        $pivotData = array_fill(0, count($students), ['position' => $position, 'jersy' => $jersy, 'photo' => asset('uploads/students/'.$fileName)]);
+        $syncData  = array_combine($students, $pivotData);
+    
+        $roster->students()->sync($syncData, false);
+
+        $response = array(
+            'status' => 'success',
+            'msg' => 'Student Added successfully',
+        );
+
 
         //custom fields
         $school = School::where('id', '=', $this->schoolId)->first();
@@ -310,13 +334,7 @@ class StudentsController extends Controller
 
         return view('rosters.show', compact('sports', 'levels', 'years', 'positions','weight_options', 'levelcreate', 'id_sport', 'sortby', 'order'))->withRosters($rosters)->with('type', $type);
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function edit($id)
     {
 
