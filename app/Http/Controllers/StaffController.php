@@ -111,7 +111,7 @@ class StaffController extends Controller
         ]);
         if (true)
         {
-            //$staff->rosters()->attach(array_values($request->input('roster_id')));
+            $staff->rosters()->attach(array_values($request->input('roster_id')));
         }
 
         $year = Year::create([

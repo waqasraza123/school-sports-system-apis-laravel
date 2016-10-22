@@ -128,6 +128,15 @@
 
   <script>
       $(document).ready(function() {
+
+      });
+  </script>
+
+  <script type='text/javascript'>
+      jQuery(function() {
+          var picture = $('#sample_picture');
+
+
           $('#image-preview').hide();
           document.getElementById("photo").onchange = function () {
               var reader = new FileReader();
@@ -146,38 +155,39 @@
                   document.getElementById("sample_picture").src = e.target.result;
               };
               reader.readAsDataURL(this.files[0]);
-              $('#image-preview').show();
-          };
-      });
-  </script>
 
-  <script type='text/javascript'>
-      jQuery(function() {
-          var picture = $('#sample_picture');
 
-          // Make sure the image is completely loaded before calling the plugin
-          picture.one('load', function(){
-              // Initialize plugin (with custom event)
-              picture.guillotine({eventOnChange: 'guillotinechange'});
-              picture.guillotine({width: 400, height: 300});
-              // Display inital data
-              var data = picture.guillotine('getData');
-              for(var key in data) { $('#'+key).html(data[key]); }
+              // Make sure the image is completely loaded before calling the plugin
+              picture.one('load', function(){
+                  // Remove any existing instance
+                  if (picture.guillotine('instance')) picture.guillotine('remove');
+                  // Initialize plugin (with custom event)
+                  picture.guillotine({eventOnChange: 'guillotinechange'});
+                  picture.guillotine({width: 400, height: 300});
+                  // Display inital data
+                  var data = picture.guillotine('getData');
+                  for(var key in data) { $('#'+key).html(data[key]); }
 
-              // Bind button actions
+                  // Bind button actions
 //              $('#rotate_left').click(function(){ picture.guillotine('rotateLeft'); $('#image_scale').val(JSON.stringify(data)); });
 //              $('#rotate_right').click(function(){ picture.guillotine('rotateRight'); $('#image_scale').val(JSON.stringify(data)); });
-              $('#fit').click(function(){ picture.guillotine('fit'); $('#image_scale').val(JSON.stringify(data));});
-              $('#zoom_in').click(function(){ picture.guillotine('zoomIn'); $('#image_scale').val(JSON.stringify(data)); });
-              $('#zoom_out').click(function(){ picture.guillotine('zoomOut'); $('#image_scale').val(JSON.stringify(data)); });
+                  $('#fit').click(function(){ picture.guillotine('fit'); $('#image_scale').val(JSON.stringify(data));});
+                  $('#zoom_in').click(function(){ picture.guillotine('zoomIn'); $('#image_scale').val(JSON.stringify(data)); });
+                  $('#zoom_out').click(function(){ picture.guillotine('zoomOut'); $('#image_scale').val(JSON.stringify(data)); });
 
-              // Update data on change
-              picture.on('guillotinechange', function(ev, data, action) {
-                  data.scale = parseFloat(data.scale.toFixed(4));
-                  $('#image_scale').val(JSON.stringify(data));
-                  for(var k in data) { $('#'+k).html(data[k]); }
+                  // Update data on change
+                  picture.on('guillotinechange', function(ev, data, action) {
+                      data.scale = parseFloat(data.scale.toFixed(4));
+                      $('#image_scale').val(JSON.stringify(data));
+                      for(var k in data) { $('#'+k).html(data[k]); }
+                  });
               });
-          });
+
+
+              $('#image-preview').show();
+          };
+
+
 
           // Make sure the 'load' event is triggered at least once (for cached images)
           if (picture.prop('complete')) picture.trigger('load')
