@@ -1,4 +1,33 @@
 @extends('layouts.master')
+
+@section('jqueery')
+
+<script src="{{ URL::asset('js/jquery.js') }}"></script>
+	<script>
+	
+		$(document).ready(function(){
+		
+           
+//			$("#levell").show();
+			
+
+			$("#sport_id").change(function(){
+				$("#levell").show();
+                return false;
+	
+			});
+            
+            
+            
+            
+		});
+        
+        
+	
+	</script> 
+
+@endsection
+
 @section('content')
     <div class="container-fluid">
         @include('partials.error-messages.success')
@@ -20,12 +49,48 @@
             </div>
             {!! Form::close() !!}
         </div>
+        
 
         <div class="row">
             <div class="table-responsive .table-striped .table-hover col-md-12">
                 <p class="lead">
                     <a href="{{url('rosters/create')}}"><button class="btn btn-primary">Add Roster</button></a>
                 </p>
+                <br>
+                <div class="row">
+                    <div class="col-md-4">
+                        <form name="" id="sppt" method="post" action="{{ action('RostersController@yearRosters') }}">
+                            <select name="sport_id" id="sport_id" class="form-control" onchange="this.form.submit()">
+                                <option value="">Select Sport</option>
+                                @foreach($sporttt as $sport)
+                                    <option value="{{ $sport->id }}"> 
+                                        {{ $sport->name }}
+                                    </option>
+                                @endforeach
+                            </select>    
+                        </form>                            
+                    </div>
+                    <div class="col-md-4" id="levell" style="display:none;">
+                        <form method="post" action="{{ action('RostersController@yearRosters') }}">
+                            <select name="level_id" class="form-control" onchange="this.form.submit()">
+                                <option value="">Sport Level</option>
+                                @foreach($levels as $level)
+                                    @foreach($rosters as $rr)    
+                                        @if($level->id == $rr->level_id)  
+                                        <option value="{{ $level->id }}"> 
+                                            {{ $level->name }}
+                                        </option>
+                                        @endif  
+                                    @endforeach
+                                @endforeach
+                            </select>
+                          <!--  <input type="hidden" name="sid" value="{{ $rr->sport_id }}">  -->
+                        </form>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="{{ route('students.create') }}" class="btn btn-primary">Add Student</a>
+                    </div>
+                </div>    
                 <br>
                 <div class="panel panel-primary">
                     <div class="table-responsive">
@@ -104,5 +169,6 @@
     @include('partials.error-messages.footer-script')
     <script>
         $("#select_year_id").val(<?php echo $year?>);
+        
     </script>
 @endsection

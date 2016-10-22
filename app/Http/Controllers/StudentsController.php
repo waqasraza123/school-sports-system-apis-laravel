@@ -115,9 +115,16 @@ class StudentsController extends Controller
     {
         $school = School::where('id', $this->schoolId)->first();
         $tableName = strtolower(str_replace(' ', '_', $school->name)).'_custom_students';
-        $rosters = Roster::where('school_id', $this->schoolId)->lists('name', 'id');
+    //    $rosters = Roster::where('school_id', $this->schoolId)->lists('name', 'id');
         $school = School::select('name')->where('id', $this->schoolId)->first();
-
+        
+        $rosters = \DB::table('rosters')->where('school_id', $this->schoolId)->lists('name', 'id');
+        
+    //    dd($rosters);
+    
+    //    $sports = \DB::table('sports')->where('school_id', $this->schoolId)->lists('name', 'id');
+     //   $rosters = Roster::where('school_id', $this->schoolId)->where('sport_id', $sports)->get();
+        
         $customFields = "";
         if (Schema::hasTable($tableName)){
             $customFields = \DB::table($tableName)->groupBy('custom_label')->get();
@@ -125,7 +132,7 @@ class StudentsController extends Controller
 
         /*$columnNames = \DB::connection()->getSchemaBuilder()->getColumnListing("custom_students");*/
 
-        return View('students.create', compact('rosters', 'school', 'customFields', 'columnNames'));
+        return View('students.create', compact('rosters', 'school', 'customFields', 'columnNames', 'sports'));
     }
 
     /**
@@ -140,7 +147,7 @@ class StudentsController extends Controller
         $custom = false;
         if($request->input('custom-field-name')){
             $this->validate($request, [
-                'name' => 'required|max:255',
+                'title' => 'required|max:255',
                 'academic_year' => 'required',
                 //custom_students is table where to check for
                 // uniqueness and label is the column name where will be checked
@@ -150,8 +157,10 @@ class StudentsController extends Controller
         }
         else{
             $this->validate($request, [
-                'name' => 'required|max:255',
+                'title' => 'required|max:255',
                 'academic_year' => 'required',
+                'position' => 'required|min:2|max:255',
+                //   'students_id' => 'required',
                 'photo'
             ]);
         }
@@ -201,7 +210,7 @@ class StudentsController extends Controller
         }
 
         $student = Student::create([
-            'name' => $request->input('name'),
+            'name' => $request->input('title'),
             'photo' => asset('uploads/students/'.$fileName),
             'pro_flag' => $request->input('pro_free') == 0 ? 0 : 1,
             'pro_cover_photo' => asset('uploads/students/'.$pro_cover_photo),
@@ -213,8 +222,34 @@ class StudentsController extends Controller
             'number' => $request->input('number'),
             'pro_free' => $request->input('pro_free'),
             'position' => $request->input('position'),
+            'jersy' => $request->input('jersy'),
             'school_id' => $this->schoolId
         ]);
+        
+        
+        $stuId = $student->id;
+    //    $stuJ = $student->jersy;
+    //    $stuP = $student->position;
+        
+        
+        $position = $_POST['position'];
+        $students = array($stuId);
+        $rosterId = $_POST['roster'];
+        $jersy = $_POST['jersy'];
+
+       // dd($students);
+        
+        $roster = Roster::find($rosterId);
+        $pivotData = array_fill(0, count($students), ['position' => $position, 'jersy' => $jersy, 'photo' => asset('uploads/students/'.$fileName)]);
+        $syncData  = array_combine($students, $pivotData);
+    
+        $roster->students()->sync($syncData, false);
+
+        $response = array(
+            'status' => 'success',
+            'msg' => 'Student Added successfully',
+        );
+
 
         //custom fields
         $school = School::where('id', '=', $this->schoolId)->first();
@@ -299,13 +334,7 @@ class StudentsController extends Controller
 
         return view('rosters.show', compact('sports', 'levels', 'years', 'positions','weight_options', 'levelcreate', 'id_sport', 'sortby', 'order'))->withRosters($rosters)->with('type', $type);
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function edit($id)
     {
 

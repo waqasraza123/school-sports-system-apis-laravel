@@ -5,6 +5,7 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta content="" name="description">
     <meta content="" name="author">
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>Repit Sports-CMS</title><!-- Bootstrap Core CSS -->
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">

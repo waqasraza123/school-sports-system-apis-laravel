@@ -72,6 +72,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('students/filter', 'StudentsController@filterStudents');
     Route::resource('students', 'StudentsController');
+    
 
     Route::resource('sponsors', 'SponsorsController');
 
@@ -81,7 +82,10 @@ Route::group(['middleware' => ['auth']], function () {
 });
 
     //testing purposes
-
+    
+    Route::get('rosterajax', 'Ajax@index');
+    Route::post('ajaxsave', 'Ajax@save');
+     Route::get('ajaxshow', 'Ajax@show');
 
 /**
  * Authentication routes for the applications

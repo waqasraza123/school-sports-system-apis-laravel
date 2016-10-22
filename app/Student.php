@@ -7,8 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Student extends Model
 {
     protected $fillable = ['name', 'photo', 'position', 'pro_flag', 'number', 'pro_cover_photo',
-    'pro_head_photo', 'height_feet', 'height_inches', 'weight', 'school_id', 'academic_year','created_at'
-    ,'updated_at'];
+    'pro_head_photo', 'height_feet', 'height_inches', 'weight', 'school_id', 'academic_year', 'pro_fee', 'jersy',  'created_at', 'updated_at'];
     protected $hidden = ['pivot'];
 
     /**
