@@ -15,7 +15,7 @@ class CreateTempRosterTable extends Migration
         Schema::create('temp_roster', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('roster_id')->nullable()->unsigned();
-            $table->foreign('roster_id')->references('id')->on('rosters');
+          /**    $table->foreign('roster_id')->references('id')->on('rosters');  UNNEEDED    */
             $table->timestamps();
         });
     }
