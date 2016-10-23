@@ -129,24 +129,22 @@ class StudentsController extends Controller
 
     public function storeRosterStudents($position, $jersey, $ros_photo, $_roster_id, $ros_level, $student_id){
 
-        for($i = 0; $i < count($jersey); $i++){
+        /*dd($position, $jersey, $ros_level, $ros_photo, $_roster_id)*/;
+        $student = Student::find($student_id);
+        $data = array();
+        $syncData = array();
+        for($i = 0; $i < count($_roster_id); $i++){
             if(isset($_roster_id[$i]) && isset($position[$i]) && isset($jersey[$i]) && isset($ros_level[$i])){
-                $roster = Roster::find($_roster_id[$i]);
-                $roster->students()->attach($student_id, [
+
+                $syncData[$_roster_id[$i]] = [
                     'position' => $position[$i],
-                    'photo' => $ros_photo[$i],
+                    'photo' => isset($ros_photo[$i]) == true ? isset($ros_photo[$i]) : '',
                     'jersy' => $jersey[$i],
                     'level_id' => $ros_level[$i]
-                ]);
+                ];
             }
-            else{dd("no");}
         }
-
-
-        /*$pivotData = array_fill(0, count($students), ['position' => $position]);
-        $syncData  = array_combine($students, $pivotData);
-
-        $roster->students()->sync($syncData);*/
+        $student->rosters()->sync($syncData);
 
         $response = array(
             'status' => 'success',
@@ -329,9 +327,9 @@ class StudentsController extends Controller
         return view('rosters.show', compact('sports', 'levels', 'years', 'positions','weight_options', 'levelcreate', 'id_sport', 'sortby', 'order'))->withRosters($rosters)->with('type', $type);
     }
     
-    public function edit($id)
+    public function edit($studentId)
     {
-
+        $id = $studentId;
         $school = School::where('id', $this->schoolId)->first();
         $tableName = strtolower(str_replace(' ', '_', $school->name)).'_custom_students';
         $school = School::select('name')->where('id', $this->schoolId)->first();
@@ -345,7 +343,7 @@ class StudentsController extends Controller
         $student = Student::find($id);
         $rosters = Roster::lists('name', 'id');
 
-        return view('students.update', compact('student', 'rosters', 'school', 'customFields', 'columnNames'));
+        return view('students.update', compact('student', 'rosters', 'school', 'customFields'));
     }
 
     /**
@@ -475,6 +473,10 @@ class StudentsController extends Controller
             }
         }
 
+        //add pivot table data
+        //sync rosters_students
+        $this->storeRosterStudents($request->input('position'), $request->input('jersey'), $request->input('ros_photo'),
+            $request->input('_roster_id'), $request->input('ros_level'), $id);
         return redirect('/students')->with('success', 'Student Updated Successfully');
     }
 

@@ -61,5 +61,12 @@ $('document').ready(function () {
                 console.log(error);
             }
         })
+    })//add roster ends here
+
+    //delete the roster
+    var deleteRoster = $(".delete_student_roster");
+    deleteRoster.on('click', deleteRoster, function () {
+        var idToDelete = $(this).attr('id');
+        $("#"+idToDelete).remove();
     })
 })

@@ -10,12 +10,15 @@ class Student extends Model
     'pro_head_photo', 'height_feet', 'height_inches', 'weight', 'school_id', 'academic_year', 'pro_fee', 'jersy',  'created_at', 'updated_at'];
     protected $hidden = ['pivot'];
 
+
     /**
      * a student can belong to many rosters
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function rosters(){
-        return $this->belongsToMany('App\Roster', 'rosters_students')->withTimestamps();
+        return $this->belongsToMany('App\Roster', 'rosters_students', 'student_id', 'roster_id')
+            ->withPivot('position', 'photo', 'jersy', 'level_id')
+            ->withTimestamps();
     }
 
     public function years(){
