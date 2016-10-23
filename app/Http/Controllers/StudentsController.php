@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\Year;
 use App\School;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
@@ -115,24 +116,45 @@ class StudentsController extends Controller
     {
         $school = School::where('id', $this->schoolId)->first();
         $tableName = strtolower(str_replace(' ', '_', $school->name)).'_custom_students';
-    //    $rosters = Roster::where('school_id', $this->schoolId)->lists('name', 'id');
+        $rosters = Roster::where('school_id', $this->schoolId)->groupBy('name')->lists('name', 'id');
         $school = School::select('name')->where('id', $this->schoolId)->first();
-        
-        $rosters = \DB::table('rosters')->where('school_id', $this->schoolId)->lists('name', 'id');
-        
-    //    dd($rosters);
-    
-    //    $sports = \DB::table('sports')->where('school_id', $this->schoolId)->lists('name', 'id');
-     //   $rosters = Roster::where('school_id', $this->schoolId)->where('sport_id', $sports)->get();
         
         $customFields = "";
         if (Schema::hasTable($tableName)){
             $customFields = \DB::table($tableName)->groupBy('custom_label')->get();
         }
 
-        /*$columnNames = \DB::connection()->getSchemaBuilder()->getColumnListing("custom_students");*/
-
         return View('students.create', compact('rosters', 'school', 'customFields', 'columnNames', 'sports'));
+    }
+
+    public function storeRosterStudents($position, $jersey, $ros_photo, $_roster_id, $ros_level, $student_id){
+
+        for($i = 0; $i < count($jersey); $i++){
+            if(isset($_roster_id[$i]) && isset($position[$i]) && isset($jersey[$i]) && isset($ros_level[$i])){
+                $roster = Roster::find($_roster_id[$i]);
+                $roster->students()->attach($student_id, [
+                    'position' => $position[$i],
+                    'photo' => $ros_photo[$i],
+                    'jersy' => $jersey[$i],
+                    'level_id' => $ros_level[$i]
+                ]);
+            }
+            else{dd("no");}
+        }
+
+
+        /*$pivotData = array_fill(0, count($students), ['position' => $position]);
+        $syncData  = array_combine($students, $pivotData);
+
+        $roster->students()->sync($syncData);*/
+
+        $response = array(
+            'status' => 'success',
+            'msg' => 'Student Added successfully',
+        );
+
+        return Response::json($response);
+
     }
 
     /**
@@ -147,7 +169,6 @@ class StudentsController extends Controller
         $custom = false;
         if($request->input('custom-field-name')){
             $this->validate($request, [
-                'title' => 'required|max:255',
                 'academic_year' => 'required',
                 //custom_students is table where to check for
                 // uniqueness and label is the column name where will be checked
@@ -157,11 +178,7 @@ class StudentsController extends Controller
         }
         else{
             $this->validate($request, [
-                'title' => 'required|max:255',
                 'academic_year' => 'required',
-                'position' => 'required|min:2|max:255',
-                //   'students_id' => 'required',
-                'photo'
             ]);
         }
 
@@ -187,13 +204,6 @@ class StudentsController extends Controller
                 Input::file('photo')->move($destinationPath, $fileName);
             }
 
-            /*if(Input::file('pro_flag') != null){
-                $destinationPath = 'uploads/students'; // upload path
-                $extension = Input::file('pro_flag')->getClientOriginalExtension();
-                $pro_flag = rand(1111, 9999) . '.' . $extension;
-                Input::file('pro_flag')->move($destinationPath, $pro_flag);
-            }*/
-
             if(Input::file('pro_cover_photo') != null){
                 $destinationPath = 'uploads/students'; // upload path
                 $extension = Input::file('pro_cover_photo')->getClientOriginalExtension();
@@ -210,7 +220,7 @@ class StudentsController extends Controller
         }
 
         $student = Student::create([
-            'name' => $request->input('title'),
+            'name' => $request->input('name'),
             'photo' => asset('uploads/students/'.$fileName),
             'pro_flag' => $request->input('pro_free') == 0 ? 0 : 1,
             'pro_cover_photo' => asset('uploads/students/'.$pro_cover_photo),
@@ -221,29 +231,8 @@ class StudentsController extends Controller
             'weight' => $request->input('weight'),
             'number' => $request->input('number'),
             'pro_free' => $request->input('pro_free'),
-            'position' => $request->input('position'),
-            'jersy' => $request->input('jersy'),
             'school_id' => $this->schoolId
         ]);
-        
-        
-        $stuId = $student->id;
-    //    $stuJ = $student->jersy;
-    //    $stuP = $student->position;
-        
-        
-        $position = $_POST['position'];
-        $students = array($stuId);
-        $rosterId = $_POST['roster'];
-        $jersy = $_POST['jersy'];
-
-       // dd($students);
-        
-        $roster = Roster::find($rosterId);
-        $pivotData = array_fill(0, count($students), ['position' => $position, 'jersy' => $jersy, 'photo' => asset('uploads/students/'.$fileName)]);
-        $syncData  = array_combine($students, $pivotData);
-    
-        $roster->students()->sync($syncData, false);
 
         $response = array(
             'status' => 'success',
@@ -308,6 +297,11 @@ class StudentsController extends Controller
                 }
             }
         }
+
+        //add pivot table data
+        //sync rosters_students
+        $this->storeRosterStudents($request->input('position'), $request->input('jersey'), $request->input('ros_photo'),
+            $request->input('_roster_id'), $request->input('ros_level'), $student->id);
 
         return redirect('/students')->with('success', 'Student Created Successfully');
     }
@@ -436,7 +430,6 @@ class StudentsController extends Controller
             'weight' => $request->input('weight'),
             'number' => $request->input('number'),
             'pro_free' => $request->input('pro_free'),
-            'position' => $request->input('position'),
             'school_id' => $this->schoolId
         ]);
 

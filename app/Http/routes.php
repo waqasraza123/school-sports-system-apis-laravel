@@ -9,10 +9,12 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('settings', ['as' => 'settings', 'uses' => 'PagesController@settings']);
     Route::post('settings', ['as' => 'settings', 'uses' => 'PagesController@updateSettings']);
+
     Route::post('rosters/{rosterId}/students/{studentId}/update', ['as' => 'rosters.students.update', 'uses' => 'RostersController@updatePosition']);
     Route::post('rosters/year', ['as' => 'year-rosters', 'uses' => 'RostersController@yearRosters']);
     Route::get('rosters/{id}/students', ['as' => 'roster-students', 'uses' => 'RostersController@showAddStudentsForm']);
     Route::post('rosters/students/add', ['as' => 'roster-students-post', 'uses' => 'RostersController@storeRosterStudents']);
+    Route::post('/rosters/load-levels', ['as' => 'load-levels', 'uses' => 'RostersController@loadLevels']);
     Route::resource('rosters', 'RostersController');
 
     Route::delete('rosters/{rosterId}/student/{studentId}/delete',
@@ -80,12 +82,6 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::resource('ads', 'AdsController');
 });
-
-    //testing purposes
-    
-    Route::get('rosterajax', 'Ajax@index');
-    Route::post('ajaxsave', 'Ajax@save');
-     Route::get('ajaxshow', 'Ajax@show');
 
 /**
  * Authentication routes for the applications

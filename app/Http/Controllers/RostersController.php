@@ -315,6 +315,19 @@ class RostersController extends Controller
         return $positions;
     }
 
+    public function loadLevels(Request $request){
+        $rosterId = $request->input('id');
+        $rosterName = $request->input('name');
+
+        //since now we have roster id, get the
+        //roster name from db based on the id
+        //then fetch the levels of that roster
+        $rosterLevelsIds = Roster::select('level_id')->where('name', $rosterName)->where('school_id', $this->schoolId)->get();
+        $levels = LevelSport::whereIn('id', $rosterLevelsIds)->where('school_id', $this->schoolId)->get();
+
+        return response()->json($levels);
+    }
+
     public function showAddStudentsForm($rosterId){
         $roster = Roster::find($rosterId);
         $students = Student::where('school_id', $this->schoolId)->lists('name', 'id');

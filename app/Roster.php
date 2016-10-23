@@ -66,7 +66,7 @@ class Roster extends Model
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function students(){
-        return $this->belongsToMany('App\Student', 'rosters_students')->withPivot('position');
+        return $this->belongsToMany('App\Student', 'rosters_students')->withTimestamps();
     }
 
 

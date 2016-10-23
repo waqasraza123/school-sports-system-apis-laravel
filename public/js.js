@@ -42,7 +42,7 @@ $(document).ready(function() {
             '<div class="col-md-1"><button data-id-remove="'+localCount+'" type="button" class="btn btn-sm remove-btn">-</button></div>'+
             '</div>'+
             '</div>'+
-            '</div>' +
+            '</div>'+
             '</div>'
         ).show('slow');
     }));
