@@ -80,17 +80,13 @@
                                         <td>{{ $r->name }}</td>
                                         <td>{{ $stu->academic_year }}</td>
                                         <td>
-                                            {{ Html::linkRoute('rosters.edit', 'Edit', array($stu->id), ['class' => 'btn btn-success btn-sm']) }}
+                                            <a href="{{url('students/'. $stu->id. '/edit')}}" class="btn btn-primary btn-sm">Edit</a>
                                         </td>
                                         <td>
                                             {{ Html::linkRoute('rosters.edit', 'Quick Edit', array($stu->id), ['class' => 'btn btn-warning btn-sm']) }}
                                         </td>
                                         <td>
-                                            <form method="POST" action="rosters/{{ $stu->id }}">
-                                                <input type="hidden" name="_method" value="DELETE">
-                                                <input type="submit" class="btn btn-danger btn-sm" name="submit" value="Delete">
-                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                            </form>
+                                            {!! Form::open([    'method' => 'DELETE','url' => ['/students', $stu->id]]) !!}{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}{!! Form::close() !!}
                                         </td>
                                     </tr>
                                 @endforeach
