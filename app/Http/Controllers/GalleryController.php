@@ -57,10 +57,10 @@ class GalleryController extends Controller
         //save image in public/uploads/gallery
         $file->move('uploads/gallery', $name);
             //create thumbnail of the image in publi/uploads/gallery/tmb
-            Image::make('uploads/gallery/'.$name)->fit(200)->save('uploads/gallery/tmb/'.$name);
+            Image::make('uploads/gallery/'.$name)->fit(200)->save('uploads/gallery/tmb/thumb'.$name);
             //save image name to db
             Photo::create([
-                'thumb' => asset('uploads/gallery/tmb/'.$name),
+                'thumb' => asset('uploads/gallery/tmb/thumb'.$name),
                 'large' => asset('uploads/gallery/'.$name),
                 'album_id' => $id
             ]);
