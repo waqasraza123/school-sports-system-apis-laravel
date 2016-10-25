@@ -6,7 +6,7 @@
         @include('partials.error-messages.success')
         @include('partials.error-messages.error')
 
-        {!! Form::open(['url' => 'students/', 'files' =>true, 'id' => '']) !!}
+        {!! Form::open(['url' => 'students/', 'files' =>true]) !!}
 
         <div class="row">
             <div class="col-md-6">
@@ -75,8 +75,6 @@
             {{--will append the data on button click--}}
         </div>
 
-    </div>{{--container fluid closed--}}
-    <div class="container-fluid">
         @if($customFields)
             @foreach($customFields as $customField)
 

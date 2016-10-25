@@ -1,5 +1,5 @@
 <?php
-
+use Illuminate\Http\Request;
 Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/home', [
@@ -99,8 +99,8 @@ Route::controllers([
  */
 Route::get('/', 'APIController@handle');
 
-Route::get('test', function(){
-    return App\Student::find(37)->rosters()->get();
+Route::post('test', function(Request $request){
+    return $request->all();
     /*return App\Roster::find(13)->students()->get();*/
 });
 
