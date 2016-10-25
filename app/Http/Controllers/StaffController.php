@@ -9,15 +9,18 @@ use App\Roster;
 use App\RosterStaff;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 use Intervention\Image\Facades\Image;
+use Illuminate\Contracts\Filesystem\Cloud;
 
 class StaffController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -79,22 +82,22 @@ class StaffController extends Controller
 
         $fileName = "";
         if(Input::file('photo') != null){
-            $destinationPath = 'uploads/staff'; // upload path
+            $destinationPath = 'https://s3-' . env('S3_REGION','') . ".amazonaws.com/" . env('S3_BUCKET','') . "/". "uploads/staff"; // upload path
             $extension = Input::file('photo')->getClientOriginalExtension();
             $fileName = rand(1111, 9999) . '.' . $extension;
-            Input::file('photo')->move($destinationPath, $fileName);
+//            Input::file('photo')->move($destinationPath, $fileName);
 
-            $img = Image::make($destinationPath."/".$fileName);
+            $img = Image::make(Input::file('photo'));
             $img->widen((int) ($img->width() * $json['scale']));
             $img->crop((int)$json['w'], (int)$json['h'], (int)$json['x'], (int)$json['y']);
             $img->encode();
-            $img->save($destinationPath."/".$fileName);
+            //$img->save($destinationPath."/".$fileName);
 
 
-//            $img = Image::make($destinationPath."/".$fileName)->rotate((float)$json['angle']);
-//            $img->widen((int)($img->width()*$json['scale']));
-//            $img->crop((int)$json['w'], (int)$json['h'], (int)$json['x'], (int)$json['y']);
-//            $img->save($destinationPath."/".$fileName);
+            $filesystem = Storage::disk('s3');
+            $filesystem->put($destinationPath . $fileName, Input::file('photo'), 'public');
+            dd('yes');
+
         }
 
 
@@ -106,7 +109,7 @@ class StaffController extends Controller
             'title' => $request->input('title'),
             'website' => $request->input('website'),
             'school_id' => $schoolId,
-            'photo' => $fileName == ""? null : asset('/uploads/staff/'.$fileName),
+            'photo' => $fileName == ""? null : 'https://s3-' . env('S3_REGION','') . ".amazonaws.com/" . env('S3_BUCKET','') . "/" . $destinationPath . $fileName,
             'season_id' => $request->input('season_id')
         ]);
         if (true)
