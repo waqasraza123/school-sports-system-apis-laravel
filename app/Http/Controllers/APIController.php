@@ -662,7 +662,6 @@ class APIController extends Controller
             $roster = Roster::join('rosters_students', 'rosters_students.roster_id', '=', 'rosters.id')
                 ->join('students', 'students.id', '=', 'rosters_students.student_id')
                 ->select('students.id as student_id', 'students.name as student_name',
-                    'number as student_number', 'photo as student_photo',
                     'rosters_students.position as student_position',
                     DB::raw('CONCAT(students.height_feet, " ", students.height_inches) AS student_height'),
                     'students.weight as student_weight', 'students.academic_year as student_year',  'students.academic_year as pLevel',
@@ -707,7 +706,7 @@ class APIController extends Controller
         //both are required param
         if($schoolId && $studentId) {
             $student = Student::select('students.id', 'students.id as student_id', 'students.name as student_name',
-                'students.number as student_number', 'students.photo as student_photo',
+                'students.photo as student_photo',
                 DB::raw('CONCAT(students.height_feet, "\'", students.height_inches, "\"") AS student_height'),
                 'rosters_students.position as student_position', 'weight as student_weight', 'pro_flag',
                 'pro_cover_photo', 'pro_head_photo')
@@ -826,8 +825,6 @@ class APIController extends Controller
         if($student->first()){
             $arr['student_id'] = $student->first()->student_id;
             $arr['student_name'] = $student->first()->student_name;
-            $arr['student_photo'] = $student->first()->student_photo;
-            $arr['student_number'] = $student->first()->student_number;
             $arr['student_position'] = $student->first()->student_position;
             $arr['student_weight'] = $student->first()->student_weight;
             $arr['student_height'] = $student->first()->student_height;
