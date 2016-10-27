@@ -148,8 +148,7 @@
                                 <div class="col-md-8">
                                     <input name="ros_photo[]" type="file" class="form-control">
                                 </div>
-                            </div>{{--
-                            {!! Form::file('ros_photo', ['required' => 'true', 'class' => 'form-control']) !!}--}}
+                            </div>
                         </div>
                         <div class="col-md-1">
                             <button class="btn btn-small btn-danger delete_student_roster" id="{{$roster->pivot->student_id}}{{"_"}}{{$roster->pivot->roster_id}}{{"_"}}{{$roster->pivot->level_id}}">Delete</button>

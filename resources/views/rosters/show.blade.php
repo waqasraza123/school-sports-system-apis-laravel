@@ -60,10 +60,10 @@
                                     <tr>
                                         <td class="text-center">{{ $i++ }}</td>
                                         <td class="text-center">
-                                            @if($stu->photo == "")
+                                            @if($stu->pivot->photo == null )
                                                 <img src="{{ asset('uploads/' . 'def.png') }}" width="60" height="40">
                                             @else
-                                                <img src="{{$stu->photo}}" width="60" height="40">
+                                                <img src="{{$stu->pivot->photo}}" width="60" height="40">
                                             @endif
                                         </td>
                                         <td>{{ $stu->name }}</td>
