@@ -704,9 +704,9 @@ class APIController extends Controller
     public function getStudent($schoolId, $studentId, $sportId, $levelId, $seasonId, $schoolYear){
 
         //both are required param
+        $sports = array();
         if($schoolId && $studentId) {
             $student = Student::select('students.id', 'students.id as student_id', 'students.name as student_name',
-                'students.photo as student_photo',
                 DB::raw('CONCAT(students.height_feet, "\'", students.height_inches, "\"") AS student_height'),
                 'rosters_students.position as student_position', 'weight as student_weight', 'pro_flag',
                 'pro_cover_photo', 'pro_head_photo')
