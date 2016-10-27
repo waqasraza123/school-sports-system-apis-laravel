@@ -6,7 +6,8 @@
         @include('partials.error-messages.success')
         @include('partials.error-messages.error')
 
-        {!! Form::model($student, ['method' => 'put', 'url' => 'students/'.$student->id, 'files' =>true]) !!}
+        {!! Form::model($student, ['method' => 'put', 'url' => 'students/'.$student->id, 'files' =>true, 'enctype' =>
+        'multipart/form-data']) !!}
 
         <div class="row">
             <div class="col-md-6">
@@ -116,7 +117,7 @@
                 <div class="row">
                     <div class="col-md-3"><h4 style="text-align: center">Position</h4></div>
                     <div class="col-md-3"><h4 style="text-align: center">Level</h4></div>
-                    <div class="col-md-3"><h4 style="text-align: center">Jersey</h4></div>
+                    <div class="col-md-3"><h4 style="text-align: left">Jersey</h4></div>
                     <div class="col-md-3"><h4 style="text-align: left">Photo</h4></div>
                 </div>
                 @foreach($student->rosters as $roster)
@@ -129,13 +130,26 @@
                             <input name="ros_level[]" value="{{$roster->pivot->level_id}}" required
                                    class="form-control">
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <input name="jersey[]" value="{{$roster->pivot->jersy}}" required
                                    class="form-control">
                         </div>
-                        <div class="col-md-2">
-                            <input name="ros_photo[]" value="{{$roster->pivot->photo}}" required
-                                   class="form-control">
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    @if($roster->pivot->photo != null)
+                                        <img src="{{$roster->pivot->photo}}" width="50px"
+                                        height="40px">
+                                    @else
+                                        <img src="{{asset('uploads/def.png')}}" width="50px"
+                                             height="40px">
+                                    @endif
+                                </div>
+                                <div class="col-md-8">
+                                    <input name="ros_photo[]" type="file" class="form-control">
+                                </div>
+                            </div>{{--
+                            {!! Form::file('ros_photo', ['required' => 'true', 'class' => 'form-control']) !!}--}}
                         </div>
                         <div class="col-md-1">
                             <button class="btn btn-small btn-danger delete_student_roster" id="{{$roster->pivot->student_id}}{{"_"}}{{$roster->pivot->roster_id}}{{"_"}}{{$roster->pivot->level_id}}">Delete</button>
