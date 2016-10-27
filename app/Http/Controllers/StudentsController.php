@@ -507,6 +507,7 @@ class StudentsController extends Controller
         $tableName = strtolower(str_replace(' ', '_', $school->name)).'_custom_students';
         DB::table($tableName)->where('student_id', $id)->delete();
 
+        $student->rosters()->detach();
         $student->delete();
 
         return redirect('/rosters')->with('success', 'Student deleted successfully');
