@@ -136,7 +136,7 @@ class GamesController extends Controller
                 'result' =>  $result,
                 'game_time' => $file['game_time']));
 
-            Year::where('year_id', $id)->where('year_type', 'App\Game')->update([
+            Year::where('year_id', $id)->where('year_type', 'App\Games')->update([
                 'year' => $request->input('year_id'),
                 'year_id' => $id,
                 'year_type' => 'App\Games'
@@ -156,7 +156,7 @@ class GamesController extends Controller
                 'result' => $result,
                 'game_time' => $file['game_time']));
 
-            Year::where('year_id', $id)->where('year_type', 'App\Game')->update([
+            Year::where('year_id', $id)->where('year_type', 'App\Games')->update([
                 'year' => $request->input('year_id'),
                 'year_id' => $id,
                 'year_type' => 'App\Games'
