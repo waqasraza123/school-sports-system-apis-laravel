@@ -25,14 +25,25 @@ $('document').ready(function () {
                     '</div>'+
                     '</div>'+
                     '</div>'+
-                    '<div class="col-md-3">'+
-                    '<div class="row">'+
-                    '<div class="col-md-12">'+
-                    "<label for='jersey' class = 'control-label'>Jersey</label>"+
-                    "<input type='text' name='jersey[]' class = 'form-control' required>"+
+
+                    '<div class="col-md-1">'+
+                        '<div class="row">'+
+                            '<div class="col-md-12">'+
+                                "<label for='jersey' class = 'control-label'>Jersey</label>"+
+                                "<input type='number' name='jersey[]' class = 'form-control' required>"+
+                            '</div>'+
+                        '</div>'+
                     '</div>'+
+
+                    '<div class="col-md-2">'+
+                        '<div class="row">'+
+                            '<div class="col-md-12">'+
+                                "<label for='number' class = 'control-label'>Number</label>"+
+                                "<input type='number' name='number[]' class = 'form-control' required>"+
+                            '</div>'+
+                        '</div>'+
                     '</div>'+
-                    '</div>'+
+
                     '<div class="col-md-3">'+
                     '<div class="row">'+
                     '<div class="col-md-12">'+

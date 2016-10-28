@@ -116,8 +116,9 @@
             <div id="show_rosters">
                 <div class="row">
                     <div class="col-md-3"><h4 style="text-align: center">Position</h4></div>
-                    <div class="col-md-3"><h4 style="text-align: center">Level</h4></div>
-                    <div class="col-md-3"><h4 style="text-align: left">Jersey</h4></div>
+                    <div class="col-md-2"><h4 style="text-align: center">Level</h4></div>
+                    <div class="col-md-1"><h4 style="text-align: left">Jersey</h4></div>
+                    <div class="col-md-2"><h4 style="text-align: left">Number</h4></div>
                     <div class="col-md-3"><h4 style="text-align: left">Photo</h4></div>
                 </div>
                 @foreach($student->rosters as $roster)
@@ -126,13 +127,17 @@
                             <input name="position[]" value="{{$roster->pivot->position}}" required
                                    class="form-control">
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <input name="ros_level[]" value="{{$roster->pivot->level_id}}" required
                                    class="form-control">
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-1">
                             <input name="jersey[]" value="{{$roster->pivot->jersy}}" required
-                                   class="form-control">
+                                   class="form-control" type="number">
+                        </div>
+                        <div class="col-md-2">
+                            <input name="number[]" value="{{$roster->pivot->number}}" required
+                                   class="form-control" type="number">
                         </div>
                         <div class="col-md-3">
                             <div class="row">

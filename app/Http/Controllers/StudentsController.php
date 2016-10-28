@@ -127,12 +127,12 @@ class StudentsController extends Controller
         return View('students.create', compact('rosters', 'school', 'customFields', 'columnNames', 'sports'));
     }
 
-    public function storeRosterStudents($position, $jersey, $ros_photo, $_roster_id, $ros_level, $student_id){
+    public function storeRosterStudents($position, $jersey, $ros_photo, $_roster_id, $ros_level, $student_id, $number){
 
         $student = Student::find($student_id);
         $syncData = array();
         for($i = 0; $i < count($_roster_id); $i++){
-            if(isset($_roster_id[$i]) && isset($position[$i]) && isset($jersey[$i]) && isset($ros_level[$i])){
+            if(isset($_roster_id[$i]) && isset($position[$i]) && isset($jersey[$i]) && isset($ros_level[$i]) && isset($number[$i])){
                 if(($ros_photo[$i]) != null){
                     //store the image
                     $destinationPath = 'uploads/students'; // upload path
@@ -145,7 +145,8 @@ class StudentsController extends Controller
                         'position' => $position[$i],
                         'photo' => ($ros_photo[$i]) != null ? asset('uploads/students/'.$fileName ) : null,
                         'jersy' => $jersey[$i],
-                        'level_id' => $ros_level[$i]
+                        'level_id' => $ros_level[$i],
+                        'number' => $number[$i],
                     ];
                 }
                 else{
@@ -154,7 +155,8 @@ class StudentsController extends Controller
                             'position' => $position[$i],
                             'jersy' => $jersey[$i],
                             'photo' => $student->rosters()->find($_roster_id[$i])->pivot->photo,
-                            'level_id' => $ros_level[$i]
+                            'level_id' => $ros_level[$i],
+                            'number' => $number[$i],
                         ];
                     }
                 }
@@ -315,7 +317,7 @@ class StudentsController extends Controller
         //add pivot table data
         //sync rosters_students
         $this->storeRosterStudents($request->input('position'), $request->input('jersey'), Input::file('ros_photo'),
-            $request->input('_roster_id'), $request->input('ros_level'), $student->id);
+            $request->input('_roster_id'), $request->input('ros_level'), $student->id, $request->input('number'));
 
         return redirect('/rosters')->with('success', 'Student Created Successfully');
     }
@@ -490,7 +492,7 @@ class StudentsController extends Controller
         //add pivot table data
         //sync rosters_students
         $this->storeRosterStudents($request->input('position'), $request->input('jersey'), Input::file('ros_photo'),
-            $request->input('_roster_id'), $request->input('ros_level'), $id);
+            $request->input('_roster_id'), $request->input('ros_level'), $id, $request->input('number'));
         return redirect('/rosters')->with('success', 'Student Updated Successfully');
     }
 
