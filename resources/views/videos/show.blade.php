@@ -19,7 +19,7 @@
                     {!! Form::text('url', null, ['class' => 'fn form-control', 'required' => 'true']) !!}
                 </div>
                 <button type="button" class="btn btn-warning" id="addInput">Add new field</button>
-
+                            <td><button  data-toggle="modal" class="edit_video btn btn-info" data-target="#videoModaladd" align="right" >edit</button></td>
                 <button type="submit" class="btn btn-info" id="submitbtn" style="margin-left: 75%; margin-top: 5px;">Add video url</button>
                 {!! Form::close() !!}
             </div>
@@ -55,6 +55,7 @@
         </div>
     </div>
 @stop
+@include('videos.modal.video_formadd')
 @include('videos.modal.video_form')
 @section('footer')
     @include('partials.error-messages.footer-script')

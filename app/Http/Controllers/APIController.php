@@ -662,7 +662,7 @@ class APIController extends Controller
             $roster = Roster::join('rosters_students', 'rosters_students.roster_id', '=', 'rosters.id')
                 ->join('students', 'students.id', '=', 'rosters_students.student_id')
                 ->select('students.id as student_id', 'students.name as student_name',
-                    'rosters_students.position as student_position',
+                    'rosters_students.position as student_position', 'rosters_students.jersy as student_number', 'rosters_students.photo as student_photo',
                     DB::raw('CONCAT(students.height_feet, " ", students.height_inches) AS student_height'),
                     'students.weight as student_weight', 'students.academic_year as student_year',  'students.academic_year as pLevel',
                     'rosters.id as roster_id')

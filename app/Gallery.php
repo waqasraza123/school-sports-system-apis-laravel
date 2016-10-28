@@ -23,5 +23,9 @@ class Gallery extends Model
     {
         return $this->belongsTo('App\Album');
     }
+    public function games()
+    {
+        return $this->belongsToMany('App\Games');
+    }
 
 }

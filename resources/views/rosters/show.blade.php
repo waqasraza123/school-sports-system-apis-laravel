@@ -60,10 +60,10 @@
                                     <tr>
                                         <td class="text-center">{{ $i++ }}</td>
                                         <td class="text-center">
-                                            @if($stu->pivot->photo == null )
+                                            @if($stu->photo == "")
                                                 <img src="{{ asset('uploads/' . 'def.png') }}" width="60" height="40">
                                             @else
-                                                <img src="{{$stu->pivot->photo}}" width="60" height="40">
+                                                <img src="{{$stu->photo}}" width="60" height="40">
                                             @endif
                                         </td>
                                         <td>{{ $stu->name }}</td>
@@ -80,13 +80,17 @@
                                         <td>{{ $r->name }}</td>
                                         <td>{{ $stu->academic_year }}</td>
                                         <td>
-                                            <a href="{{url('students/'. $stu->id. '/edit')}}" class="btn btn-primary btn-sm">Edit</a>
+                                            {{ Html::linkRoute('rosters.edit', 'Edit', array($stu->id), ['class' => 'btn btn-success btn-sm']) }}
                                         </td>
                                         <td>
                                             {{ Html::linkRoute('rosters.edit', 'Quick Edit', array($stu->id), ['class' => 'btn btn-warning btn-sm']) }}
                                         </td>
                                         <td>
-                                            {!! Form::open([    'method' => 'DELETE','url' => ['/students', $stu->id]]) !!}{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}{!! Form::close() !!}
+                                            <form method="POST" action="rosters/{{ $stu->id }}">
+                                                <input type="hidden" name="_method" value="DELETE">
+                                                <input type="submit" class="btn btn-danger btn-sm" name="submit" value="Delete">
+                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach

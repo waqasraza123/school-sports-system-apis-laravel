@@ -21,4 +21,8 @@ class Video extends Model
     {
         return $this->belongsToMany('App\Roster');
     }
+
+    public function games(){
+        return $this->belongsToMany('App\Game');
+    }
 }

@@ -1,5 +1,5 @@
 <?php
-use Illuminate\Http\Request;
+
 Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/home', [
@@ -51,11 +51,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('albums', 'AlbumController');
 
     Route::get('/videos', 'AlbumController@videosShow');
-
+    Route::get('videos/add', 'AlbumController@videosAdd');
 //    Route::get('gallery', 'GalleryController@show');
     Route::get('gallery/{id}', 'GalleryController@show');
     Route::resource('gallery', 'GalleryController');
-    Route::post('videos/url-upload', ['as' => 'videos.url-upload', 'uses' => 'GalleryController@uploadUrl']);
+    Route::post('videos/url-upload', ['as' => 'videos.url-upload', 'uses' => 'GalleryController@storeVideo']);
     Route::post('videos/', 'GalleryController@videoTagsUpdate');
     Route::delete('videos/{id}/destroy', ['as' => 'videos.destroy', 'uses' => 'GalleryController@videoDelete']);
     Route::post('image/upload', 'GalleryController@uploadImage');
@@ -74,7 +74,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('students/filter', 'StudentsController@filterStudents');
     Route::resource('students', 'StudentsController');
-    
+
 
     Route::resource('sponsors', 'SponsorsController');
 
@@ -99,9 +99,7 @@ Route::controllers([
  */
 Route::get('/', 'APIController@handle');
 
-Route::post('test', function(Request $request){
-    return $request->all();
+Route::get('test', function(){
+    return App\Student::find(37)->rosters()->get();
     /*return App\Roster::find(13)->students()->get();*/
 });
-
-

@@ -16,7 +16,7 @@ $('document').ready(function () {
 
             success: function (data) {
 
-                $('<div class="row" id="" style="margin-top: 20px">'+
+                $('<div class="row" id="show_rosters_field_row" style="margin-top: 20px">'+
                     '<div class="col-md-3">'+
                     '<div class="row">'+
                     '<div class="col-md-12">'+
