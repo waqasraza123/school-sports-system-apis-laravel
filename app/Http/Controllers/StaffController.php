@@ -316,6 +316,11 @@ if (isset($file['roster_id']))
     public function destroy($id)
     {
         $staff = Staff::find($id);
+$filesystem = Storage::disk('s3');
+$imagePath = explode(".amazonaws.com/" . env('S3_BUCKET',''),$staff->photo);
+$filesystem->delete(end($imagePath));
+
+
         $staff->delete();
 
         return redirect('/staff')->with('success', 'Staff deleted successfully');
