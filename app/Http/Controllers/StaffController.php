@@ -2,22 +2,70 @@
 
 namespace App\Http\Controllers;
 
+use App\School;
 use App\Season;
 use App\Staff;
+use App\User;
 use App\Year;
 use App\Roster;
 use App\RosterStaff;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 use Intervention\Image\Facades\Image;
+use Illuminate\Contracts\Filesystem\Cloud as FileSystems;
+use League\Flysystem\File;
 
 class StaffController extends Controller
 {
+
+    protected $filesystem;
+    protected $basePath;
+/**
+    public function __construct($basePath = "/", FileSystems $filesystem)
+    {
+
+        if(Schema::hasTable('schools')){
+            $school = School::firstOrCreate([
+                'school_email' => 'admin@gmail.com',
+                'name' => 'Admin',
+                'school_logo' => 'https://lh3.googleusercontent.com/YGqr3CRLm45jMF8eM8eQxc1VSERDTyzkv1CIng0qjcenJZxqV5DBgH5xlRTawnqNPcOp=w300'
+
+            ]);
+
+            $user = User::firstOrCreate([
+                'name' => 'Admin',
+                'email' => 'admin@gmail.com',
+                'school_id' => $school->id
+            ]);
+
+            $user->password = bcrypt('admin');
+            $user->save();
+
+            $seasons = Season::where('name', 'Fall')->first();
+            $now = Carbon::now('utc')->toDateTimeString();
+            if(!($seasons)){
+                Season::insert([
+                    ['name' => 'Fall', 'created_at' => $now, 'updated_at' => $now],
+                    ['name' => 'Spring', 'created_at' => $now, 'updated_at' => $now],
+                    ['name' => 'Winter', 'created_at' => $now, 'updated_at' => $now],
+                ]);
+            }
+        }
+
+        $this->basePath = $basePath;
+        $this->filesystem = $filesystem;
+    }
+*/
+
     /**
      * Display a listing of the resource.
      *
@@ -79,22 +127,22 @@ class StaffController extends Controller
 
         $fileName = "";
         if(Input::file('photo') != null){
-            $destinationPath = 'uploads/staff'; // upload path
+
             $extension = Input::file('photo')->getClientOriginalExtension();
             $fileName = rand(1111, 9999) . '.' . $extension;
-            Input::file('photo')->move($destinationPath, $fileName);
 
-            $img = Image::make($destinationPath."/".$fileName);
+//            $destinationPath = 'https://s3-' . env('S3_REGION','') . ".amazonaws.com/" . env('S3_BUCKET','') . "/". "uploads/staff/"; // upload path
+            $destinationPath = "/uploads/staff/"; // upload path
+
+            $img = Image::make(Input::file('photo'));
             $img->widen((int) ($img->width() * $json['scale']));
             $img->crop((int)$json['w'], (int)$json['h'], (int)$json['x'], (int)$json['y']);
             $img->encode();
-            $img->save($destinationPath."/".$fileName);
+
+            $filesystem = Storage::disk('s3');
+            $filesystem->put($destinationPath . $fileName, $img->__toString());
 
 
-//            $img = Image::make($destinationPath."/".$fileName)->rotate((float)$json['angle']);
-//            $img->widen((int)($img->width()*$json['scale']));
-//            $img->crop((int)$json['w'], (int)$json['h'], (int)$json['x'], (int)$json['y']);
-//            $img->save($destinationPath."/".$fileName);
         }
 
 
@@ -106,7 +154,7 @@ class StaffController extends Controller
             'title' => $request->input('title'),
             'website' => $request->input('website'),
             'school_id' => $schoolId,
-            'photo' => $fileName == ""? null : asset('/uploads/staff/'.$fileName),
+            'photo' => $fileName == ""? null : 'https://s3-' . env('S3_REGION','') . ".amazonaws.com/" . env('S3_BUCKET','') . $destinationPath . $fileName,
             'season_id' => $request->input('season_id')
         ]);
         if (true)

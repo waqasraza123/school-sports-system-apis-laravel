@@ -153,7 +153,8 @@
                   }
                   $('#imageerror').text('');
                   document.getElementById("sample_picture").src = e.target.result;
-              };
+             $('#image_scale').val(JSON.stringify(data));
+};
               reader.readAsDataURL(this.files[0]);
 
 
