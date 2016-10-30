@@ -2,22 +2,70 @@
 
 namespace App\Http\Controllers;
 
+use App\School;
 use App\Season;
 use App\Staff;
+use App\User;
 use App\Year;
 use App\Roster;
 use App\RosterStaff;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 use Intervention\Image\Facades\Image;
+use Illuminate\Contracts\Filesystem\Cloud as FileSystems;
+use League\Flysystem\File;
 
 class StaffController extends Controller
 {
+
+    protected $filesystem;
+    protected $basePath;
+    /**
+    public function __construct($basePath = "/", FileSystems $filesystem)
+    {
+
+    if(Schema::hasTable('schools')){
+    $school = School::firstOrCreate([
+    'school_email' => 'admin@gmail.com',
+    'name' => 'Admin',
+    'school_logo' => 'https://lh3.googleusercontent.com/YGqr3CRLm45jMF8eM8eQxc1VSERDTyzkv1CIng0qjcenJZxqV5DBgH5xlRTawnqNPcOp=w300'
+
+    ]);
+
+    $user = User::firstOrCreate([
+    'name' => 'Admin',
+    'email' => 'admin@gmail.com',
+    'school_id' => $school->id
+    ]);
+
+    $user->password = bcrypt('admin');
+    $user->save();
+
+    $seasons = Season::where('name', 'Fall')->first();
+    $now = Carbon::now('utc')->toDateTimeString();
+    if(!($seasons)){
+    Season::insert([
+    ['name' => 'Fall', 'created_at' => $now, 'updated_at' => $now],
+    ['name' => 'Spring', 'created_at' => $now, 'updated_at' => $now],
+    ['name' => 'Winter', 'created_at' => $now, 'updated_at' => $now],
+    ]);
+    }
+    }
+
+    $this->basePath = $basePath;
+    $this->filesystem = $filesystem;
+    }
+     */
+
     /**
      * Display a listing of the resource.
      *
@@ -79,22 +127,22 @@ class StaffController extends Controller
 
         $fileName = "";
         if(Input::file('photo') != null){
-            $destinationPath = 'uploads/staff'; // upload path
+
             $extension = Input::file('photo')->getClientOriginalExtension();
             $fileName = rand(1111, 9999) . '.' . $extension;
-            Input::file('photo')->move($destinationPath, $fileName);
 
-            $img = Image::make($destinationPath."/".$fileName);
+//            $destinationPath = 'https://s3-' . env('S3_REGION','') . ".amazonaws.com/" . env('S3_BUCKET','') . "/". "uploads/staff/"; // upload path
+            $destinationPath = "/uploads/staff/"; // upload path
+
+            $img = Image::make(Input::file('photo'));
             $img->widen((int) ($img->width() * $json['scale']));
             $img->crop((int)$json['w'], (int)$json['h'], (int)$json['x'], (int)$json['y']);
             $img->encode();
-            $img->save($destinationPath."/".$fileName);
+
+            $filesystem = Storage::disk('s3');
+            $filesystem->put($destinationPath . $fileName, $img->__toString());
 
 
-//            $img = Image::make($destinationPath."/".$fileName)->rotate((float)$json['angle']);
-//            $img->widen((int)($img->width()*$json['scale']));
-//            $img->crop((int)$json['w'], (int)$json['h'], (int)$json['x'], (int)$json['y']);
-//            $img->save($destinationPath."/".$fileName);
         }
 
 
@@ -106,7 +154,7 @@ class StaffController extends Controller
             'title' => $request->input('title'),
             'website' => $request->input('website'),
             'school_id' => $schoolId,
-            'photo' => $fileName == ""? null : asset('/uploads/staff/'.$fileName),
+            'photo' => $fileName == ""? null : 'https://s3-' . env('S3_REGION','') . ".amazonaws.com/" . env('S3_BUCKET','') . $destinationPath . $fileName,
             'season_id' => $request->input('season_id')
         ]);
         if (true)
@@ -145,11 +193,11 @@ class StaffController extends Controller
     {
         $staff = Staff::findOrFail($id);
         $seasons = Season::lists('name', 'id');
-            $rosters = Roster::lists('name', 'id');
-            $selected = RosterStaff::where('staff_id', '=', $id)->lists('roster_id');
-              $rostersTags = [];
-              foreach ($selected as $select) { $rostersTags[] = $select;
-               }
+        $rosters = Roster::lists('name', 'id');
+        $selected = RosterStaff::where('staff_id', '=', $id)->lists('roster_id');
+        $rostersTags = [];
+        foreach ($selected as $select) { $rostersTags[] = $select;
+        }
 
         return view('staff.update', compact('staff', 'seasons', 'rosters', 'selected', 'rostersTags' ));
     }
@@ -162,101 +210,101 @@ class StaffController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-  public function update(Request $request, $id)
-     {
+    public function update(Request $request, $id)
+    {
 
-         $file = Input::all();
-         $rules = array();
-         $schoolId = Auth::user()->school_id;
-         $validator = Validator::make(Input::all(), $rules);
-         if ($validator->fails()) {
-             //setting errors message
-             Session::flash('message', $validator->errors()->all());
+        $file = Input::all();
+        $rules = array();
+        $schoolId = Auth::user()->school_id;
+        $validator = Validator::make(Input::all(), $rules);
+        if ($validator->fails()) {
+            //setting errors message
+            Session::flash('message', $validator->errors()->all());
 
-             // send back to the page with the input data and errors
-             return Redirect::back()->withInput()->withErrors($validator);
-         }
-         else
-         {
-           if (Input::file('photo') != null) {
-    $destinationPath = 'uploads/staff'; // upload path
-    $extension = Input::file('photo')->getClientOriginalExtension(); // getting image extension
-    $fileName = rand(11111, 99999) . '.' . $extension; // renameing image
-    Input::file('photo')->move($destinationPath, $fileName); // uploading file to given path
-    //update
-           Staff::where('id', $id)->update(array('name' => $file['name'], 'email' => $file['email'],
-         'phone' => $file['phone'], 'description' => $file['description'], 'title' => $file['title'],
-       'description' => $file['description'], 'school_id' => $schoolId,              'photo' => asset('/uploads/staff/'.$fileName) ));
-  } else {
-    Staff::where('id', $id)->update(array('name' => $file['name'], 'email' => $file['email'],
-  'phone' => $file['phone'], 'description' => $file['description'], 'title' => $file['title'],
-'description' => $file['description'], 'school_id' => $schoolId,   ));
-}
-  $staff = Staff::where('id', '=', $id)->first();
+            // send back to the page with the input data and errors
+            return Redirect::back()->withInput()->withErrors($validator);
+        }
+        else
+        {
+            if (Input::file('photo') != null) {
+                $destinationPath = 'uploads/staff'; // upload path
+                $extension = Input::file('photo')->getClientOriginalExtension(); // getting image extension
+                $fileName = rand(11111, 99999) . '.' . $extension; // renameing image
+                Input::file('photo')->move($destinationPath, $fileName); // uploading file to given path
+                //update
+                Staff::where('id', $id)->update(array('name' => $file['name'], 'email' => $file['email'],
+                    'phone' => $file['phone'], 'description' => $file['description'], 'title' => $file['title'],
+                    'description' => $file['description'], 'school_id' => $schoolId,              'photo' => asset('/uploads/staff/'.$fileName) ));
+            } else {
+                Staff::where('id', $id)->update(array('name' => $file['name'], 'email' => $file['email'],
+                    'phone' => $file['phone'], 'description' => $file['description'], 'title' => $file['title'],
+                    'description' => $file['description'], 'school_id' => $schoolId,   ));
+            }
+            $staff = Staff::where('id', '=', $id)->first();
 
-if (isset($file['roster_id']))
-         {
-             $staff->rosters()->sync(array_values($file['roster_id']));
-         }
-         else
-         {
-             $staff->rosters()->sync([]);
-         }
+            if (isset($file['roster_id']))
+            {
+                $staff->rosters()->sync(array_values($file['roster_id']));
+            }
+            else
+            {
+                $staff->rosters()->sync([]);
+            }
 
-           Session::flash('success', 'Updated successfully');
-           return Redirect::back();
-
-
-         }
-       }
+            Session::flash('success', 'Updated successfully');
+            return Redirect::back();
 
 
+        }
+    }
 
-        /**
+
+
+    /**
 
     public function update(Request $request, $id)
     {$fileName == ""? $fileNameOld:
-        $schoolId = Auth::user()->school_id;
+    $schoolId = Auth::user()->school_id;
 
-        $this->validate($request, [
-            'name' => 'required',
-            'email' => 'required|email|unique:staff,email,'.$id,
-            'year' => 'required',
-            'phone' => 'required|max:15'
-        ]);
+    $this->validate($request, [
+    'name' => 'required',
+    'email' => 'required|email|unique:staff,email,'.$id,
+    'year' => 'required',
+    'phone' => 'required|max:15'
+    ]);
 
-        $fileName = "";
-        if(Input::file('photo') != null){
-            $destinationPath = 'uploads/staff'; // upload path
-            $extension = Input::file('photo')->getClientOriginalExtension();
-            $fileName = rand(1111, 9999) . '.' . $extension;
-            Input::file('photo')->move($destinationPath, $fileName);
-        }
+    $fileName = "";
+    if(Input::file('photo') != null){
+    $destinationPath = 'uploads/staff'; // upload path
+    $extension = Input::file('photo')->getClientOriginalExtension();
+    $fileName = rand(1111, 9999) . '.' . $extension;
+    Input::file('photo')->move($destinationPath, $fileName);
+    }
 
-        $image = Staff::find($id);
-        $fileNameOld= "";
-        if($image->photo){
-            $fileNameOld = $image->photo;
-        }
-        $staff = Staff::where('id', $id)->update([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'phone' => $request->input('phone'),
-            'description' => $request->input('description'),
-            'title' => $request->input('title'),
-            'website' => $request->input('website'),
-            'school_id' => $schoolId,
-            'photo' => $fileName == ""? $fileNameOld: asset('/uploads/staff/'.$fileName),
-            'season_id' => $request->input('season_id')
-        ]);
+    $image = Staff::find($id);
+    $fileNameOld= "";
+    if($image->photo){
+    $fileNameOld = $image->photo;
+    }
+    $staff = Staff::where('id', $id)->update([
+    'name' => $request->input('name'),
+    'email' => $request->input('email'),
+    'phone' => $request->input('phone'),
+    'description' => $request->input('description'),
+    'title' => $request->input('title'),
+    'website' => $request->input('website'),
+    'school_id' => $schoolId,
+    'photo' => $fileName == ""? $fileNameOld: asset('/uploads/staff/'.$fileName),
+    'season_id' => $request->input('season_id')
+    ]);
 
-        $year = Year::where('year_id', $id)->where('year_type', 'App\Staff')->update([
-            'year' => $request->input('year'),
-            'year_id' => $id,
-            'year_type' => 'App\Staff'
-        ]);
-        Session::flash('success', 'staff updated successfully');
-        return redirect('/staff');
+    $year = Year::where('year_id', $id)->where('year_type', 'App\Staff')->update([
+    'year' => $request->input('year'),
+    'year_id' => $id,
+    'year_type' => 'App\Staff'
+    ]);
+    Session::flash('success', 'staff updated successfully');
+    return redirect('/staff');
     }
 
 
@@ -268,6 +316,11 @@ if (isset($file['roster_id']))
     public function destroy($id)
     {
         $staff = Staff::find($id);
+        $filesystem = Storage::disk('s3');
+        $imagePath = explode(".amazonaws.com/" . env('S3_BUCKET',''),$staff->photo);
+        $filesystem->delete(end($imagePath));
+
+
         $staff->delete();
 
         return redirect('/staff')->with('success', 'Staff deleted successfully');
