@@ -160,7 +160,8 @@ class APIController extends Controller
             with([
                 'sport_list' => function($q){
                     $q->select('sports.name as sport_name', 'sports.id as sport_id', 'school_id', 'sport_icon.path')
-                      ->join('sport_icon', 'sports.icon_id', '=', 'sport_icon.id');
+                      ->join('sport_icon', 'sports.icon_id', '=', 'sport_icon.id')
+                        ->orderBy('sort_order','ASC');;
                 },
 
             ])->select('app_name', 'id as school_id', 'name as school_name', 'school_logo',
@@ -662,7 +663,7 @@ class APIController extends Controller
             $roster = Roster::join('rosters_students', 'rosters_students.roster_id', '=', 'rosters.id')
                 ->join('students', 'students.id', '=', 'rosters_students.student_id')
                 ->select('students.id as student_id', 'students.name as student_name',
-                    'rosters_students.position as student_position',
+                    'rosters_students.position as student_position', 'rosters_students.jersy as student_number', 'rosters_students.photo as student_photo',
                     DB::raw('CONCAT(students.height_feet, " ", students.height_inches) AS student_height'),
                     'students.weight as student_weight', 'students.academic_year as student_year',  'students.academic_year as pLevel',
                     'rosters.id as roster_id')
