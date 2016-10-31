@@ -477,7 +477,7 @@ class APIController extends Controller
     public function getSchedule($schoolId, $sportId, $levelId, $seasonId){
         $schedule = Games::select('games.id as game_id', 'rosters.sport_id', 'our_score as school_score', 'result as game_result',
                         'home_away as game_vs_at', 'opponents.name as opp_name', 'nick as opp_nick', 'opponents.photo as opp_logo',
-                        'opponents_score as opp_score', 'roster_id', 'game_date', 'game_time')
+                        'opponents_score as opp_score', 'roster_id', DB::raw('DATE_FORMAT(game_date,\'%b %d %Y\') as game_date'), 'game_time')
                         ->join('opponents', 'games.opponents_id', '=', 'opponents.id')
                         ->join('rosters', 'rosters.id', '=', 'games.roster_id')
                         ->where('games.school_id', $schoolId);
