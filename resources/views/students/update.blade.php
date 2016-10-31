@@ -177,7 +177,6 @@
 @section('footer')
     @include('partials.error-messages.footer-script')
     @include('students.partials.footer')
-
     <script>
         var element = document.getElementById('pro_free_');
         element.value = "{{$student->pro_free}}";
