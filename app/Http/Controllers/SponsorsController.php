@@ -89,15 +89,14 @@ class SponsorsController extends Controller
             'video' => $request->input('video'),
             'tagline' => $request->input('tagline'),
             'bio' => $request->input('bio'),
-            'url' => $request->input('url')
+            'url' => $request->input('url'),
+            'order' => $request->input('order')
         ]);
 
         Social::create([
             'facebook' => $request->input('facebook'),
             'twitter' => $request->input('twitter'),
             'instagram' => $request->input('instagram'),
-            'vimeo' => $request->input('vimeo'),
-            'youtube' => $request->input('youtube'),
             'socialLinks_id' => $sponsor->id,
             'socialLinks_type' => 'App\Sponsor',
         ]);
@@ -225,15 +224,14 @@ class SponsorsController extends Controller
             'video' => $request->input('video'),
             'tagline' => $request->input('tagline'),
             'bio' => $request->input('bio'),
-            'url' => $request->input('website')
+            'url' => $request->input('website'),
+            'order' => $request->input('order')
         ]);
 
         Social::where('socialLinks_id', $id)->where('socialLinks_type', 'App\Sponsor')->update([
             'facebook' => $request->input('facebook'),
             'twitter' => $request->input('twitter'),
             'instagram' => $request->input('instagram'),
-            'vimeo' => $request->input('vimeo'),
-            'youtube' => $request->input('youtube'),
             'socialLinks_id' => $id,
             'socialLinks_type' => 'App\Sponsor',
         ]);

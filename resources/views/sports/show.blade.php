@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('content')
     <div class="container-fluid">
-  <div style="margin: 20px auto; width: 100%">
+        <div style="margin: 20px auto; width: 100%">
         <h2 style="text-align: center">All Sports ({{$year}})</h2>
 
             {!! Form::open(['route' => 'year-sports']) !!}
@@ -23,56 +23,57 @@
                     <a href="{{url('sports/create')}}"><button class="btn btn-primary">Add Sport</button></a>
                 </p>
                 <br>
-                  @include('partials.error-messages.success')
-                  @include('partials.error-messages.error')
-                      <div class="panel panel-primary">
-                          <div class="table-responsive">
-                              <table class="table table-hover">
-                                  <thead  style="background-color:#000000; color:white">
-                                       <tr>
-                                        <th>#</th>
-                                        <th>Icon</th>
-                                        <th>Name</th>
-                                        <th>Season</th>
-                                        <th>School</th>
-                                        <th>Year</th>
-                                        <th>&nbsp;</th>
-                                        <th>&nbsp;</th>
-                                    </tr>
-                                </thead>
-                        <tbody>
-                        @if($sports)
-                            @foreach($seasons as $season)
-                                @foreach($season->sports as $s)
-                                    @foreach($s->years as $y)
-                                        @if($y->year == $year && $s->school_id == $school_id)
-                                            <tr>
-                                                <td>{{$s->id}}</td>
-                                                @if($s->sport()->first())
-                                                    <td><img src="{{$s->sport->icon}}" height="50px" width="50px" alt="image"></td>
+                @include('partials.error-messages.success')
+                @include('partials.error-messages.error')
+                <div class="panel panel-primary">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead  style="background-color:#000000; color:white">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Icon</th>
+                                    <th>Name</th>
+                                    <th>Season</th>
+                                    <th>School</th>
+                                    <th>Year</th>
+                                    <th>&nbsp;</th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if($sports)
+                                    @foreach($seasons as $season)
+                                        @foreach($season->sports as $s)
+                                            @foreach($s->years as $y)
+                                                @if($y->year == $year && $s->school_id == $school_id)
+                                                    <tr>
+                                                        <td>{{$s->id}}</td>
+                                                        @if($s->sport()->first())
+                                                            <td><img src="{{$s->sport->icon}}" height="50px" width="50px" alt="image"></td>
+                                                        @else
+                                                            <td><img src="{{asset('uploads/def.png')}}" height="50px" width="50px" alt="image"></td>
+                                                        @endif
+                                                        <td>{{$s->name}}</td>
+                                                        <td>{{$season->name}}</td>
+                                                        <td>{{$s->school->name}}</td>
+                                                        <td>{{$y->year}}</td>
+                                                        <td><a href="{{url('sports/'. $s->id. '/edit')}}" class="btn btn-primary btn-sm">Edit</a></td>
+                                                        <td>{!! Form::open([    'method' => 'DELETE','url' => ['/sports', $s->id]]) !!}{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}{!! Form::close() !!}</td>
+                                                    </tr>
                                                 @else
-                                                    <td><img src="{{asset('uploads/def.png')}}" height="50px" width="50px" alt="image"></td>
-                                                @endif
-                                                <td>{{$s->name}}</td>
-                                                <td>{{$season->name}}</td>
-                                                <td>{{$s->school->name}}</td>
-                                                <td>{{$y->year}}</td>
-                                                <td><a href="{{url('sports/'. $s->id. '/edit')}}" class="btn btn-primary btn-sm">Edit</a></td>
-                                                <td>{!! Form::open([    'method' => 'DELETE','url' => ['/sports', $s->id]]) !!}{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}{!! Form::close() !!}</td>
-                                            </tr>
-                                        @else
 
-                                        @endif
+                                                @endif
+                                            @endforeach
+                                        @endforeach
                                     @endforeach
-                                @endforeach
-                            @endforeach
-                        @else
-                            <div class="alert alert-danger">No Sports added yet.</div>
-                        @endif
-                    </table>
+                                @else
+                                    <div class="alert alert-danger">No Sports added yet.</div>
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-          </div>
-      </div>
+            </div>
         </div>
     </div>
 @endsection
