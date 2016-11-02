@@ -13,7 +13,7 @@ class ModifyForeignKeyOfSports extends Migration
     public function up()
     {
         Schema::table('sports', function (Blueprint $table) {
-            $table->renameColumn('sport_id', 'sports_id');
+        #    $table->renameColumn('sport_id', 'sports_id');
         });
     }
 
