@@ -39,9 +39,6 @@
                                 <div class="col-s-3">
                                 {!! Form::label('highlight_video', 'Highlight Video', ['class' => 'control-label']) !!}
                                     {!! Form::text('highlight_video', null, ['class' => 'form-control']) !!}
-                                    {{--{!! Form::label('sport-icon', 'Icon', ['class' => 'control-label']) !!}
-                                <div id="my-icon-select"></div>
-                                    {{ Form::hidden('selected-text', null, ['id' => 'selected-text']) }}--}}
                                 </div>
                             </div>
                         </div>
@@ -103,33 +100,4 @@
 @section('footer')
     @include('partials.add_new_sport_level_script')
     @include('partials.error-messages.footer-script')
-
-    {{--<script>
-
-        var iconSelect;
-        var selectedText;
-
-        window.onload = function(){
-
-            selectedText = document.getElementById('selected-text');
-
-            document.getElementById('my-icon-select').addEventListener('changed', function(e){
-                selectedText.value = iconSelect.getSelectedValue();
-
-            });
-
-            iconSelect = new IconSelect("my-icon-select");
-
-            var icons = [];
-            @foreach ($sportIcons as $sportIcon)
-
-            icons.push({'iconFilePath':'/img/sport_icons/'+'{{$sportIcon->path}}', 'iconValue':'{{$sportIcon->name}}'});
-            @endforeach
-
-            iconSelect.refresh(icons);
-
-            document.getElementById('sport-icon').value = selectedText.value;
-        };
-
-    </script>--}}
 @stop

@@ -194,7 +194,8 @@
                         <div class="col-md-6 col-md-offset-5" style="margin-top: 30px">
                             <div class="form-group-sm">
                                 <div class="col-s-3">
-                                    {!! Form::submit('Create Sponsor', ['class' => 'submit_school_modal btn btn-primary']) !!}
+                                    {!! Form::submit('Create Sponsor', ['class' => 'submit_school_modal btn btn-primary'
+                                    ,'id' => 'submit_sponsor']) !!}
                                 </div>
                             </div>
                         </div>
@@ -208,4 +209,5 @@
 @endsection
 @section('footer')
     @include('partials.error-messages.footer-script')
+    <script src="/js/sports/sponsors.js"></script>
 @stop

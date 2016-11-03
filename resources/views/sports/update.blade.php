@@ -90,35 +90,4 @@
 @section('footer')
     @include('partials.add_new_sport_level_script')
     @include('partials.error-messages.footer-script')
-
-    {{--<script>
-
-        var iconSelect;
-        var selectedText;
-
-        window.onload = function(){
-
-            selectedText = document.getElementById('selected-text');
-
-            document.getElementById('my-icon-select').addEventListener('changed', function(e){
-                selectedText.value = iconSelect.getSelectedValue();
-
-            });
-
-            iconSelect = new IconSelect("my-icon-select");
-
-            var icons = [];
-
-            @foreach ($sportIcons as $sportIcon)
-
-            icons.push({'iconFilePath':'/img/sport_icons/'+'{{$sportIcon->path}}', 'iconValue':'{{$sportIcon->name}}'});
-            @endforeach
-            icons.push({'iconFilePath':'/img/sport_icons/criquet-ball.png'+'', 'iconValue':'criquet-ball'});
-
-            iconSelect.refresh(icons);
-            iconSelect.setSelectedIndex({{$iconSelectedIndex}})
-
-        };
-
-    </script>--}}
 @stop
