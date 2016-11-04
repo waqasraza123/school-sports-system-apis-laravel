@@ -1,15 +1,16 @@
 $(document).ready(function () {
 
     var accessToken = null;
+    var facebookError = false;
 
     //when submit button is clicked
     $("#submit_sponsor").click(function (event) {
         event.preventDefault();
-
         var facebookUrl = ($("#facebook").val()).trim();
 
         //initialize the facebook api
         window.fbAsyncInit = function() {
+            alert('hello');
             FB.init({
                 appId      : '1350095405009348',
                 xfbml      : true,
@@ -22,14 +23,6 @@ $(document).ready(function () {
                     var access_token =   FB.getAuthResponse()['accessToken'];
                     console.log('Access Token = '+ access_token);
                     accessToken = access_token;
-
-                    FB.api(facebookUrl, function(response) {
-                        //alert(response.error.code);
-                        console.log(response);
-                        if(!response.name){
-                            alert('Facebook url is not valid')
-                        }
-                    });
                 } else {
                     console.log('User cancelled login or did not fully authorize.');
                 }
@@ -45,6 +38,20 @@ $(document).ready(function () {
             js.src = "//connect.facebook.net/en_US/sdk.js";
             fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));
+
+        if(facebookUrl.includes('facebook.com')){
+            FB.api(facebookUrl+'?access_token='+accessToken, function(response) {
+                //alert(response.error.code);
+                console.log(response);
+                if(!response.name){
+                    alert('Facebook url is not valid')
+                }
+            });
+        }
+        else{
+            alert('Facebook url is not valid');
+            facebookError = true;
+        }
 
         /*send ajax request to save the data in db*/
 
