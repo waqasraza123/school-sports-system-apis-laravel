@@ -1,11 +1,16 @@
 @extends('layouts.master')
 @section('content')
-    {!! Form::model($sponsor, array('url'=>'sponsors/'.$sponsor->id, 'method'=>'PUT', 'files'=>true)) !!}
+    {!! Form::model($sponsor, array('url'=>'sponsors/'.$sponsor->id, 'method'=>'PUT', 'files'=>true,
+    'id' => 'sponsor_form')) !!}
     <div class="container" style="width: 100% !important;">
 
         @include('partials.error-messages.error')
         @include('partials.error-messages.success')
 
+        <div class="alert-custom-success alert alert-success" style="display: none"></div>
+        <div class="alert-custom-error alert alert-danger" style="display: none"></div>
+        <input type="hidden" value="0" id="create_sponsor">
+        <input type="hidden" value="{{$sponsor->id}}" id="sponsor_id">
 
         <div class="row">
             <div class="col-sm-8">
@@ -196,7 +201,7 @@
                         <div class="col-md-6 col-md-offset-5" style="margin-top: 30px">
                             <div class="form-group-sm">
                                 <div class="col-s-3">
-                                    {!! Form::submit('Create Sponsor', ['class' => 'submit_school_modal btn btn-primary'
+                                    {!! Form::submit('Update', ['class' => 'btn btn-primary'
                                     ,'id' => 'submit_sponsor']) !!}
                                 </div>
                             </div>

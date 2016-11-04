@@ -70,24 +70,48 @@ $(document).ready(function () {
 
         /*send ajax request to save the data in db*/
         if(!(facebookError && twitterError && instaError)){
-            $.ajax({
-                'url': '/sponsors',
-                'method': 'post',
-                'data': $("#sponsor_form").serialize(),
-                success: function (data) {
-                    $(".alert-success").show('slow');
-                    $(".alert-success").text("Sponsor Saved Successfully");
-                    $(".alert-success").delay(2000).hide('slow');
-                },
-                error: function (data) {
-                    $(".alert-error").show('slow');
-                    $.each(data.responseJSON, function (index, value) {
-                        $(".alert").html('<ul>'+value[0]+'</ul>')
-                    });
-                    $(".alert-error").delay(2000).hide('slow');
-                    console.log(data);
-                }
-            })
+            if(($("#create_sponsor").val()) == 1){
+                $.ajax({
+                    'url': '/sponsors',
+                    'method': 'post',
+                    'data': $("#sponsor_form").serialize(),
+                    success: function (data) {
+                        $(".alert-custom-success").show('slow');
+                        $(".alert-custom-success").text("Sponsor Saved Successfully");
+                        $(".alert-custom-success").delay(2000).hide('slow');
+                    },
+                    error: function (data) {
+                        $(".alert-custom-error").show('slow');
+                        $.each(data.responseJSON, function (index, value) {
+                            $(".alert-custom-error").html('<ul>'+value[0]+'</ul>')
+                        });
+                        $(".alert-custom-error").delay(2000).hide('slow');
+                        console.log(data);
+                    }
+                })
+            }
+            //else update the sponsor
+            else{
+                var sponsorId = $("#sponsor_id").val();
+                $.ajax({
+                    'url': '/sponsors/'+sponsorId,
+                    'type': 'post',
+                    'data': $("#sponsor_form").serialize(),
+                    success: function (data) {
+                        $(".alert-custom-success").show('slow');
+                        $(".alert-custom-success").text("Sponsor Updated Successfully");
+                        $(".alert-custom-success").delay(2000).hide('slow');
+                    },
+                    error: function (data) {
+                        $(".alert-custom-error").show('slow');
+                        $.each(data.responseJSON, function (index, value) {
+                            $(".alert-custom-error").html('<ul>'+value[0]+'</ul>')
+                        });
+                        $(".alert-custom-error").delay(2000).hide('slow');
+                        console.log(data);
+                    }
+                })
+            }
         }
 
     })

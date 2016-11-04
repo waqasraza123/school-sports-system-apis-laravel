@@ -5,6 +5,9 @@
 
         @include('partials.error-messages.error')
         @include('partials.error-messages.success')
+        <div class="alert-custom-success alert alert-success" style="display: none"></div>
+        <div class="alert-custom-error alert alert-danger" style="display: none"></div>
+        <input type="hidden" value="1" id="create_sponsor">
 
         <div class="row">
             <div class="col-sm-8">

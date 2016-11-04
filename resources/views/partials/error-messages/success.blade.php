@@ -1,5 +1,5 @@
-<div class="alert alert-success" style="margin-top: 30px;">
-    @if (session('success'))
+@if (session('success'))
+    <div class="alert alert-success" style="margin-top: 30px;">
         {{ session('success') }}
-    @endif
-</div>
+    </div>
+@endif
