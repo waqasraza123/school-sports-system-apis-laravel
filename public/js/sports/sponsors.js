@@ -20,39 +20,39 @@ $(document).ready(function () {
     var twitterError = false;
     var instaError = false;
 
+    //initialize the facebook api
+    window.fbAsyncInit = function() {
+        FB.init({
+            appId      : '1350095405009348',
+            xfbml      : true,
+            version    : 'v2.8'
+        });
+        FB.AppEvents.logPageView();
+
+        FB.login(function(response) {
+            if (response.authResponse.accessToken) {
+                var access_token =   FB.getAuthResponse()['accessToken'];
+                console.log('Access Token = '+ access_token);
+                accessToken = access_token;
+            } else {
+                console.log('User cancelled login or did not fully authorize.');
+            }
+        }, {scope: ''});
+
+    };
+
+    (function(d, s, id){
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
     //when submit button is clicked
     $("#submit_sponsor").click(function (event) {
         event.preventDefault();
         var facebookUrl = ($("#facebook").val()).trim();
-
-        //initialize the facebook api
-        window.fbAsyncInit = function() {
-            FB.init({
-                appId      : '1350095405009348',
-                xfbml      : true,
-                version    : 'v2.8'
-            });
-            FB.AppEvents.logPageView();
-
-            FB.login(function(response) {
-                if (response.authResponse.accessToken) {
-                    var access_token =   FB.getAuthResponse()['accessToken'];
-                    console.log('Access Token = '+ access_token);
-                    accessToken = access_token;
-                } else {
-                    console.log('User cancelled login or did not fully authorize.');
-                }
-            }, {scope: ''});
-
-        };
-
-        (function(d, s, id){
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) {return;}
-            js = d.createElement(s); js.id = id;
-            js.src = "//connect.facebook.net/en_US/sdk.js";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
 
         if(facebookUrl.includes('facebook.com')){
             FB.api(facebookUrl+'?access_token='+accessToken, function(response) {
@@ -71,11 +71,17 @@ $(document).ready(function () {
         /*send ajax request to save the data in db*/
         if(!(facebookError && twitterError && instaError)){
             if(($("#create_sponsor").val()) == 1){
+                var formdata = new FormData($('form')[0]);
+                formdata.append('photo', $(".photo")[0]);
+                formdata.append('logo', $(".logo")[0]);
                 $.ajax({
                     'url': '/sponsors',
                     'method': 'post',
-                    'data': $("#sponsor_form").serialize(),
+                    'data': formdata,
+                    processData: false,
+                    contentType: false,
                     success: function (data) {
+                        console.log(data);
                         $(".alert-custom-success").show('slow');
                         $(".alert-custom-success").text("Sponsor Saved Successfully");
                         $(".alert-custom-success").delay(2000).hide('slow');
@@ -93,10 +99,15 @@ $(document).ready(function () {
             //else update the sponsor
             else{
                 var sponsorId = $("#sponsor_id").val();
+                var formdata = new FormData($('form')[0]);
+                formdata.append('photo', $(".photo")[0]);
+                formdata.append('logo', $(".logo")[0]);
                 $.ajax({
                     'url': '/sponsors/'+sponsorId,
                     'type': 'post',
-                    'data': $("#sponsor_form").serialize(),
+                    'data': formdata,
+                    processData: false,
+                    contentType: false,
                     success: function (data) {
                         $(".alert-custom-success").show('slow');
                         $(".alert-custom-success").text("Sponsor Updated Successfully");

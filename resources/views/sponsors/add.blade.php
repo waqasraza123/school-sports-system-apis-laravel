@@ -156,7 +156,7 @@
                                             <div class="control-group">
                                                 <div class="controls">
                                                     <label class="control-label" for="logo">Logo:</label>
-                                                    {!! Form::file('logo', ['class' => 'form-control']) !!}
+                                                    {!! Form::file('logo', ['class' => 'form-control logo']) !!}
                                                 </div>
                                             </div>
                                         </div>
@@ -183,7 +183,7 @@
                                             <div class="control-group">
                                                 <div class="controls">
                                                     <label class="control-label" for="photo">Photo:</label>
-                                                    {!! Form::file('photo', ['class' => 'form-control']) !!}
+                                                    {!! Form::file('photo', ['class' => 'form-control photo']) !!}
                                                 </div>
                                             </div>
                                         </div>

@@ -45,12 +45,13 @@ class SponsorsController extends Controller
             'bio' => 'required',
             'email' => 'required|email|unique:sponsors,email',
             'address' => 'required',
-            'phone' => 'required'
+            'phone' => 'required',
+            'photo' => 'required',
+            'logo' => 'required'
         ]);
 
         $photo = "";
         $logo = "";
-        $logo2 = "";
 
         if(Input::file('photo') != null){
             $destinationPath = 'uploads/sponsors'; // upload path
@@ -215,13 +216,10 @@ class SponsorsController extends Controller
             'email' => $request->input('email'),
             'phone' => $request->input('phone'),
             'logo' => $logo,
-            'logo2' => $logo2,
             'photo' => $photo,
             'address' => $request->input('address'),
             'school_id' => $this->schoolId,
             'color' => $request->input('color'),
-            'color2' => $request->input('color2'),
-            'color3' => $request->input('color3'),
             'video' => $request->input('video'),
             'tagline' => $request->input('tagline'),
             'bio' => $request->input('bio'),
@@ -237,7 +235,12 @@ class SponsorsController extends Controller
             'socialLinks_type' => 'App\Sponsor',
         ]);
 
-        return redirect('/sponsors')->with('success', 'Sponsor Updated Successfully');
+        $response = array(
+            'status' => 'success',
+            'msg' => 'Sponsor Updated successfully',
+        );
+
+        return Response::json($response);
     }
 
     /**
