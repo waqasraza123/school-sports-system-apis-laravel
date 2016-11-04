@@ -1,11 +1,10 @@
 @extends('layouts.master')
 @section('content')
-    {!! Form::open(array('url'=>'sponsors/', 'method'=>'POST', 'files'=>true)) !!}
+    {!! Form::open(array('url'=>'sponsors/', 'method'=>'POST', 'files'=>true, 'id' => 'sponsor_form')) !!}
     <div class="container" style="width: 100% !important;">
 
         @include('partials.error-messages.error')
         @include('partials.error-messages.success')
-
 
         <div class="row">
             <div class="col-sm-8">

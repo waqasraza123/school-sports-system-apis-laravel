@@ -1,7 +1,24 @@
 $(document).ready(function () {
 
+
+    /*function httpGetAsync(theUrl, callback)
+    {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function() {
+            if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                callback(xmlHttp.responseText);
+        }
+        xmlHttp.open("GET", theUrl, true); // true for asynchronous
+        xmlHttp.send(null);
+    }
+    httpGetAsync('https://twitter.com/chaudhrywaqas12', function (response) {
+        alert(response);
+    });*/
+
     var accessToken = null;
     var facebookError = false;
+    var twitterError = false;
+    var instaError = false;
 
     //when submit button is clicked
     $("#submit_sponsor").click(function (event) {
@@ -10,7 +27,6 @@ $(document).ready(function () {
 
         //initialize the facebook api
         window.fbAsyncInit = function() {
-            alert('hello');
             FB.init({
                 appId      : '1350095405009348',
                 xfbml      : true,
@@ -27,7 +43,6 @@ $(document).ready(function () {
                     console.log('User cancelled login or did not fully authorize.');
                 }
             }, {scope: ''});
-
 
         };
 
@@ -54,7 +69,26 @@ $(document).ready(function () {
         }
 
         /*send ajax request to save the data in db*/
-
+        if(!(facebookError && twitterError && instaError)){
+            $.ajax({
+                'url': '/sponsors',
+                'method': 'post',
+                'data': $("#sponsor_form").serialize(),
+                success: function (data) {
+                    $(".alert-success").show('slow');
+                    $(".alert-success").text("Sponsor Saved Successfully");
+                    $(".alert-success").delay(2000).hide('slow');
+                },
+                error: function (data) {
+                    $(".alert-error").show('slow');
+                    $.each(data.responseJSON, function (index, value) {
+                        $(".alert").html('<ul>'+value[0]+'</ul>')
+                    });
+                    $(".alert-error").delay(2000).hide('slow');
+                    console.log(data);
+                }
+            })
+        }
 
     })
 

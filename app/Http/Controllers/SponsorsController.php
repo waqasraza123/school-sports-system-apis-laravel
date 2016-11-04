@@ -5,9 +5,8 @@ namespace App\Http\Controllers;
 use App\Social;
 use App\Sponsor;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Response;
 
 class SponsorsController extends Controller
 {
@@ -101,7 +100,12 @@ class SponsorsController extends Controller
             'socialLinks_type' => 'App\Sponsor',
         ]);
 
-        return redirect('/sponsors')->with('success', 'Sponsor Added Successfully');
+        $response = array(
+            'status' => 'success',
+            'msg' => 'Sponsor Added successfully',
+        );
+
+        return Response::json($response);
     }
 
     /**
