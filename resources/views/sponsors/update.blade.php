@@ -117,7 +117,9 @@
                                     <div class="form-group-sm">
                                         <div class="col-s-3">
                                             {!! Form::label('title', 'Facebook:', ['class' => 'control-label']) !!}
-                                            {!! Form::text('facebook', $social == null ? "" : $social->facebook, ['class' => 'form-control', 'id'=> 'facebook']) !!}
+                                            <span style="font-size: 11px">for profile id go to http://findmyfbid.com/</span>
+                                            {!! Form::text('facebook', $social == null ? "" : $social->facebook, ['class' => 'form-control', 'id'=> 'facebook',
+                                            'placeholder' => 'for profile link follow the format facebook.com/id']) !!}
                                         </div>
                                     </div>
                                 </div>
