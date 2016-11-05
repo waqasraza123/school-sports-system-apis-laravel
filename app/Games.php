@@ -44,6 +44,11 @@ class Games extends Model
         return $this->belongsToMany('App\Album');
     }
 
+    public function videos()
+    {
+        return $this->belongsToMany('App\Video');
+    }
+
     public function year(){
         return $this->morphOne('App\Year', 'year');
     }
@@ -55,9 +60,9 @@ class Games extends Model
     public function game_photos(){
         return $this->belongsToMany('App\Album', 'album_games', 'games_id', 'album_id');
     }
-
-    public function game_video(){
-        return $this->belongsToMany('App\Album', 'album_video', 'games_id', 'album_id');
+    public function game_video()
+    {
+        return $this->belongsToMany('App\Video');
     }
 
 }
