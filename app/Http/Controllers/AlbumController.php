@@ -217,5 +217,18 @@ class AlbumController extends Controller
         $gallery_videos = Video::get();
         return  view('videos.show', compact('gallery_videos', 'students', 'rosters'));
     }
+    public function videosAdd()
+    {
+        $rosters = Roster::where('school_id', '=', $this->schoolId)->get()->lists('name', 'id');
+        $students = Student::where('school_id', '=', $this->schoolId)->get()->lists('name', 'id');
+        $games_all = Games::where('school_id', $this->schoolId)->get();
+        $games = [];
+        foreach ($games_all as $game) {
+            $games[$game->id] = Opponent::where('id', '=', $game->opponents_id)
+                    ->first()->name.' '.(new Carbon($game->game_date))->toDateString();
+        }
+        $gallery_videos = Video::get();
 
+        return  view('videos.add', compact('gallery_videos', 'students', 'rosters', 'games'));
+    }
 }
