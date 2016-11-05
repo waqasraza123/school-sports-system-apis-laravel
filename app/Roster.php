@@ -52,6 +52,11 @@ class Roster extends Model
         return $this->belongsToMany('App\Gallery');
     }
 
+    public function videos()
+    {
+        return $this->belongsToMany('App\Video');
+    }
+
     public function games(){
         return $this->hasMany('App\Games', 'roster_id');
     }
@@ -61,7 +66,9 @@ class Roster extends Model
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function students(){
-        return $this->belongsToMany('App\Student', 'rosters_students')->withPivot('position');
+        return $this->belongsToMany('App\Student', 'rosters_students', 'roster_id', 'student_id')
+            ->withPivot('position', 'photo', 'jersy', 'level_id')
+            ->withTimestamps();
     }
 
 

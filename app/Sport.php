@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Sport extends Model
 {
 
-    protected $fillable = ['name', 'highlight_video', 'school_id', 'season_id', 'record', 'photo', 'icon_id'];
+    protected $fillable = ['sport_id', 'highlight_video', 'school_id', 'season_id', 'record', 'photo', 'icon_id'];
 
     protected $table = 'sports';
 
-    protected $hidden = ['school_id', 'pivot', 'game_date', 'id', 'season_id', 'created_at', 'updated_at'];
+    protected $hidden = ['school_id', 'pivot', 'game_date', 'id', 'season_id', 'created_at', 'updated_at', 'sports_id'];
 
     public function rosters()
     {
@@ -56,6 +56,11 @@ class Sport extends Model
 
     public function games(){
         return $this->hasMany('App\Games', 'sport_id');
+    }
+
+    //returns the data from sports_list table
+    public function sport(){
+        return $this->belongsTo('App\SportsList', 'sports_id');
     }
 
 

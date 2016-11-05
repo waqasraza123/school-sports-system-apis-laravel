@@ -136,7 +136,7 @@ class GamesController extends Controller
                 'result' =>  $result,
                 'game_time' => $file['game_time']));
 
-            Year::where('year_id', $id)->where('year_type', 'App\Game')->update([
+            Year::where('year_id', $id)->where('year_type', 'App\Games')->update([
                 'year' => $request->input('year_id'),
                 'year_id' => $id,
                 'year_type' => 'App\Games'
@@ -156,7 +156,7 @@ class GamesController extends Controller
                 'result' => $result,
                 'game_time' => $file['game_time']));
 
-            Year::where('year_id', $id)->where('year_type', 'App\Game')->update([
+            Year::where('year_id', $id)->where('year_type', 'App\Games')->update([
                 'year' => $request->input('year_id'),
                 'year_id' => $id,
                 'year_type' => 'App\Games'
@@ -195,9 +195,7 @@ class GamesController extends Controller
             'opponent' => 'required',
             'game_date' => 'required',
             'game_time' => 'required',
-            'home_or_away' => 'required',
-            'our_score' => 'required',
-            'opponents_score' => 'required'
+            'home_or_away' => 'required'
         ]);
 
         if($file['our_score'] == $file['opponents_score'])
@@ -205,11 +203,11 @@ class GamesController extends Controller
         else
             $result = ($file['our_score'] > $file['opponents_score']) ? 'W' : 'L';
 
-        if (Input::file('image') != null) {
+        if (Input::file('photo') != null) {
             $destinationPath = 'uploads/games'; // upload path
-            $extension = Input::file('image')->getClientOriginalExtension(); // getting image extension
+            $extension = Input::file('photo')->getClientOriginalExtension(); // getting image extension
             $fileName = rand(11111, 99999) . '.' . $extension; // renameing image
-            Input::file('image')->move($destinationPath, $fileName); // uploading file to given path
+            Input::file('photo')->move($destinationPath, $fileName); // uploading file to given path
 
             $game = Games::create(array('season_id' => $request->input('season_id'),
                 'school_id' => $this->schoolId, 'roster_id' => $file['roster_id'],

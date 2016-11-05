@@ -7,16 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 class Student extends Model
 {
     protected $fillable = ['name', 'photo', 'position', 'pro_flag', 'number', 'pro_cover_photo',
-    'pro_head_photo', 'height_feet', 'height_inches', 'weight', 'school_id', 'academic_year','created_at'
-    ,'updated_at'];
+    'pro_head_photo', 'height_feet', 'height_inches', 'weight', 'school_id', 'academic_year', 'pro_fee', 'jersy',  'created_at', 'updated_at'];
     protected $hidden = ['pivot'];
+
 
     /**
      * a student can belong to many rosters
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function rosters(){
-        return $this->belongsToMany('App\Roster', 'rosters_students')->withPivot('position');
+        return $this->belongsToMany('App\Roster', 'rosters_students', 'student_id', 'roster_id')
+            ->withPivot('position', 'photo', 'jersy', 'level_id')
+            ->withTimestamps();
     }
 
     public function years(){
@@ -30,6 +32,16 @@ class Student extends Model
     public function albums()
     {
         return $this->belongsToMany('App\Album');
+    }
+
+    public function galleries()
+    {
+        return $this->belongsToMany('App\Gallery');
+    }
+
+    public function videos()
+    {
+        return $this->belongsToMany('App\Video');
     }
 
     public function news_list(){

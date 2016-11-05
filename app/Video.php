@@ -11,4 +11,14 @@ class Video extends Model
     public function video(){
         return $this->morphTo();
     }
+
+    public function students()
+    {
+        return $this->belongsToMany('App\Student');
+    }
+
+    public function rosters()
+    {
+        return $this->belongsToMany('App\Roster');
+    }
 }

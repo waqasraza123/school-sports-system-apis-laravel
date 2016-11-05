@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use App\Year;
 use App\School;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
@@ -115,17 +116,64 @@ class StudentsController extends Controller
     {
         $school = School::where('id', $this->schoolId)->first();
         $tableName = strtolower(str_replace(' ', '_', $school->name)).'_custom_students';
-        $rosters = Roster::where('school_id', $this->schoolId)->lists('name', 'id');
+        $rosters = Roster::where('school_id', $this->schoolId)->groupBy('name')->lists('name', 'id');
         $school = School::select('name')->where('id', $this->schoolId)->first();
-
+        
         $customFields = "";
         if (Schema::hasTable($tableName)){
             $customFields = \DB::table($tableName)->groupBy('custom_label')->get();
         }
 
-        /*$columnNames = \DB::connection()->getSchemaBuilder()->getColumnListing("custom_students");*/
+        return View('students.create', compact('rosters', 'school', 'customFields', 'columnNames', 'sports'));
+    }
 
-        return View('students.create', compact('rosters', 'school', 'customFields', 'columnNames'));
+    public function storeRosterStudents($position, $jersey, $ros_photo, $_roster_id, $ros_level, $student_id, $number){
+
+        $student = Student::find($student_id);
+        $syncData = array();
+        for($i = 0; $i < count($_roster_id); $i++){
+            if(isset($_roster_id[$i]) && isset($position[$i]) && isset($jersey[$i]) && isset($ros_level[$i]) && isset($number[$i])){
+                if(($ros_photo[$i]) != null){
+                    //store the image
+                    $destinationPath = 'uploads/students'; // upload path
+                    $extension = $ros_photo[$i]->getClientOriginalExtension(); // getting image extension
+
+                    $fileName = rand(1111, 9999) . '.' . $extension; // renameing image
+                    $ros_photo[$i]->move($destinationPath, $fileName); // uploading file to given path
+
+                    $syncData[$_roster_id[$i]] = [
+                        'position' => $position[$i],
+                        'photo' => ($ros_photo[$i]) != null ? asset('uploads/students/'.$fileName ) : null,
+                        'jersy' => $jersey[$i],
+                        'level_id' => $ros_level[$i],
+                        'number' => $number[$i],
+                    ];
+                }
+                else{
+                    if($student->rosters()->find($_roster_id[$i])->pivot->photo != null){
+                        $syncData[$_roster_id[$i]] = [
+                            'position' => $position[$i],
+                            'jersy' => $jersey[$i],
+                            'photo' => $student->rosters()->find($_roster_id[$i])->pivot->photo,
+                            'level_id' => $ros_level[$i],
+                            'number' => $number[$i],
+                        ];
+                    }
+                }
+            }
+            else{
+                return redirect('/rosters')->with('error', 'An Error Occurred');
+            }
+        }
+        $student->rosters()->sync($syncData);
+
+        $response = array(
+            'status' => 'success',
+            'msg' => 'Student Added successfully',
+        );
+
+        return Response::json($response);
+
     }
 
     /**
@@ -136,11 +184,9 @@ class StudentsController extends Controller
      */
     public function store(Request $request)
     {
-
         $custom = false;
         if($request->input('custom-field-name')){
             $this->validate($request, [
-                'name' => 'required|max:255',
                 'academic_year' => 'required',
                 //custom_students is table where to check for
                 // uniqueness and label is the column name where will be checked
@@ -150,9 +196,7 @@ class StudentsController extends Controller
         }
         else{
             $this->validate($request, [
-                'name' => 'required|max:255',
                 'academic_year' => 'required',
-                'photo'
             ]);
         }
 
@@ -178,13 +222,6 @@ class StudentsController extends Controller
                 Input::file('photo')->move($destinationPath, $fileName);
             }
 
-            /*if(Input::file('pro_flag') != null){
-                $destinationPath = 'uploads/students'; // upload path
-                $extension = Input::file('pro_flag')->getClientOriginalExtension();
-                $pro_flag = rand(1111, 9999) . '.' . $extension;
-                Input::file('pro_flag')->move($destinationPath, $pro_flag);
-            }*/
-
             if(Input::file('pro_cover_photo') != null){
                 $destinationPath = 'uploads/students'; // upload path
                 $extension = Input::file('pro_cover_photo')->getClientOriginalExtension();
@@ -202,7 +239,6 @@ class StudentsController extends Controller
 
         $student = Student::create([
             'name' => $request->input('name'),
-            'photo' => asset('uploads/students/'.$fileName),
             'pro_flag' => $request->input('pro_free') == 0 ? 0 : 1,
             'pro_cover_photo' => asset('uploads/students/'.$pro_cover_photo),
             'pro_head_photo' => asset('uploads/students/'.$pro_head_photo),
@@ -210,11 +246,15 @@ class StudentsController extends Controller
             'height_feet' => $request->input('height_feet'),
             'height_inches' => $request->input('height_inches'),
             'weight' => $request->input('weight'),
-            'number' => $request->input('number'),
             'pro_free' => $request->input('pro_free'),
-            'position' => $request->input('position'),
             'school_id' => $this->schoolId
         ]);
+
+        $response = array(
+            'status' => 'success',
+            'msg' => 'Student Added successfully',
+        );
+
 
         //custom fields
         $school = School::where('id', '=', $this->schoolId)->first();
@@ -274,7 +314,12 @@ class StudentsController extends Controller
             }
         }
 
-        return redirect('/students')->with('success', 'Student Created Successfully');
+        //add pivot table data
+        //sync rosters_students
+        $this->storeRosterStudents($request->input('position'), $request->input('jersey'), Input::file('ros_photo'),
+            $request->input('_roster_id'), $request->input('ros_level'), $student->id, $request->input('number'));
+
+        return redirect('/rosters')->with('success', 'Student Created Successfully');
     }
 
     /**
@@ -299,16 +344,10 @@ class StudentsController extends Controller
 
         return view('rosters.show', compact('sports', 'levels', 'years', 'positions','weight_options', 'levelcreate', 'id_sport', 'sortby', 'order'))->withRosters($rosters)->with('type', $type);
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    
+    public function edit($studentId)
     {
-
+        $id = $studentId;
         $school = School::where('id', $this->schoolId)->first();
         $tableName = strtolower(str_replace(' ', '_', $school->name)).'_custom_students';
         $school = School::select('name')->where('id', $this->schoolId)->first();
@@ -322,7 +361,7 @@ class StudentsController extends Controller
         $student = Student::find($id);
         $rosters = Roster::lists('name', 'id');
 
-        return view('students.update', compact('student', 'rosters', 'school', 'customFields', 'columnNames'));
+        return view('students.update', compact('student', 'rosters', 'school', 'customFields'));
     }
 
     /**
@@ -397,7 +436,6 @@ class StudentsController extends Controller
 
         Student::find($id)->update([
             'name' => $request->input('name'),
-            'photo' => $fileName == null ? $fileNameInDB : asset('uploads/students/'.$fileName),
             'pro_flag' => $request->input('pro_free') == 0 ? 0 : 1,
             'pro_cover_photo' => $pro_cover_photo == null ? $pro_cover_photoInDB : asset('uploads/students/'.$pro_cover_photo),
             'pro_head_photo' => $pro_head_photo == null ? $pro_head_photoInDB : asset('uploads/students/'.$pro_head_photo),
@@ -405,9 +443,7 @@ class StudentsController extends Controller
             'height_feet' => $request->input('height_feet'),
             'height_inches' => $request->input('height_inches'),
             'weight' => $request->input('weight'),
-            'number' => $request->input('number'),
             'pro_free' => $request->input('pro_free'),
-            'position' => $request->input('position'),
             'school_id' => $this->schoolId
         ]);
 
@@ -453,7 +489,11 @@ class StudentsController extends Controller
             }
         }
 
-        return redirect('/students')->with('success', 'Student Updated Successfully');
+        //add pivot table data
+        //sync rosters_students
+        $this->storeRosterStudents($request->input('position'), $request->input('jersey'), Input::file('ros_photo'),
+            $request->input('_roster_id'), $request->input('ros_level'), $id, $request->input('number'));
+        return redirect('/rosters')->with('success', 'Student Updated Successfully');
     }
 
     /**
@@ -469,9 +509,10 @@ class StudentsController extends Controller
         $tableName = strtolower(str_replace(' ', '_', $school->name)).'_custom_students';
         DB::table($tableName)->where('student_id', $id)->delete();
 
+        $student->rosters()->detach();
         $student->delete();
 
-        return redirect('/students')->with('success', 'Student deleted successfully');
+        return redirect('/rosters')->with('success', 'Student deleted successfully');
     }
 
     //get position for roster

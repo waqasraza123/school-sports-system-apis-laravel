@@ -1,5 +1,5 @@
 <?php
-
+use Illuminate\Http\Request;
 Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/home', [
@@ -9,10 +9,12 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('settings', ['as' => 'settings', 'uses' => 'PagesController@settings']);
     Route::post('settings', ['as' => 'settings', 'uses' => 'PagesController@updateSettings']);
+
     Route::post('rosters/{rosterId}/students/{studentId}/update', ['as' => 'rosters.students.update', 'uses' => 'RostersController@updatePosition']);
     Route::post('rosters/year', ['as' => 'year-rosters', 'uses' => 'RostersController@yearRosters']);
     Route::get('rosters/{id}/students', ['as' => 'roster-students', 'uses' => 'RostersController@showAddStudentsForm']);
     Route::post('rosters/students/add', ['as' => 'roster-students-post', 'uses' => 'RostersController@storeRosterStudents']);
+    Route::post('/rosters/load-levels', ['as' => 'load-levels', 'uses' => 'RostersController@loadLevels']);
     Route::resource('rosters', 'RostersController');
 
     Route::delete('rosters/{rosterId}/student/{studentId}/delete',
@@ -48,10 +50,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('albums/add-photos', ['as' => 'upload-photos-post', 'uses' => 'ImageController@storePhotos']);
     Route::resource('albums', 'AlbumController');
 
+    Route::get('/videos', 'AlbumController@videosShow');
+
 //    Route::get('gallery', 'GalleryController@show');
     Route::get('gallery/{id}', 'GalleryController@show');
     Route::resource('gallery', 'GalleryController');
-    Route::post('albums/{id}/url-upload', ['as' => 'albums.url-upload', 'uses' => 'GalleryController@uploadUrl']);
+    Route::post('videos/url-upload', ['as' => 'videos.url-upload', 'uses' => 'GalleryController@uploadUrl']);
+    Route::post('videos/', 'GalleryController@videoTagsUpdate');
+    Route::delete('videos/{id}/destroy', ['as' => 'videos.destroy', 'uses' => 'GalleryController@videoDelete']);
     Route::post('image/upload', 'GalleryController@uploadImage');
 
     Route::post('staff/year', ['as' => 'year-staff', 'uses' => 'StaffController@yearStaff']);
@@ -68,6 +74,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('students/filter', 'StudentsController@filterStudents');
     Route::resource('students', 'StudentsController');
+    
 
     Route::resource('sponsors', 'SponsorsController');
 
@@ -75,9 +82,6 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::resource('ads', 'AdsController');
 });
-
-    //testing purposes
-
 
 /**
  * Authentication routes for the applications
@@ -95,8 +99,9 @@ Route::controllers([
  */
 Route::get('/', 'APIController@handle');
 
-Route::get('test', function(){
-    dd(env('APP_DEBUG'));
+Route::post('test', function(Request $request){
+    return $request->all();
+    /*return App\Roster::find(13)->students()->get();*/
 });
 
 

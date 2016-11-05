@@ -13,4 +13,9 @@ class Photo extends Model
     public function sports(){
         return $this->belongsTo('App\Sport', 'photo_sport', 'photo_id', 'sport_id');
     }
+
+    public function students()
+    {
+        return $this->belongsToMany('App\Student');
+    }
 }

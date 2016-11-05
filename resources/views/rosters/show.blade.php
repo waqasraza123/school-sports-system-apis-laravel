@@ -1,9 +1,10 @@
 @extends('layouts.master')
+
 @section('content')
     <div class="container-fluid">
         @include('partials.error-messages.success')
         @include('partials.error-messages.error')
-        <h2 style="text-align: center">All Rosters of year ({{$year}})</h2>
+        <h2 style="text-align: center">All Rosters of year ({{ $year }})</h2>
         <div class="row">
             {!! Form::open(['route' => 'year-rosters']) !!}
             <div class="col-md-3 col-md-offset-1">
@@ -20,70 +21,90 @@
             </div>
             {!! Form::close() !!}
         </div>
+        
 
         <div class="row">
             <div class="table-responsive .table-striped .table-hover col-md-12">
-                <p class="lead">
-                <a href="{{url('rosters/create')}}"><button class="btn btn-primary">Add Roster</button></a>
-</p>
+                <br>
+                <div class="row">
+                    <div class="col-md-4">
+                        <a href="{{ route('students.create') }}" class="btn btn-primary">Add Student</a>
+                    </div>
+                </div>    
                 <br>
                 <div class="panel panel-primary">
                     <div class="table-responsive">
-                        <table class="table table-hover">
+                        <table class="table table-hover" border="0">
                             <thead  style="background-color:#000000; color:white">
-                        <th>#</th>
 
-                        <th>Name</th>
-                        <th>&nbsp;</th>
-                        <th>&nbsp;</th>
-                        <th>&nbsp;</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @if($sports)
-                        @foreach($sports as $s)
+                            <tr>
+                                <th>#</th>
+                                <th>Photo</th>
+                                <th>Name</th>
+                                <th>Level</th>
+                                <th>Sport</th>
+                                <th>Roster</th>
+                                <th>Year</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @php
+                                $i = 1
+                            @endphp
 
                             @foreach($rosters as $r)
-
-                                @foreach($levels as $level)
-
-                                    @if($r->sport_id == $s->id && $level->id == $r->level_id)
-                                        @if($r->years)
-                                            @foreach($r->years as $y)
-
-                                                @if($y->year == $year)
-
-                                                    <tr>
-                                                        <td>{{$r->id}}</td>
-                                                      
-                                                        <td>{{$r->name}}</td>
-                                                        <td><a href="{{url('rosters/'. $r->id. '/edit')}}" class="btn btn-primary btn-sm">Edit</a></td>
-                                                        <td>{!! Form::open([    'method' => 'DELETE','url' => ['/rosters', $r->id]]) !!}{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}{!! Form::close() !!}</td>
-                                                        <td><a href="{{route('roster-students', [$r->id])}}" class="btn btn-sm btn-default">Add Students</a></td>
-                                                    </tr>
-                                                @else
-
-                                                @endif
-                                            @endforeach
-                                        @endif
-                                    @endif
+                                @foreach($r->students as $stu)
+                                    <tr>
+                                        <td class="text-center">{{ $i++ }}</td>
+                                        <td class="text-center">
+                                            @if($stu->pivot->photo == null )
+                                                <img src="{{ asset('uploads/' . 'def.png') }}" width="60" height="40">
+                                            @else
+                                                <img src="{{$stu->pivot->photo}}" width="60" height="40">
+                                            @endif
+                                        </td>
+                                        <td>{{ $stu->name }}</td>
+                                        @foreach($levels as $level)
+                                            @if($level->id == $r->level_id)
+                                                <td>{{ $level->name }}</td>
+                                            @endif
+                                        @endforeach
+                                        @foreach($sports as $sport)
+                                            @if($sport->id == $r->sport_id)
+                                                <td>{{ $sport->name }}</td>
+                                            @endif
+                                        @endforeach
+                                        <td>{{ $r->name }}</td>
+                                        <td>{{ $stu->academic_year }}</td>
+                                        <td>
+                                            <a href="{{url('students/'. $stu->id. '/edit')}}" class="btn btn-primary btn-sm">Edit</a>
+                                        </td>
+                                        <td>
+                                            {{ Html::linkRoute('rosters.edit', 'Quick Edit', array($stu->id), ['class' => 'btn btn-warning btn-sm']) }}
+                                        </td>
+                                        <td>
+                                            {!! Form::open([    'method' => 'DELETE','url' => ['/students', $stu->id]]) !!}{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}{!! Form::close() !!}
+                                        </td>
+                                    </tr>
                                 @endforeach
                             @endforeach
-                        @endforeach
-                    @else
-                        <div class="alert alert-danger">Please add some sports first.</div>
-                    @endif
-                </table>
-            </div>
+                            </tbody>
 
+                        </table>
+                    </div>
+
+                </div>
+            </div>
         </div>
     </div>
-  </div>
-</div>
 @endsection
 @section('footer')
     @include('partials.error-messages.footer-script')
     <script>
         $("#select_year_id").val(<?php echo $year?>);
+        
     </script>
 @endsection

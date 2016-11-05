@@ -1,4 +1,5 @@
 @extends('layouts.master')
+<link href='/css/jquery.guillotine.css' media='all' rel='stylesheet'>
 <link rel="stylesheet" href="/timepicker/css/bootstrap-timepicker.min.css">
 @section('content')
     <div class="container-fluid">
@@ -14,10 +15,12 @@
         @else
             {!! Form::open(['url' => '/games', 'files' =>true]) !!}
 
+            @include('partials.image_crop_preview')
+
             <div class="row">
                 <div class="col-md-6">
                     {!! Form::label('title', 'Select Image:', ['class' => 'control-label']) !!}
-                    {!! Form::file('image') !!}
+                    {!! Form::file('photo', ['class' => 'form-control', 'id' => 'photo']) !!}
                 </div>
             </div>
             <div class="row">
@@ -113,8 +116,11 @@
         $(function () {
             $('#game_date').datetimepicker({format: "YYYY-MM-DD"});
             $('#game_time').timepicker('showWidget');
-            $("#game_time").disableFocus(true);
+//            $("#game_time").disableFocus(true);
         });
     </script>
+
+    <script src='/js/jquery.guillotine.js'></script>
+    <script src='/dist/js/sb-image-crop-2.js'></script>
     <script src="/timepicker/js/bootstrap-timepicker.min.js"></script>
 @endsection

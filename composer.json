@@ -10,7 +10,10 @@
          "laravelcollective/html": "5.2.*",
         "intervention/image": "^2.3",
         "doctrine/dbal": "v2.5.4",
-        "barryvdh/laravel-debugbar": "^2.2"
+        "barryvdh/laravel-debugbar": "^2.2",
+        "aws/aws-sdk-php-laravel":"~3.0",
+        "graham-campbell/flysystem":"^3.0",
+        "league/flysystem-aws-s3-v3": "~1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

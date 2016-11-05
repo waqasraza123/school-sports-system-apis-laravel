@@ -19,7 +19,6 @@ class Controller extends BaseController
             $currentSchool = School::find($this->schoolId);
             View::share(['school_id' => $this->schoolId, 'currentSchool' => $currentSchool]);
         }
-
     }
 
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;

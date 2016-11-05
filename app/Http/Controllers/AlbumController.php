@@ -38,7 +38,7 @@ class AlbumController extends Controller
             $games[$game->id] = Opponent::where('id','=',$game->opponents_id)
                     ->first()->name." ".(new Carbon($game->game_date))->toDateString();
         }
-        $opponents = Opponent::where('school_id', $this->schoolId)->lists('name', 'id');
+        $opponents = Opponent::all()->lists('name', 'id');
 
         $albums = Album::where('school_id','=', $this->schoolId)->get();
         //showing view for all photos
@@ -162,7 +162,6 @@ class AlbumController extends Controller
             Session::flash('success', 'Updated successfully');
             return Redirect::back();
         }
-
     }
 
     public function edit($id)
@@ -170,15 +169,28 @@ class AlbumController extends Controller
         $years = Year::lists('year', 'id');
         $rosters = Roster::lists('name', 'id');
         //making list od all games where key=game_id and value= opponent name and date of the game
-        $games_all = Games::all();
+        $games_all = Games::where('school_id', $this->schoolId)->get();
         $seasons = Season::lists('name', 'id');
         $games = [];
         foreach ($games_all as $game)
         {
             $games[$game->id] = Opponent::where('id','=',$game->opponents_id)->first()->name." ".(new Carbon($game->game_date))->toDateString();
         }
+        $gamesIds = Album::where('id', '=', $id)->first()->games()->lists('id');
+        $gameTags = [];
+        foreach ($gamesIds as $gameId)
+        {
+            $gameTags[] = $gameId;
+        }
+        $rostersIds = Album::where('id', '=', $id)->first()->rosters()->lists('id');
+        $rostersTags = [];
+        foreach ($rostersIds as $rostersId)
+        {
+            $rostersTags[] = $rostersId;
+        }
+
         $album = Album::where('school_id','=', $this->schoolId)->where('id','=', $id)->first();
-        return view('albums.edit', compact('seasons', 'games','years', 'album', 'rosters'));
+        return view('albums.edit', compact('seasons', 'games','years', 'album', 'rosters', 'gameTags', 'rostersTags'));
     }
 
     public function show($id)
@@ -186,9 +198,8 @@ class AlbumController extends Controller
         $album_id = $id;
         $students = Student::where('school_id','=', $this->schoolId)->get()->lists('name','id');
         $gallery_images = Photo::where('album_id','=', $album_id)->get();
-        $gallery_videos = Video::where('album_id','=', $album_id)->get();
         //showing view for all photos
-        return view('gallery.show', compact('gallery_images', 'gallery_videos', 'students', 'album_id'));
+        return view('gallery.show', compact('gallery_images', 'students', 'album_id'));
 //        return view('albums.add-photos', compact('gallery_images', 'gallery_videos', 'rosters', 'album_id'));
     }
     public function destroy($id)
@@ -197,6 +208,14 @@ class AlbumController extends Controller
         $album->delete();
         Session::flash('flash_message_s', 'Album successfully deleted!');
         return redirect()->back();
+    }
+
+    public function videosShow()
+    {
+        $rosters = Roster::where('school_id','=', $this->schoolId)->get()->lists('name','id');
+        $students = Student::where('school_id','=', $this->schoolId)->get()->lists('name','id');
+        $gallery_videos = Video::get();
+        return  view('videos.show', compact('gallery_videos', 'students', 'rosters'));
     }
 
 }

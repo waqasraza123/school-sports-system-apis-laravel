@@ -20,7 +20,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Intervention\Image\Facades\Image;
 
 class NewsController extends Controller
 {
@@ -163,14 +165,26 @@ class NewsController extends Controller
         }
         else
         {
-            if (Input::file('image') != null) {
-                $destinationPath = 'uploads/news'; // upload path
-                $extension = Input::file('image')->getClientOriginalExtension(); // getting image extension
-                $fileName = rand(11111, 99999) . '.' . $extension; // renameing image
-                Input::file('image')->move($destinationPath, $fileName); // uploading file to given path
-                //create news
+            $json = json_decode(Input::get('image_scale'), true);
+            $fileName = "";
+            if(Input::file('photo') != null){
+
+                $extension = Input::file('photo')->getClientOriginalExtension();
+                $fileName = rand(1111, 9999) . '.' . $extension;
+
+                $destinationPath = "/uploads/news/"; // upload path
+
+                $img = Image::make(Input::file('photo'));
+                $img->widen((int) ($img->width() * $json['scale']));
+                $img->crop((int)$json['w'], (int)$json['h'], (int)$json['x'], (int)$json['y']);
+                $img->encode();
+
+                $filesystem = Storage::disk('s3');
+                $filesystem->put($destinationPath . $fileName, $img->__toString(), 'public');
+
                 $news = News::create(array('school_id' => $this->schoolId, 'title' => $file['title'],
-                    'image' => asset('uploads/news/'.$fileName),  'news_date' => $file['news_date'], 'content' => $file['content'],
+                    'image' => $fileName == ""? null : 'https://s3-' . env('S3_REGION','') . ".amazonaws.com/" . env('S3_BUCKET','') . $destinationPath . $fileName,
+                    'news_date' => $file['news_date'], 'content' => $file['content'],
                     'season_id' => $file['season']));
 
             } else {
@@ -226,14 +240,27 @@ class NewsController extends Controller
         }
         else
         {
-            if (Input::file('image') != null) {
-                $destinationPath = 'uploads/news'; // upload path
-                $extension = Input::file('image')->getClientOriginalExtension(); // getting image extension
-                $fileName = rand(11111, 99999) . '.' . $extension; // renameing image
-                Input::file('image')->move($destinationPath, $fileName); // uploading file to given path
+            $json = json_decode(Input::get('image_scale'), true);
+            $fileName = "";
+            if(Input::file('photo') != null){
+
+                $extension = Input::file('photo')->getClientOriginalExtension();
+                $fileName = rand(1111, 9999) . '.' . $extension;
+
+                $destinationPath = "/uploads/news/"; // upload path
+
+                $img = Image::make(Input::file('photo'));
+                $img->widen((int) ($img->width() * $json['scale']));
+                $img->crop((int)$json['w'], (int)$json['h'], (int)$json['x'], (int)$json['y']);
+                $img->encode();
+
+                $filesystem = Storage::disk('s3');
+                $filesystem->put($destinationPath . $fileName, $img->__toString(), 'public');
+
                 //update
                 News::find($id)
-                    ->update(['school_id' => $this->schoolId, 'title' => $file['title'], 'image' => asset('uploads/news/'.$fileName),
+                    ->update(['school_id' => $this->schoolId, 'title' => $file['title'],
+                        'image' => $fileName == ""? null : 'https://s3-' . env('S3_REGION','') . ".amazonaws.com/" . env('S3_BUCKET','') . $destinationPath . $fileName,
                         'news_date' => $file['news_date'], 'content' => $file['content'], 'season_id' => $file['season']]);
             } else {
                 //update

@@ -5,9 +5,8 @@ namespace App\Http\Controllers;
 use App\Social;
 use App\Sponsor;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Response;
 
 class SponsorsController extends Controller
 {
@@ -41,17 +40,35 @@ class SponsorsController extends Controller
      */
     public function store(Request $request)
     {
+        if (isset($_POST['name'])) {
+            $url = "https://twitter.com/users/username_available?username=Microsoftasdasd";
+            $content = @file_get_contents($url);
+
+            if (($json_data = json_decode($content, 1)) == NULL) {
+                echo 0;
+            } else {
+                //print_r($json_data);
+                if (!empty($json_data[0]['screen_name'])) {
+                    // user exists
+                    echo 1;
+                }
+            }
+
+            exit;
+        }
+
         $this->validate($request, [
             'name' => 'required|max:255',
             'bio' => 'required',
             'email' => 'required|email|unique:sponsors,email',
             'address' => 'required',
-            'phone' => 'required'
+            'phone' => 'required',
+            'photo' => 'required',
+            'logo' => 'required'
         ]);
 
         $photo = "";
         $logo = "";
-        $logo2 = "";
 
         if(Input::file('photo') != null){
             $destinationPath = 'uploads/sponsors'; // upload path
@@ -79,30 +96,31 @@ class SponsorsController extends Controller
             'email' => $request->input('email'),
             'phone' => $request->input('phone'),
             'logo' => $logo == '' ? '' : asset('uploads/sponsors/'.$logo),
-            'logo2' => $logo2 == '' ? '' :asset('uploads/sponsors/'.$logo2),
             'photo' => $photo == '' ? '' :asset('uploads/sponsors/'.$photo),
             'address' => $request->input('address'),
             'school_id' => $this->schoolId,
             'color' => $request->input('color'),
-            'color2' => $request->input('color2'),
-            'color3' => $request->input('color3'),
             'video' => $request->input('video'),
             'tagline' => $request->input('tagline'),
             'bio' => $request->input('bio'),
-            'url' => $request->input('url')
+            'url' => $request->input('url'),
+            'order' => $request->input('order')
         ]);
 
         Social::create([
             'facebook' => $request->input('facebook'),
             'twitter' => $request->input('twitter'),
             'instagram' => $request->input('instagram'),
-            'vimeo' => $request->input('vimeo'),
-            'youtube' => $request->input('youtube'),
             'socialLinks_id' => $sponsor->id,
             'socialLinks_type' => 'App\Sponsor',
         ]);
 
-        return redirect('/sponsors')->with('success', 'Sponsor Added Successfully');
+        $response = array(
+            'status' => 'success',
+            'msg' => 'Sponsor Added successfully',
+        );
+
+        return Response::json($response);
     }
 
     /**
@@ -215,30 +233,31 @@ class SponsorsController extends Controller
             'email' => $request->input('email'),
             'phone' => $request->input('phone'),
             'logo' => $logo,
-            'logo2' => $logo2,
             'photo' => $photo,
             'address' => $request->input('address'),
             'school_id' => $this->schoolId,
             'color' => $request->input('color'),
-            'color2' => $request->input('color2'),
-            'color3' => $request->input('color3'),
             'video' => $request->input('video'),
             'tagline' => $request->input('tagline'),
             'bio' => $request->input('bio'),
-            'url' => $request->input('website')
+            'url' => $request->input('website'),
+            'order' => $request->input('order')
         ]);
 
         Social::where('socialLinks_id', $id)->where('socialLinks_type', 'App\Sponsor')->update([
             'facebook' => $request->input('facebook'),
             'twitter' => $request->input('twitter'),
             'instagram' => $request->input('instagram'),
-            'vimeo' => $request->input('vimeo'),
-            'youtube' => $request->input('youtube'),
             'socialLinks_id' => $id,
             'socialLinks_type' => 'App\Sponsor',
         ]);
 
-        return redirect('/sponsors')->with('success', 'Sponsor Updated Successfully');
+        $response = array(
+            'status' => 'success',
+            'msg' => 'Sponsor Updated successfully',
+        );
+
+        return Response::json($response);
     }
 
     /**

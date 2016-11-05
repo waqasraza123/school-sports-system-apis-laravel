@@ -1,15 +1,20 @@
 @extends('layouts.master')
 @section('content')
-    {!! Form::model($sponsor, array('url'=>'sponsors/'.$sponsor->id, 'method'=>'PUT', 'files'=>true)) !!}
+    {!! Form::model($sponsor, array('url'=>'sponsors/'.$sponsor->id, 'method'=>'PUT', 'files'=>true,
+    'id' => 'sponsor_form')) !!}
     <div class="container" style="width: 100% !important;">
 
         @include('partials.error-messages.error')
         @include('partials.error-messages.success')
 
+        <div class="alert-custom-success alert alert-success" style="display: none"></div>
+        <div class="alert-custom-error alert alert-danger" style="display: none"></div>
+        <input type="hidden" value="0" id="create_sponsor">
+        <input type="hidden" value="{{$sponsor->id}}" id="sponsor_id">
 
         <div class="row">
-          <div class="col-sm-8">
-              <h3 style="text-align: center; margin-bottom: 50px;">Update Sponsor</h3>
+            <div class="col-sm-8">
+                <h3 style="text-align: center; margin-bottom: 50px;">Create Sponsor</h3>
             </div>
             <div class="col-sm-8">
                 <ul class="nav nav-tabs">
@@ -25,7 +30,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group-sm">
                                         <div class="col-s-3">
-                                            {!! Form::label('title', 'Name:', ['class' => 'control-label']) !!}
+                                            {!! Form::label('title', 'Business Name:', ['class' => 'control-label']) !!}
                                             {!! Form::text('name', null, ['class' => 'form-control', 'id'=> 'name', 'required'=> 'true']) !!}
                                         </div>
                                     </div>
@@ -34,7 +39,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group-sm">
                                         <div class="col-s-3">
-                                            {!! Form::label('tagline', 'Tagline:', ['class' => 'control-label']) !!}
+                                            {!! Form::label('tagline', 'Headline:', ['class' => 'control-label']) !!}
                                             {!! Form::text('tagline', null, ['class' => 'form-control']) !!}
                                         </div>
                                     </div>
@@ -51,12 +56,12 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group-sm">
-                                      <div class="form-group-sm">
-                                          <div class="col-s-3">
-                                              {!! Form::label('title', 'Phone:', ['class' => 'control-label']) !!}
-                                              {!! Form::text('phone', null, ['class' => 'form-control', 'id'=> 'phone', 'required' => true]) !!}
-                                          </div>
-                                      </div>
+                                        <div class="form-group-sm">
+                                            <div class="col-s-3">
+                                                {!! Form::label('title', 'Phone:', ['class' => 'control-label']) !!}
+                                                {!! Form::text('phone', null, ['class' => 'form-control', 'id'=> 'phone', 'required' => true]) !!}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -80,16 +85,21 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                  <div class="form-group-sm">
-                                      <div class="col-s-3">
-                                          {!! Form::label('title', 'Bio:', ['class' => 'control-label']) !!}
-                                          {!! Form::textarea('bio', null, ['class' => 'form-control', 'id'=> 'bio', 'required' => true]) !!}
-                                      </div>
-                                  </div>
+                                    <div class="form-group-sm">
+                                        <div class="col-s-3">
+                                            {!! Form::label('title', 'Description:', ['class' => 'control-label']) !!}
+                                            {!! Form::textarea('bio', null, ['class' => 'form-control', 'id'=> 'bio', 'required' => true]) !!}
+                                        </div>
+                                    </div>
 
                                 </div>
                                 <div class="col-md-6">
-
+                                    <div class="form-group-sm">
+                                        <div class="col-s-3">
+                                            {!! Form::label('order', 'Order:', ['class' => 'control-label']) !!}
+                                            {!! Form::number('order', null, ['class' => 'form-control', 'id'=> 'order', 'required' => true]) !!}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -98,24 +108,6 @@
                     {{--school media tab--}}
                     <div class="tab-pane fade" id="media">
                         <div class="container" style="width: 100% !important;">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group-sm">
-                                        <div class="col-s-3">
-                                            <label class="control-label" for="video">Video</label>
-                                            {!! Form::text('video', null, ['class' => 'form-control']) !!}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group-sm">
-                                        <div class="col-s-3">
-                                            {!! Form::label('title', 'Vimeo:', ['class' => 'control-label']) !!}
-                                            {!! Form::text('vimeo', $social == null ? "" : $social->vimeo, ['class' => 'form-control', 'id'=> 'vimeo']) !!}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
                             <div class="row">
                                 <div class="col-md-6">
@@ -130,7 +122,9 @@
                                     <div class="form-group-sm">
                                         <div class="col-s-3">
                                             {!! Form::label('title', 'Facebook:', ['class' => 'control-label']) !!}
-                                            {!! Form::text('facebook', $social == null ? "" : $social->facebook, ['class' => 'form-control', 'id'=> 'facebook']) !!}
+                                            <span style="font-size: 11px">for profile id go to http://findmyfbid.com/</span>
+                                            {!! Form::text('facebook', $social == null ? "" : $social->facebook, ['class' => 'form-control', 'id'=> 'facebook',
+                                            'placeholder' => 'for profile link follow the format facebook.com/id']) !!}
                                         </div>
                                     </div>
                                 </div>
@@ -147,8 +141,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group-sm">
                                         <div class="col-s-3">
-                                            {!! Form::label('title', 'Youtube:', ['class' => 'control-label']) !!}
-                                            {!! Form::text('youtube', $social == null ? "" : $social->youtube, ['class' => 'form-control', 'id'=> 'youtube']) !!}
+
                                         </div>
                                     </div>
                                 </div>
@@ -165,8 +158,8 @@
                                         <div class="col-s-3">
                                             <div class="control-group">
                                                 <div class="controls">
-                                                    <label class="control-label" for="photo">Sponsor Photo:</label>
-                                                    {!! Form::file('photo', ['class' => 'form-control']) !!}
+                                                    <label class="control-label" for="logo">Logo:</label>
+                                                    {!! Form::file('logo', ['class' => 'form-control logo']) !!}
                                                 </div>
                                             </div>
                                         </div>
@@ -177,8 +170,8 @@
                                         <div class="col-s-3">
                                             <div class="control-group">
                                                 <div class="controls">
-                                                    {!! Form::label('title', 'Sponsor logo:', ['class' => 'control-label']) !!}
-                                                    {!! Form::file('logo', ['class' => 'form-control']) !!}
+                                                    <label class="control-label" for="color">Main Color:</label>
+                                                    {!! Form::color('color', null, ['class' => 'form-control']) !!}
                                                 </div>
                                             </div>
                                         </div>
@@ -192,47 +185,15 @@
                                         <div class="col-s-3">
                                             <div class="control-group">
                                                 <div class="controls">
-                                                    <label class="control-label" for="logo2">Sponsor logo 2:</label>
-                                                    {!! Form::file('logo2', ['class' => 'form-control']) !!}
+                                                    <label class="control-label" for="photo">Photo:</label>
+                                                    {!! Form::file('photo', ['class' => 'form-control photo']) !!}
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group-sm">
-                                        <div class="col-s-3">
-                                            <label class="control-label" for="color">Sponsor Color:</label>
-                                            {!! Form::color('color', null, ['class' => 'form-control']) !!}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-
-                                <div class="col-md-6">
-                                    <div class="form-group-sm">
-                                        <div class="col-s-3">
-                                            <label class="control-label" for="color2">Sponsor Color2:</label>
-                                            {!! Form::color('color2', null, ['class' => 'form-control']) !!}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group-sm">
-                                        <div class="col-s-3">
-                                            <label class="control-label" for="color3">Sponsor Color3:</label>
-                                            {!! Form::color('color3', null, ['class' => 'form-control']) !!}
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col-md-6">
-
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div class="row">
@@ -240,7 +201,8 @@
                         <div class="col-md-6 col-md-offset-5" style="margin-top: 30px">
                             <div class="form-group-sm">
                                 <div class="col-s-3">
-                                    {!! Form::submit('Update Sponsor', ['class' => 'submit_school_modal btn btn-primary']) !!}
+                                    {!! Form::submit('Update', ['class' => 'btn btn-primary'
+                                    ,'id' => 'submit_sponsor']) !!}
                                 </div>
                             </div>
                         </div>
@@ -254,4 +216,5 @@
 @endsection
 @section('footer')
     @include('partials.error-messages.footer-script')
+    <script src="/js/sports/sponsors.js"></script>
 @stop

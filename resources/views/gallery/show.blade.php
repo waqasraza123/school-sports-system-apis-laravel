@@ -12,9 +12,6 @@
                 <br>
             @endif
 
-            <button  class="btn btn-info" id="upload_switch">Add video url</button>
-            </br>
-            </br>
             <div class="col-lg-12" id="photo_box">
                 <form id="my-awesome-dropzone" class="dropzone">
                     <!-- this is were the previews should be shown. -->
@@ -29,19 +26,6 @@
                     </ul>
                 </div>
                 <button id="submitUpload" type="submit" form="my-awesome-dropzone" class="btn btn-info" id="submitbtn" style="margin-left: 75%; ">Upload photos!</button>
-            </div>
-
-            <div class="col-lg-12" id="video_box">
-            {!! Form::open(['route' => ['albums.url-upload', $album_id]]) !!}
-            <!-- this is were the previews should be shown. -->
-                <div id="inputs">
-                {!! Form::label('title', 'Video url:', ['class' => 'control-label']) !!}
-                {!! Form::text('url', null, ['class' => 'fn form-control', 'required' => 'true']) !!}
-                </div>
-                <button type="button" class="btn btn-warning" id="addInput">Add new field</button>
-
-                <button type="submit" class="btn btn-info" id="submitbtn" style="margin-left: 75%; margin-top: 5px;">Add video url</button>
-                {!! Form::close() !!}
             </div>
 
             <div class="col-lg-12" >
@@ -72,41 +56,17 @@
                                 </button>
                                 <p class="id" style="display: none;" >{{ $photo->id}}</p>
                                 <div>
-                                    {{--<p class="students_ids" style="display: none;" >{{ json_encode($photo->students->lists('id'))}} </p>--}}
+                                    <p class="students_ids" style="display: none;" >{{ json_encode($photo->students->lists('id'))}} </p>
                                 </div>
-                                <p style="position: absolute;bottom: 0; right:10px; left:10px">{{--
+                                <p style="position: absolute;bottom: 0; right:10px; left:10px">
                                     @foreach($photo->students as $student_tag)<span class="label label-info" style="color: black; font-weight: lighter; font-size: 10px">{{$student_tag->name}}</span> @endforeach
-                                --}}</p>
+                                </p>
                             </div>
                         </div>
                     </div>
                 @endforeach
             </div>
 
-            <div class="col-lg-12">
-                <h1>VIDEOS</h1>
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th>URL</th>
-                        <th>Players</th>
-                        <th>&nbsp;</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                @foreach($gallery_videos as $video)
-                    <tr>
-                        <td><a href="{{ $video->url}}">{{$video->url}}</a></td>
-                        <td>{{--@foreach($video->students as $student_tag) <label>{{$student_tag->name}}, </label> @endforeach--}}
-                        </td>
-                        <td><button data-id="{{ $video->id}}" data-toggle="modal" class="edit_video btn btn-info" data-target="#galleryModal" align="right" >edit</button></td>
-                        <td>{!! Form::open([    'method' => 'DELETE','route' => ['gallery.destroy', $video->id]]) !!}{!! Form::submit('Delete', array('class' => 'btn btn-danger')) !!}{!! Form::close() !!}</td>
-                        {{--<td><p class="video_students_ids" style="display: none;" >{{ json_encode($video->students->lists('id'))}} </p></td>--}}
-                    </tr>
-                @endforeach
-                    </tbody>
-                </table>
-            </div>
         </div>
     </div>
     @include('gallery.modal.galltery_form')

@@ -17,6 +17,7 @@ use App\Level;
 use App\Year;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
+use DB;
 
 class RostersController extends Controller
 {
@@ -38,8 +39,10 @@ class RostersController extends Controller
         $levelsList = LevelSport::lists('name', 'id');
         $levelsList->prepend('Level');
 
+        $sporttt = DB::table('sports')->where('school_id', $this->schoolId)->get();
+        
         return view('rosters.show',
-            compact('sports', 'school_id', 'year', 'rosters', 'sportsList', 'levels', 'levelsList'));
+            compact('sports', 'school_id', 'year', 'rosters', 'sportsList', 'levels', 'levelsList', 'sporttt'));
     }
 
     public function updatePosition(Request $request, $rosterId, $studentId)
@@ -64,7 +67,10 @@ class RostersController extends Controller
         $year = $request->input('year');
 
         $sportId = $request->input('sport_id');
+        $sId = $request->input('sid');
         $levelId = $request->input('level_id');
+        
+        $sporttt = DB::table('sports')->where('school_id', $this->schoolId)->get();
 
         if($sportId){
             $rosters = Roster::where('school_id', $this->schoolId)->where('sport_id', $sportId)->get();
@@ -76,11 +82,11 @@ class RostersController extends Controller
             $levelsList->prepend('Level');
 
             return view('rosters.show',
-                compact('sports', 'school_id', 'year', 'rosters', 'sportsList', 'levels', 'levelsList'));
+                compact('sports', 'school_id', 'year', 'rosters', 'sportsList', 'levels', 'levelsList', 'sporttt'));
         }
 
         if($levelId){
-            $rosters = Roster::where('school_id', $this->schoolId)->where('level_id', $levelId)->get();
+            $rosters = Roster::where('school_id', $this->schoolId)->where('level_id', $levelId)->where('sport_id', $sId)->get();
             $sports = Sport::where('school_id', $this->schoolId)->get();
             $levels = LevelSport::where('school_id', $this->schoolId)->where('id', $levelId)->get();
             $sportsList = Sport::lists('name', 'id');
@@ -89,9 +95,9 @@ class RostersController extends Controller
             $levelsList->prepend('Level');
 
             return view('rosters.show',
-                compact('sports', 'school_id', 'year', 'rosters', 'sportsList', 'levels', 'levelsList'));
+                compact('sports', 'school_id', 'year', 'rosters', 'sportsList', 'levels', 'levelsList', 'sporttt'));
         }
-
+        
         $rosters = Roster::where('school_id', $this->schoolId)->get();
         $sports = Sport::where('school_id', $this->schoolId)->get();
         $levels = LevelSport::where('school_id', $this->schoolId)->get();
@@ -307,6 +313,19 @@ class RostersController extends Controller
     {
         $positions = Positions::where('sport_id', '=', $sport_id)->lists('name', 'id');
         return $positions;
+    }
+
+    public function loadLevels(Request $request){
+        $rosterId = $request->input('id');
+        $rosterName = $request->input('name');
+
+        //since now we have roster id, get the
+        //roster name from db based on the id
+        //then fetch the levels of that roster
+        $rosterLevelsIds = Roster::select('level_id')->where('name', $rosterName)->where('school_id', $this->schoolId)->get();
+        $levels = LevelSport::whereIn('id', $rosterLevelsIds)->where('school_id', $this->schoolId)->get();
+
+        return response()->json($levels);
     }
 
     public function showAddStudentsForm($rosterId){
