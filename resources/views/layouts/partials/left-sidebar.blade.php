@@ -20,7 +20,7 @@
               @else
                   <li>
                       <a href="/schools"><i class="fa fa-dashboard fa-fw"></i>
-                          Add School</a>
+                          Schools</a>
                   </li>
               @endif
           @endif

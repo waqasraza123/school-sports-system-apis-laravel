@@ -39,6 +39,7 @@
                         <th>API</th>
                         <th>&nbsp;</th>
                         <th>&nbsp;</th>
+                        <th>&nbsp;</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -50,6 +51,7 @@
                             <td class="first_name">{{ $school->city }}</td>
                             <td class="position">{{ $school->state}}</td>
                             <td class="position">{{ $school->api_key}}</td>
+                            <td> <a href="{{url('schools/edit', [$school->id])}}"><button type="button" class="btn btn-default btn-sm">Login</button></a></td>
                             <td> <a href="{{url('schools/edit', [$school->id])}}"><button type="button" class="btn btn-primary btn-sm edit_school">Edit</button></a></td>
                             <td> {!! Form::open([    'method' => 'DELETE','route' => ['schools.destroy', $school->id]]) !!}{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}{!! Form::close() !!}</td>
                             <td class="id" style="display: none;"  />{{ $school->id}}</td>
