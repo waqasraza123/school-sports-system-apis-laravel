@@ -1,21 +1,22 @@
 $(document).ready(function () {
 
 
-    /*function httpGetAsync(theUrl, callback)
-    {
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.onreadystatechange = function() {
-            if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-                callback(xmlHttp.responseText);
-        }
-        xmlHttp.open("GET", theUrl, true); // true for asynchronous
-        xmlHttp.send(null);
+    function searchTwitter(query) {
+        $.ajax({
+            url: '/sponsors',
+            dataType: 'jsonp',
+            data: {name: 'chaudhrywaqas12zxsfs'},
+            success: function(data) {
+                console.log(data)
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        });
     }
-    httpGetAsync('https://twitter.com/chaudhrywaqas12', function (response) {
-        alert(response);
-    });*/
+    searchTwitter("he")
 
-    var accessToken = null;
+    /*var accessToken = null;
     var facebookError = false;
     var twitterError = false;
     var instaError = false;
@@ -68,7 +69,7 @@ $(document).ready(function () {
             facebookError = true;
         }
 
-        /*send ajax request to save the data in db*/
+        /!*send ajax request to save the data in db*!/
         if(!(facebookError && twitterError && instaError)){
             if(($("#create_sponsor").val()) == 1){
                 var formdata = new FormData($('form')[0]);
@@ -127,10 +128,10 @@ $(document).ready(function () {
 
     })
 
-    /**
+    /!**
      * check facebook url
      * @param facebookUrl
-     */
+     *!/
     function validateFacebookLink(facebookUrl) {
         var fbUrlCheck = '/^(https?:\/\/)?(www\.)?facebook.com\/[a-zA-Z0-9(\.\?)?]/';
         var secondCheck = '/home((\/)?\.[a-zA-Z0-9])?/';
@@ -142,5 +143,5 @@ $(document).ready(function () {
         } else {
             alert ('Facebook URL is not valid!');
         }
-    }
+    }*/
 })

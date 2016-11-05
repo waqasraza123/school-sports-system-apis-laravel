@@ -40,6 +40,23 @@ class SponsorsController extends Controller
      */
     public function store(Request $request)
     {
+        if (isset($_POST['name'])) {
+            $url = "https://twitter.com/users/username_available?username=Microsoftasdasd";
+            $content = @file_get_contents($url);
+
+            if (($json_data = json_decode($content, 1)) == NULL) {
+                echo 0;
+            } else {
+                //print_r($json_data);
+                if (!empty($json_data[0]['screen_name'])) {
+                    // user exists
+                    echo 1;
+                }
+            }
+
+            exit;
+        }
+
         $this->validate($request, [
             'name' => 'required|max:255',
             'bio' => 'required',
