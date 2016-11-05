@@ -116,8 +116,6 @@ class StaffController extends Controller
     {
         $schoolId = Auth::user()->school_id;
 
-        $json = json_decode(Input::get('image_scale'), true);
-
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|email|unique:staff,email',
@@ -125,13 +123,13 @@ class StaffController extends Controller
             'photo' => 'required'
         ]);
 
+        $json = json_decode(Input::get('image_scale'), true);
         $fileName = "";
         if(Input::file('photo') != null){
 
             $extension = Input::file('photo')->getClientOriginalExtension();
             $fileName = rand(1111, 9999) . '.' . $extension;
 
-//            $destinationPath = 'https://s3-' . env('S3_REGION','') . ".amazonaws.com/" . env('S3_BUCKET','') . "/". "uploads/staff/"; // upload path
             $destinationPath = "/uploads/staff/"; // upload path
 
             $img = Image::make(Input::file('photo'));
@@ -140,9 +138,7 @@ class StaffController extends Controller
             $img->encode();
 
             $filesystem = Storage::disk('s3');
-            $filesystem->put($destinationPath . $fileName, $img->__toString());
-
-
+            $filesystem->put($destinationPath . $fileName, $img->__toString(), 'public');
         }
 
 
@@ -226,15 +222,26 @@ class StaffController extends Controller
         }
         else
         {
+            $json = json_decode(Input::get('image_scale'), true);
+            $fileName = "";
             if (Input::file('photo') != null) {
-                $destinationPath = 'uploads/staff'; // upload path
-                $extension = Input::file('photo')->getClientOriginalExtension(); // getting image extension
-                $fileName = rand(11111, 99999) . '.' . $extension; // renameing image
-                Input::file('photo')->move($destinationPath, $fileName); // uploading file to given path
+                $extension = Input::file('photo')->getClientOriginalExtension();
+                $fileName = rand(1111, 9999) . '.' . $extension;
+
+                $destinationPath = "/uploads/staff/"; // upload path
+
+                $img = Image::make(Input::file('photo'));
+                $img->widen((int) ($img->width() * $json['scale']));
+                $img->crop((int)$json['w'], (int)$json['h'], (int)$json['x'], (int)$json['y']);
+                $img->encode();
+
+                $filesystem = Storage::disk('s3');
+                $filesystem->put($destinationPath . $fileName, $img->__toString(), 'public');
                 //update
                 Staff::where('id', $id)->update(array('name' => $file['name'], 'email' => $file['email'],
                     'phone' => $file['phone'], 'description' => $file['description'], 'title' => $file['title'],
-                    'description' => $file['description'], 'school_id' => $schoolId,              'photo' => asset('/uploads/staff/'.$fileName) ));
+                    'description' => $file['description'], 'school_id' => $schoolId,
+                    'photo' => $fileName == ""? null : 'https://s3-' . env('S3_REGION','') . ".amazonaws.com/" . env('S3_BUCKET','') . $destinationPath . $fileName ));
             } else {
                 Staff::where('id', $id)->update(array('name' => $file['name'], 'email' => $file['email'],
                     'phone' => $file['phone'], 'description' => $file['description'], 'title' => $file['title'],

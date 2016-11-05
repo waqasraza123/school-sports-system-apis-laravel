@@ -203,11 +203,11 @@ class GamesController extends Controller
         else
             $result = ($file['our_score'] > $file['opponents_score']) ? 'W' : 'L';
 
-        if (Input::file('image') != null) {
+        if (Input::file('photo') != null) {
             $destinationPath = 'uploads/games'; // upload path
-            $extension = Input::file('image')->getClientOriginalExtension(); // getting image extension
+            $extension = Input::file('photo')->getClientOriginalExtension(); // getting image extension
             $fileName = rand(11111, 99999) . '.' . $extension; // renameing image
-            Input::file('image')->move($destinationPath, $fileName); // uploading file to given path
+            Input::file('photo')->move($destinationPath, $fileName); // uploading file to given path
 
             $game = Games::create(array('season_id' => $request->input('season_id'),
                 'school_id' => $this->schoolId, 'roster_id' => $file['roster_id'],

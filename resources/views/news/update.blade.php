@@ -1,4 +1,5 @@
 @extends('layouts.master')
+<link href='/css/jquery.guillotine.css' media='all' rel='stylesheet'>
 <link rel="stylesheet" href="/timepicker/css/bootstrap-timepicker.min.css">
 @section('content')
     <div class="container-fluid">
@@ -11,9 +12,10 @@
                         {!! Form::model($news, array('url'=>'news/'.$news->id, 'method'=>'PUT', 'files'=>true)) !!}
 
                         <div class="control-group">
+                            @include('partials.image_crop_preview')
                             <div class="controls">
                                 {!! Form::label('title', 'Select Image:', ['class' => 'control-label']) !!}
-                                {!! Form::file('image') !!}
+                                {!! Form::file('photo', ['class' => 'form-control', 'id' => 'photo']) !!}
                                 <br>
                             </div>
                         </div>
@@ -131,6 +133,9 @@
         $('#news_date').datetimepicker({format: "YYYY-MM-DD"});
 
     </script>
+
+    <script src='/js/jquery.guillotine.js'></script>
+    <script src='/dist/js/sb-image-crop-2.js'></script>
     <script src="/dist/js/sb-news-2.js"></script>
     @include('partials.error-messages.footer-script')
 @endsection
