@@ -1,7 +1,7 @@
 $(document).ready(function () {
 
 
-    function searchTwitter(query) {
+    /*function searchTwitter(query) {
         $.ajax({
             url: '/sponsors',
             dataType: 'jsonp',
@@ -14,9 +14,9 @@ $(document).ready(function () {
             }
         });
     }
-    searchTwitter("he")
+    searchTwitter("he")*/
 
-    /*var accessToken = null;
+    var accessToken = null;
     var facebookError = false;
     var twitterError = false;
     var instaError = false;
@@ -69,7 +69,7 @@ $(document).ready(function () {
             facebookError = true;
         }
 
-        /!*send ajax request to save the data in db*!/
+        /*send ajax request to save the data in db*/
         if(!(facebookError && twitterError && instaError)){
             if(($("#create_sponsor").val()) == 1){
                 var formdata = new FormData($('form')[0]);
@@ -128,10 +128,10 @@ $(document).ready(function () {
 
     })
 
-    /!**
+    /**
      * check facebook url
      * @param facebookUrl
-     *!/
+     */
     function validateFacebookLink(facebookUrl) {
         var fbUrlCheck = '/^(https?:\/\/)?(www\.)?facebook.com\/[a-zA-Z0-9(\.\?)?]/';
         var secondCheck = '/home((\/)?\.[a-zA-Z0-9])?/';
@@ -143,5 +143,5 @@ $(document).ready(function () {
         } else {
             alert ('Facebook URL is not valid!');
         }
-    }*/
+    }
 })
