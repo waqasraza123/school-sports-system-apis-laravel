@@ -1,4 +1,5 @@
 @extends('layouts.master')
+<link href='/css/jquery.guillotine.css' media='all' rel='stylesheet'>
 @section('content')
     @if (session()->has('success'))
         <div class="alert alert-success">
@@ -226,11 +227,12 @@
                                 <div class="col-md-6">
                                     <div class="form-group-sm">
                                         <div class="col-s-3">
+                                            @include('partials.image_crop_preview')
                                             <div class="control-group">
-                                                <img src="{{$school->photo}}">
+                                                <img style="width: 100%;" id="photo-preview" src="{{$school->photo}}">
                                                 <div class="controls">
                                                     <label class="control-label" for="school_photo">School Photo:</label>
-                                                    {!! Form::file('photo') !!}
+                                                    {!! Form::file('photo', ['class' => 'form-control', 'id' => 'photo']) !!}
                                                 </div>
                                             </div>
                                         </div>
@@ -239,11 +241,29 @@
                                 <div class="col-md-6">
                                     <div class="form-group-sm">
                                         <div class="col-s-3">
+
+                                            <div class="row">
+                                                <div class="col-md-6" id="image-preview1" style="margin-top: 30px;">
+                                                    {{ Form::hidden('image_scale1', null, ['id' => 'image_scale1']) }}
+                                                    <div class='frame col-md-12' style="width: 350px; height: 350px">
+                                                        <img id='sample_picture1' src='img/arrow.png'>
+                                                    </div>
+
+                                                    <div id='controls' class="col-md-12" style="margin-top: -80px;">
+                                                        {{--<button id='rotate_left'  type='button' title='Rotate left'> &lt; </button>--}}
+                                                        <button id='zoom_out1'     type='button' title='Zoom out'> - </button>
+                                                        <button id='fit1'          type='button' title='Fit image'> [ ]  </button>
+                                                        <button id='zoom_in1'      type='button' title='Zoom in'> + </button>
+                                                        {{--<button id='rotate_right' type='button' title='Rotate right'> &gt; </button>--}}
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                             <div class="control-group">
-                                                <img src="{{$school->school_logo}}">
+                                                <img id="photo-preview1" src="{{$school->school_logo}}">
                                                 <div class="controls">
                                                     {!! Form::label('title', 'School logo:', ['class' => 'control-label']) !!}
-                                                    {!! Form::file('school_logo') !!}
+                                                    {!! Form::file('school_logo', ['class' => 'form-control', 'id' => 'school_logo']) !!}
                                                 </div>
                                             </div>
                                         </div>
@@ -304,6 +324,88 @@
 @endsection
 @section('footer')
     <script src="/dist/js/sb-schools-2.js"></script>
+
+    <script src='/js/jquery.guillotine.js'></script>
+    <script src='/dist/js/sb-image-crop-2.js'></script>
+    <script>
+        $(window).load(function() {
+            jQuery(function () {
+                var picture1 = $('#sample_picture1');
+
+
+                $('#image-preview1').hide();
+                document.getElementById("school_logo").onchange = function () {
+                    var reader1 = new FileReader();
+
+                    reader1.onload = function (e) {
+                        if (e.total > 250000) {
+                            $('#imageerror1').text('Image too large');
+                            $jimage = $("#school_logo");
+                            $jimage.val("");
+                            $jimage.wrap('<form>').closest('form').get(0).reset();
+                            $jimage.unwrap();
+                            $('#sample_picture1').removeAttr('src');
+                            return;
+                        }
+                        $('#imageerror1').text('');
+                        document.getElementById("sample_picture1").src = e.target.result;
+                    };
+                    reader1.readAsDataURL(this.files[0]);
+
+
+                    // Make sure the image is completely loaded before calling the plugin
+                    picture1.one('load', function () {
+                        // Remove any existing instance
+                        if (picture1.guillotine('instance')) picture1.guillotine('remove');
+                        // Initialize plugin (with custom event)
+                        picture1.guillotine({eventOnChange: 'guillotinechange'});
+                        picture1.guillotine({width: 400, height: 300});
+                        // Display inital data
+                        var data = picture1.guillotine('getData');
+                        for (var key in data) {
+                            $('#' + key).html(data[key]);
+                        }
+
+                        // Bind button actions
+//              $('#rotate_left').click(function(){ picture1.guillotine('rotateLeft'); $('#image_scale').val(JSON.stringify(data)); });
+//              $('#rotate_right').click(function(){ picture1.guillotine('rotateRight'); $('#image_scale').val(JSON.stringify(data)); });
+                        $('#fit1').click(function () {
+                            picture1.guillotine('fit');
+                            $('#image_scale1').val(JSON.stringify(data));
+                        });
+                        $('#zoom_in1').click(function () {
+                            picture1.guillotine('zoomIn');
+                            $('#image_scale1').val(JSON.stringify(data));
+                        });
+                        $('#zoom_out1').click(function () {
+                            picture1.guillotine('zoomOut');
+                            $('#image_scale1').val(JSON.stringify(data));
+                        });
+                        $('#image_scale1').val(JSON.stringify(data));
+                        // Update data on change
+                        picture1.on('guillotinechange', function (ev, data, action) {
+                            data.scale = parseFloat(data.scale.toFixed(4));
+                            $('#image_scale1').val(JSON.stringify(data));
+                            for (var k in data) {
+                                $('#' + k).html(data[k]);
+                            }
+                        });
+                    });
+
+                    if($('#photo-preview1').length > 0)
+                    {
+                        $('#photo-preview1').hide();
+                    }
+
+                    $('#image-preview1').show();
+                };
+
+                // Make sure the 'load' event is triggered at least once (for cached images)
+                if (picture1.prop('complete')) picture1.trigger('load')
+            });
+        });
+    </script>
+
     @if ($errors->has())
 
         <script>

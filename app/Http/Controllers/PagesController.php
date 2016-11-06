@@ -10,10 +10,12 @@ use App\Http\Controllers\Controller;
 use App\School;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
+use Intervention\Image\Facades\Image;
 
 class PagesController extends Controller
 {
@@ -44,6 +46,7 @@ class PagesController extends Controller
     {
         //al inputs
         $file = Input::all();
+
         $rules = array(
             'name' => 'required',
             'adress' => 'required',
@@ -69,28 +72,51 @@ class PagesController extends Controller
             $fileName = $school->photo;
             $fileName2 = $school->school_logo;
 
-            $image = School::find($this->schoolId);
-            if ($image->photo) {
-                $fileName2 = $image->photo;
-            }
-            if ($image->school_logo) {
-                $fileName = $image->school_logo;
+            $json = json_decode(Input::get('image_scale'), true);
+            if (Input::file('photo') != null) {
+                //delete old picture
+                $fileName = $school->photo;
+                $filesystem = Storage::disk('s3');
+                $imagePath = explode(".amazonaws.com/" . env('S3_BUCKET',''),$fileName);
+                $filesystem->delete(end($imagePath));
+
+                $extension = Input::file('photo')->getClientOriginalExtension();
+                $fileName = rand(1111, 9999) . '.' . $extension;
+
+                $destinationPath = "/uploads/settings/"; // upload path
+
+                $img = Image::make(Input::file('photo'));
+                $img->widen((int)($img->width() * $json['scale']));
+                $img->crop((int)$json['w'], (int)$json['h'], (int)$json['x'], (int)$json['y']);
+                $img->encode();
+
+                $filesystem = Storage::disk('s3');
+                $filesystem->put($destinationPath . $fileName, $img->__toString(), 'public');
             }
 
+            $json1 = json_decode(Input::get('image_scale'), true);
             if (Input::file('school_logo') != null) {
 
-                $destinationPath = 'uploads/schools'; // upload path
-                $extension = Input::file('school_logo')->getClientOriginalExtension(); // getting image extension
-                $fileName = rand(1111, 9999) . '.' . $extension; // renameing image
-                Input::file('school_logo')->move($destinationPath, $fileName); // uploading file to given path
-            }
-            if (Input::file('photo') != null) {
+                //delete old picture
+                $fileName2 = $school->school_logo;
+                $filesystem1 = Storage::disk('s3');
+                $imagePath1 = explode(".amazonaws.com/" . env('S3_BUCKET',''),$fileName2);
+                $filesystem1->delete(end($imagePath1));
 
-                $destinationPath = 'uploads/schools'; // upload path
-                $extension2 = Input::file('photo')->getClientOriginalExtension(); // getting image extension
-                $fileName2 = rand(1111, 9999) . '.' . $extension2; // renameing image
-                Input::file('photo')->move($destinationPath, $fileName2); // uploading file to given path
+                $extension1 = Input::file('photo')->getClientOriginalExtension();
+                $fileName1 = rand(1111, 9999) . '.' . $extension1;
+
+                $destinationPath1 = "/uploads/settings/"; // upload path
+
+                $img1 = Image::make(Input::file('school_logo'));
+                $img1->widen((int)($img1->width() * $json1['scale']));
+                $img1->crop((int)$json1['w'], (int)$json1['h'], (int)$json1['x'], (int)$json1['y']);
+                $img1->encode();
+
+                $filesystem1 = Storage::disk('s3');
+                $filesystem1->put($destinationPath1 . $fileName1, $img1->__toString(), 'public');
             }
+
 
             $school = School::where('id', '=', $this->schoolId)->first()->update(array(
 
@@ -111,8 +137,9 @@ class PagesController extends Controller
                 'school_email' => $file['school_email'],
                 'video' => $file['video'],
                 'livestream_url' => $file['livestream_url'],
-                'school_logo' => asset('uploads/schools/' . $fileName),
-                'photo' => asset('uploads/schools/' . $fileName2)));
+                'school_logo' => $fileName1 == ""? null : 'https://s3-' . env('S3_REGION','') . ".amazonaws.com/" . env('S3_BUCKET','') . $destinationPath1 . $fileName1,
+                'photo' => $fileName == ""? null : 'https://s3-' . env('S3_REGION','') . ".amazonaws.com/" . env('S3_BUCKET','') . $destinationPath . $fileName
+            ));
 
             //save the social media links to social_links table
             Social::where('socialLinks_id', $this->schoolId)->first()->update(array(
