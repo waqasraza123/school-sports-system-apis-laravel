@@ -23,9 +23,8 @@ class SportsController extends Controller
      */
     public function index()
     {
-
-        $school_id = Auth::user()->school_id;
-        $sports = Sport::where('school_id', $school_id)->get();
+        $school_id = $this->schoolId;
+        $sports = Sport::where('school_id', $this->schoolId)->get();
         $seasonsList = Season::lists('name', 'id');
         $seasonsList->prepend('Season');
         $seasons = Season::all();
@@ -44,7 +43,7 @@ class SportsController extends Controller
         $seasonsList = Season::lists('name', 'id');
 
         $year = $request->input('year');
-        $school_id = Auth::user()->school_id;
+        $school_id = $this->school_id;
         $seasonId = $request->input('season_id');
 
         if($seasonId == 0){
@@ -93,9 +92,8 @@ class SportsController extends Controller
         ]);
 
         $icon = SportIcon::where('name','=',$request->input('selected-text'))->first();
-
         $sport = Sport::create([
-            'sport_id' => $request->input('name'),
+            'sports_id' => $request->input('name'),
             'icon_id' => $icon == null ? "" : $icon->id,
             'highlight_video' => $request->input('highlight_video'),
             'record' => $request->input('record'),
@@ -221,7 +219,7 @@ class SportsController extends Controller
         $icon = SportIcon::where('name','=',$request->input('selected-text'))->first();
 
         Sport::find($id)->update([
-            'sport_id' => $request->input('name'),
+            'sports_id' => $request->input('name'),
             'highlight_video' => $request->input('highlight_video'),
             'record' => $request->input('record'),
             'season_id' => $request->input('season_id'),

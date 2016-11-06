@@ -19,7 +19,7 @@ class OpponentController extends Controller
      */
     public function index()
     {
-        $school_id = Auth::user()->school_id;
+        $school_id = $this->school_id;
         $opponents = Opponent::where('school_id', $school_id)->get();
         $year = '2016';
 
@@ -33,7 +33,7 @@ class OpponentController extends Controller
     public function yearOpponents(Request $request)
     {
         $year = $request->input('year');
-        $school_id = Auth::user()->school_id;
+        $school_id = $this->school_id;
         $opponents = Opponent::where('school_id', $school_id)->get();
 
         return view('opponent.show', compact('opponents', 'school_id', 'year'));
@@ -57,7 +57,7 @@ class OpponentController extends Controller
      */
     public function store(Request $request)
     {
-        $schoolId = Auth::user()->school_id;
+        $schoolId = $this->school_id;
 
         $this->validate($request, [
             'name' => 'required|max:255',
@@ -120,7 +120,7 @@ class OpponentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $schoolId = Auth::user()->school_id;
+        $schoolId = $this->school_id;
 
         $this->validate($request, [
             'name' => 'required|max:255',

@@ -4,12 +4,21 @@
 
 
 
-    <h1>Schools</h1>
-    <p class="lead">
-        <a href="{{url('schools/add')}}"><button type="button" id="add_new_school" class="btn btn-primary btn-sm">Add School</button></a>
-
-    </p>
-
+    <h1 style="text-align: center">Schools</h1>
+    <div class="row">
+        <div class="col-md-1 col-md-offset-5">
+            <a href="{{url('schools/add')}}">
+                <button type="button" id="add_new_school" class="btn btn-primary btn-sm">Add School</button>
+            </a>
+        </div>
+        @if(Session::get('school_id') != null)
+            <div class="col-md-1">
+                {!! Form::open(['route' => 'login-admin']) !!}
+                {!! Form::submit('Admin Login', ['class' => 'btn btn-sm btn-default']) !!}
+                {!! Form::close() !!}
+            </div>
+        @endif
+    </div>
     <br>
     @if (session()->has('success'))
         <div class="alert alert-success">
@@ -21,10 +30,7 @@
     @if ($schools->isEmpty() )
         <div class="bs-callout bs-callout-warning">
             <h4>No Results</h4>
-            Nothing to see here please create an Opponent
-            <a  data-toggle="modal" data-target="#schoolModal">Here</a>
         </div>
-
     @else
 
         <div class="panel panel-primary">
@@ -51,7 +57,12 @@
                             <td class="first_name">{{ $school->city }}</td>
                             <td class="position">{{ $school->state}}</td>
                             <td class="position">{{ $school->api_key}}</td>
-                            <td> <a href="{{url('schools/edit', [$school->id])}}"><button type="button" class="btn btn-default btn-sm">Login</button></a></td>
+                            <td>
+                                {!! Form::open(['method' => 'POST', 'route' => ['login-school']]) !!}
+                                    <input type="hidden" value="{{$school->id}}" name="school_id">
+                                    <input type="hidden" value="{{$school->name}}" name="school_name">
+                                    {!! Form::submit('Login', ['class' => 'btn btn-default btn-sm']) !!}
+                                {!! Form::close() !!}</td>
                             <td> <a href="{{url('schools/edit', [$school->id])}}"><button type="button" class="btn btn-primary btn-sm edit_school">Edit</button></a></td>
                             <td> {!! Form::open([    'method' => 'DELETE','route' => ['schools.destroy', $school->id]]) !!}{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}{!! Form::close() !!}</td>
                             <td class="id" style="display: none;"  />{{ $school->id}}</td>

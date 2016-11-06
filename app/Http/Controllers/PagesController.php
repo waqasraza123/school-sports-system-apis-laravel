@@ -21,7 +21,7 @@ class PagesController extends Controller
 	public function home()
     {
         if(Auth::check()){
-            $schoolId = Auth::user()->school_id;
+            $schoolId = $this->schoolId;
         }
         $social = Social::where('socialLinks_id', $schoolId)->first();
         $schools = School::where('school_email', '<>', 'admin@gmail.com')->get();

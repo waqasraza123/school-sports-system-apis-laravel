@@ -45,7 +45,7 @@ class RostersLevelsController extends Controller
             'name' => 'required'
         ]);
 
-        $schoolId = Auth::user()->school_id;
+        $schoolId = $this->school_id;
         $rosterLevel = LevelRoster::create([
             'name' => $request->input('name'),
             'school_id' => $schoolId,

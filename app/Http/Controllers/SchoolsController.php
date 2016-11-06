@@ -34,7 +34,7 @@ class SchoolsController extends Controller
         if(!($GLOBALS['admin'])){
 
             if(Auth::check()){
-                $schoolId = Auth::user()->school_id;
+                $schoolId = $this->school_id;
             }
             $social = Social::where('socialLinks_id', $schoolId)->first();
             $schools = School::where('school_email', '<>', 'admin@gmail.com')->get();

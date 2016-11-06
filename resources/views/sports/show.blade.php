@@ -53,7 +53,7 @@
                                                         @else
                                                             <td><img src="{{asset('uploads/def.png')}}" height="50px" width="50px" alt="image"></td>
                                                         @endif
-                                                        <td>{{$s->name}}</td>
+                                                        <td>{{isset($s->sport->name) ? $s->sport->name : null}}</td>
                                                         <td>{{$season->name}}</td>
                                                         <td>{{$s->school->name}}</td>
                                                         <td>{{$y->year}}</td>

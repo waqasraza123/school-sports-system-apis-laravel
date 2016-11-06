@@ -73,7 +73,7 @@ class StaffController extends Controller
      */
     public function index()
     {
-        $school_id = Auth::user()->school_id;
+        $school_id = $this->school_id;
         $staff = Staff::where('school_id', $school_id)->get();
         $year = '2016';
 
@@ -87,7 +87,7 @@ class StaffController extends Controller
     public function yearStaff(Request $request)
     {
         $year = $request->input('year');
-        $school_id = Auth::user()->school_id;
+        $school_id = $this->school_id;
         $staff = Staff::where('school_id', $school_id)->get();
 
         return view('staff.show', compact('staff', 'school_id', 'year'));
@@ -114,7 +114,7 @@ class StaffController extends Controller
      */
     public function store(Request $request)
     {
-        $schoolId = Auth::user()->school_id;
+        $schoolId = $this->school_id;
 
         $this->validate($request, [
             'name' => 'required',
@@ -211,7 +211,7 @@ class StaffController extends Controller
 
         $file = Input::all();
         $rules = array();
-        $schoolId = Auth::user()->school_id;
+        $schoolId = $this->school_id;
         $validator = Validator::make(Input::all(), $rules);
         if ($validator->fails()) {
             //setting errors message
@@ -271,7 +271,7 @@ class StaffController extends Controller
 
     public function update(Request $request, $id)
     {$fileName == ""? $fileNameOld:
-    $schoolId = Auth::user()->school_id;
+    $schoolId = $this->school_id;
 
     $this->validate($request, [
     'name' => 'required',

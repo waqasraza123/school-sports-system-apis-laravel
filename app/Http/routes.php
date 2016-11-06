@@ -81,6 +81,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('schedules', 'SchedulesController');
 
     Route::resource('ads', 'AdsController');
+
+    Route::post('/admin/login/schools', ['as' => 'login-school', 'uses' => 'AdminController@loginSchool']);
+    Route::post('/admin/login/', ['as' => 'login-admin', 'uses' => 'AdminController@loginAdmin']);
 });
 
 /**
