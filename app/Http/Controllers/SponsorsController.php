@@ -7,6 +7,8 @@ use App\Sponsor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 
 class SponsorsController extends Controller
 {
@@ -70,33 +72,47 @@ class SponsorsController extends Controller
         $photo = "";
         $logo = "";
 
-        if(Input::file('photo') != null){
-            $destinationPath = 'uploads/sponsors'; // upload path
+        $json = json_decode(Input::get('image_scale'), true);
+        $fileName = "";
+        if (Input::file('photo') != null) {
+
             $extension = Input::file('photo')->getClientOriginalExtension();
-            $photo = rand(1111, 9999) . '.' . $extension;
-            Input::file('photo')->move($destinationPath, $photo);
+            $fileName = rand(1111, 9999) . '.' . $extension;
+
+            $destinationPath = "/uploads/sponsors/"; // upload path
+
+            $img = Image::make(Input::file('photo'));
+            $img->widen((int)($img->width() * $json['scale']));
+            $img->crop((int)$json['w'], (int)$json['h'], (int)$json['x'], (int)$json['y']);
+            $img->encode();
+
+            $filesystem = Storage::disk('s3');
+            $filesystem->put($destinationPath . $fileName, $img->__toString(), 'public');
         }
 
+        $json1 = json_decode(Input::get('image_scale'), true);
         if(Input::file('logo') != null){
-            $destinationPath = 'uploads/sponsors'; // upload path
-            $extension = Input::file('logo')->getClientOriginalExtension();
-            $logo = rand(1111, 9999) . '.' . $extension;
-            Input::file('logo')->move($destinationPath, $logo);
+            $extension1 = Input::file('photo')->getClientOriginalExtension();
+            $fileName1 = rand(1111, 9999) . '.' . $extension1;
+
+            $destinationPath1 = "/uploads/sponsors/"; // upload path
+
+            $img1 = Image::make(Input::file('school_logo'));
+            $img1->widen((int)($img1->width() * $json1['scale']));
+            $img1->crop((int)$json1['w'], (int)$json1['h'], (int)$json1['x'], (int)$json1['y']);
+            $img1->encode();
+
+            $filesystem1 = Storage::disk('s3');
+            $filesystem1->put($destinationPath1 . $fileName1, $img1->__toString(), 'public');
         }
 
-        if(Input::file('logo2') != null){
-            $destinationPath = 'uploads/sponsors'; // upload path
-            $extension = Input::file('logo2')->getClientOriginalExtension();
-            $logo2 = rand(1111, 9999) . '.' . $extension;
-            Input::file('logo2')->move($destinationPath, $logo2);
-        }
 
         $sponsor = Sponsor::create([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'phone' => $request->input('phone'),
-            'logo' => $logo == '' ? '' : asset('uploads/sponsors/'.$logo),
-            'photo' => $photo == '' ? '' :asset('uploads/sponsors/'.$photo),
+            'logo' => $fileName == ""? null : 'https://s3-' . env('S3_REGION','') . ".amazonaws.com/" . env('S3_BUCKET','') . $destinationPath . $fileName,
+            'photo' => $fileName == ""? null : 'https://s3-' . env('S3_REGION','') . ".amazonaws.com/" . env('S3_BUCKET','') . $destinationPath . $fileName,
             'address' => $request->input('address'),
             'school_id' => $this->schoolId,
             'color' => $request->input('color'),
@@ -171,16 +187,28 @@ class SponsorsController extends Controller
 
         $checkImages = Sponsor::where('id', $id)->first();
 
-        //if user added new image while updating
-        if(Input::file('photo') != null){
+        $json = json_decode(Input::get('image_scale'), true);
+        if (Input::file('photo') != null) {
+            //delete old picture
+            $fileName = $checkImages->photo;
+            $filesystem = Storage::disk('s3');
+            $imagePath = explode(".amazonaws.com/" . env('S3_BUCKET',''),$fileName);
+            $filesystem->delete(end($imagePath));
 
-            $destinationPath = 'uploads/sponsors'; // upload path
             $extension = Input::file('photo')->getClientOriginalExtension();
-            $photo = rand(1111, 9999) . '.' . $extension;
-            Input::file('photo')->move($destinationPath, $photo);
-            $photo = asset('uploads/sponsors/'.$photo);
-        }
+            $fileName = rand(1111, 9999) . '.' . $extension;
 
+            $destinationPath = "/uploads/sponsors/"; // upload path
+
+            $img = Image::make(Input::file('photo'));
+            $img->widen((int)($img->width() * $json['scale']));
+            $img->crop((int)$json['w'], (int)$json['h'], (int)$json['x'], (int)$json['y']);
+            $img->encode();
+
+            $filesystem = Storage::disk('s3');
+            $filesystem->put($destinationPath . $fileName, $img->__toString(), 'public');
+            $photo='https://s3-' . env('S3_REGION','') . ".amazonaws.com/" . env('S3_BUCKET','') . $destinationPath . $fileName;
+        }
         //check if image is already in db
         else{
             if($checkImages->photo != null){
@@ -191,32 +219,28 @@ class SponsorsController extends Controller
             }
         }
 
-        if(Input::file('logo2') != null){
-            $destinationPath = 'uploads/sponsors'; // upload path
-            $extension = Input::file('logo2')->getClientOriginalExtension();
-            $logo2 = rand(1111, 9999) . '.' . $extension;
-            Input::file('logo2')->move($destinationPath, $logo2);
-            $logo2 = asset('uploads/sponsors/'.$logo2);
-        }
-        //check if image is already in db
-        else{
-            if($checkImages->logo2 != null){
-                $logo2 = $checkImages->logo2;
-            }
-            else{
-                $logo2 = null;
-            }
-        }
+        $json1 = json_decode(Input::get('image_scale'), true);
+        if (Input::file('school_logo') != null) {
 
-        if (Input::file('logo') != null) {
+            //delete old picture
+            $fileName2 = $checkImages->school_logo;
+            $filesystem1 = Storage::disk('s3');
+            $imagePath1 = explode(".amazonaws.com/" . env('S3_BUCKET',''),$fileName2);
+            $filesystem1->delete(end($imagePath1));
 
-            $destinationPath = 'uploads/sponsors'; // upload path
-            $extension = Input::file('logo')->getClientOriginalExtension();
-            $logo = rand(1111, 9999) . '.' . $extension;
-            Input::file('logo')->move($destinationPath, $logo);
+            $extension1 = Input::file('photo')->getClientOriginalExtension();
+            $fileName1 = rand(1111, 9999) . '.' . $extension1;
 
-            $logo = asset('uploads/sponsors/'.$logo);
+            $destinationPath1 = "/uploads/sponsors/"; // upload path
 
+            $img1 = Image::make(Input::file('school_logo'));
+            $img1->widen((int)($img1->width() * $json1['scale']));
+            $img1->crop((int)$json1['w'], (int)$json1['h'], (int)$json1['x'], (int)$json1['y']);
+            $img1->encode();
+
+            $filesystem1 = Storage::disk('s3');
+            $filesystem1->put($destinationPath1 . $fileName1, $img1->__toString(), 'public');
+            $logo='https://s3-' . env('S3_REGION','') . ".amazonaws.com/" . env('S3_BUCKET','') . $destinationPath . $fileName;
         }
         //check if image is already in db
         else{
@@ -275,6 +299,19 @@ class SponsorsController extends Controller
         if ($social){
             $social->delete();
         }
+
+        //delete old picture
+        $fileName2 = $sponsor->school_logo;
+        $filesystem1 = Storage::disk('s3');
+        $imagePath1 = explode(".amazonaws.com/" . env('S3_BUCKET',''),$fileName2);
+        $filesystem1->delete(end($imagePath1));
+
+        //delete old picture
+        $fileName = $sponsor->photo;
+        $filesystem = Storage::disk('s3');
+        $imagePath = explode(".amazonaws.com/" . env('S3_BUCKET',''),$fileName);
+        $filesystem->delete(end($imagePath));
+
         $sponsor->delete();
 
         return redirect('/sponsors')->with('success', 'Sponsor Deleted Successfully');
