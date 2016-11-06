@@ -69,8 +69,8 @@ class PagesController extends Controller
 //                $api = $this->apiKey();
 //            }
             $school = School::where('id','=', $this->schoolId)->first();
-            $fileName = $school->photo;
-            $fileName2 = $school->school_logo;
+            $photo = $school->photo;
+            $logo = $school->school_logo;
 
             $json = json_decode(Input::get('image_scale'), true);
             if (Input::file('photo') != null) {
@@ -92,6 +92,7 @@ class PagesController extends Controller
 
                 $filesystem = Storage::disk('s3');
                 $filesystem->put($destinationPath . $fileName, $img->__toString(), 'public');
+                $photo='https://s3-' . env('S3_REGION','') . ".amazonaws.com/" . env('S3_BUCKET','') . $destinationPath . $fileName;
             }
 
             $json1 = json_decode(Input::get('image_scale'), true);
@@ -115,6 +116,7 @@ class PagesController extends Controller
 
                 $filesystem1 = Storage::disk('s3');
                 $filesystem1->put($destinationPath1 . $fileName1, $img1->__toString(), 'public');
+                $logo='https://s3-' . env('S3_REGION','') . ".amazonaws.com/" . env('S3_BUCKET','') . $destinationPath1 . $fileName1;
             }
 
 
@@ -137,8 +139,8 @@ class PagesController extends Controller
                 'school_email' => $file['school_email'],
                 'video' => $file['video'],
                 'livestream_url' => $file['livestream_url'],
-                'school_logo' => $fileName1 == ""? null : 'https://s3-' . env('S3_REGION','') . ".amazonaws.com/" . env('S3_BUCKET','') . $destinationPath1 . $fileName1,
-                'photo' => $fileName == ""? null : 'https://s3-' . env('S3_REGION','') . ".amazonaws.com/" . env('S3_BUCKET','') . $destinationPath . $fileName
+                'school_logo' => $logo,
+                'photo' => $photo
             ));
 
             //save the social media links to social_links table
