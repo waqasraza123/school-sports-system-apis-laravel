@@ -34,7 +34,7 @@ class RostersController extends Controller
         $rosters = Roster::where('school_id', $this->schoolId)->get();
         $levels = LevelSport::where('school_id', $this->schoolId)->get();
 
-        $sportsList = Sport::lists('name', 'id');
+        $sportsList = Sport::lists('id');
         $sportsList->prepend('Sport');
         $levelsList = LevelSport::lists('name', 'id');
         $levelsList->prepend('Level');

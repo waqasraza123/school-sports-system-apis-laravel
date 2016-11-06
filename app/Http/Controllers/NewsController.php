@@ -30,7 +30,7 @@ class NewsController extends Controller
     {
         //Lists for Schools, Sports, Years and Levels with key = id and value = name
         $schools = School::where('id', '<>', '1')->lists('name', 'id');
-        $sports = Sport::where('school_id', $this->schoolId)->lists('name', 'id');
+        $sports = Sport::where('school_id', $this->schoolId)->lists('id');
         $levelcreate = LevelSport::where('school_id', $this->schoolId)->lists('name', 'id');
         $years = Year::lists('year', 'id');
         //making list of all games where key=game_id and value= opponent name and date of the game
