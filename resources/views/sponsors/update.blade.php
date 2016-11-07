@@ -245,13 +245,13 @@
 
 
                 $('#image-preview1').hide();
-                document.getElementById("logo").onchange = function () {
+                document.getElementById("school_logo").onchange = function () {
                     var reader1 = new FileReader();
 
                     reader1.onload = function (e) {
                         if (e.total > 250000) {
                             $('#imageerror1').text('Image too large');
-                            $jimage = $("#logo");
+                            $jimage = $("#school_logo");
                             $jimage.val("");
                             $jimage.wrap('<form>').closest('form').get(0).reset();
                             $jimage.unwrap();

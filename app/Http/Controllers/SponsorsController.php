@@ -219,7 +219,7 @@ class SponsorsController extends Controller
             }
         }
 
-        $json1 = json_decode(Input::get('image_scale'), true);
+        $json1 = json_decode(Input::get('image_scale1'), true);
         if (Input::file('school_logo') != null) {
 
             //delete old picture
@@ -228,7 +228,7 @@ class SponsorsController extends Controller
             $imagePath1 = explode(".amazonaws.com/" . env('S3_BUCKET',''),$fileName2);
             $filesystem1->delete(end($imagePath1));
 
-            $extension1 = Input::file('photo')->getClientOriginalExtension();
+            $extension1 = Input::file('school_logo')->getClientOriginalExtension();
             $fileName1 = rand(1111, 9999) . '.' . $extension1;
 
             $destinationPath1 = "/uploads/sponsors/"; // upload path
