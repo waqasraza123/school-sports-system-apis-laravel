@@ -225,6 +225,11 @@ class StaffController extends Controller
             $json = json_decode(Input::get('image_scale'), true);
             $fileName = "";
             if (Input::file('photo') != null) {
+                $filesystem = Storage::disk('s3');
+                $staff =  Staff::where('id', $id)->get();
+                $imagePath = explode(".amazonaws.com/" . env('S3_BUCKET',''),$staff->photo);
+                $filesystem->delete(end($imagePath));
+
                 $extension = Input::file('photo')->getClientOriginalExtension();
                 $fileName = rand(1111, 9999) . '.' . $extension;
 
