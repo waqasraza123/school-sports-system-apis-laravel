@@ -1,4 +1,5 @@
 @extends('layouts.master')
+<link href='/css/jquery.guillotine.css' media='all' rel='stylesheet'>
 @section('content')
     <div class="container" style="width: 100% !important;">
 
@@ -13,6 +14,21 @@
                 </div>
 
                 <div class="col-sm-8">
+
+                    @include('partials.image_crop_preview')
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group-sm">
+                                <div class="col-s-3">
+                                    {!!Form::label('photo', 'Image:', ['class' => 'control-label']) !!}
+                                    {!! Form::file('photo', ['class' => 'form-control', 'id' => 'photo']) !!}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group-sm">
@@ -88,6 +104,10 @@
     </div>
 @endsection
 @section('footer')
+
+    <script src='/js/jquery.guillotine.js'></script>
+    <script src='/dist/js/sb-image-crop-2.js'></script>
+
     @include('partials.add_new_sport_level_script')
     @include('partials.error-messages.footer-script')
 @stop

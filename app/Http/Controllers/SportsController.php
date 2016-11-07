@@ -14,6 +14,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 
 class SportsController extends Controller
 {
@@ -92,6 +94,24 @@ class SportsController extends Controller
             'level_id' => 'required',
         ]);
 
+        $json = json_decode(Input::get('image_scale'), true);
+        $fileName = "";
+        if(Input::file('photo') != null){
+
+            $extension = Input::file('photo')->getClientOriginalExtension();
+            $fileName = rand(1111, 9999) . '.' . $extension;
+
+            $destinationPath = "/uploads/sports/"; // upload path
+
+            $img = Image::make(Input::file('photo'));
+            $img->widen((int) ($img->width() * $json['scale']));
+            $img->crop((int)$json['w'], (int)$json['h'], (int)$json['x'], (int)$json['y']);
+            $img->encode();
+
+            $filesystem = Storage::disk('s3');
+            $filesystem->put($destinationPath . $fileName, $img->__toString(), 'public');
+        }
+
         $icon = SportIcon::where('name','=',$request->input('selected-text'))->first();
 
         $sport = Sport::create([
@@ -99,6 +119,7 @@ class SportsController extends Controller
             'icon_id' => $icon == null ? "" : $icon->id,
             'highlight_video' => $request->input('highlight_video'),
             'record' => $request->input('record'),
+            'photo' => $fileName == ""? null : 'https://s3-' . env('S3_REGION','') . ".amazonaws.com/" . env('S3_BUCKET','') . $destinationPath . $fileName,
             'season_id' => $request->input('season_id'),
             'school_id' => $this->schoolId,
         ]);
@@ -215,6 +236,30 @@ class SportsController extends Controller
             'level_id' => 'required',
         ]);
 
+
+        $json = json_decode(Input::get('image_scale'), true);
+        $sport = Sport::where('id', $id)->first();
+
+        $fileName = $sport->photo;
+        if (Input::file('photo') != null) {
+            $filesystem = Storage::disk('s3');
+            $imagePath = explode(".amazonaws.com/" . env('S3_BUCKET', ''), $sport->photo);
+            $filesystem->delete(end($imagePath));
+
+            $extension = Input::file('photo')->getClientOriginalExtension();
+            $fileName = rand(1111, 9999) . '.' . $extension;
+
+            $destinationPath = "/uploads/sports/"; // upload path
+
+            $img = Image::make(Input::file('photo'));
+            $img->widen((int)($img->width() * $json['scale']));
+            $img->crop((int)$json['w'], (int)$json['h'], (int)$json['x'], (int)$json['y']);
+            $img->encode();
+
+            $filesystem = Storage::disk('s3');
+            $filesystem->put($destinationPath . $fileName, $img->__toString(), 'public');
+            $fileName = 'https://s3-' . env('S3_REGION','') . ".amazonaws.com/" . env('S3_BUCKET','') . $destinationPath . $fileName;
+        }
         $levels = $request->input('level_id');
         $levelsArray = array();
 
@@ -225,6 +270,7 @@ class SportsController extends Controller
             'highlight_video' => $request->input('highlight_video'),
             'record' => $request->input('record'),
             'season_id' => $request->input('season_id'),
+            'photo' => $fileName,
             'school_id' => $this->schoolId,
         ]);
 
