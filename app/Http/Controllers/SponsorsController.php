@@ -92,12 +92,12 @@ class SponsorsController extends Controller
 
         $json1 = json_decode(Input::get('image_scale'), true);
         if(Input::file('logo') != null){
-            $extension1 = Input::file('photo')->getClientOriginalExtension();
+            $extension1 = Input::file('logo')->getClientOriginalExtension();
             $fileName1 = rand(1111, 9999) . '.' . $extension1;
 
             $destinationPath1 = "/uploads/sponsors/"; // upload path
 
-            $img1 = Image::make(Input::file('school_logo'));
+            $img1 = Image::make(Input::file('logo'));
             $img1->widen((int)($img1->width() * $json1['scale']));
             $img1->crop((int)$json1['w'], (int)$json1['h'], (int)$json1['x'], (int)$json1['y']);
             $img1->encode();
