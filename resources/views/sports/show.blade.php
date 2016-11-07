@@ -31,7 +31,7 @@
                             <thead  style="background-color:#000000; color:white">
                                 <tr>
                                     <th>#</th>
-                                    <th>Icon</th>
+
                                     <th>Name</th>
                                     <th>Season</th>
                                     <th>School</th>
@@ -48,12 +48,8 @@
                                                 @if($y->year == $year && $s->school_id == $school_id)
                                                     <tr>
                                                         <td>{{$s->id}}</td>
-                                                        @if($s->sport()->first())
-                                                            <td><img src="{{$s->sport->icon}}" height="50px" width="50px" alt="image"></td>
-                                                        @else
-                                                            <td><img src="{{asset('uploads/def.png')}}" height="50px" width="50px" alt="image"></td>
-                                                        @endif
-                                                        <td>{{$s->name}}</td>
+
+                                                        <td>{{$s->sport_name}}</td>
                                                         <td>{{$season->name}}</td>
                                                         <td>{{$s->school->name}}</td>
                                                         <td>{{$y->year}}</td>

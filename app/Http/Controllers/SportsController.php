@@ -68,7 +68,7 @@ class SportsController extends Controller
      */
     public function create()
     {
-        $sportIcons = SportIcon::all();
+       // $sportIcons = SportIcon::all();
 
         $seasons = Season::lists('name', 'id');
 
@@ -112,11 +112,12 @@ class SportsController extends Controller
             $filesystem->put($destinationPath . $fileName, $img->__toString(), 'public');
         }
 
-        $icon = SportIcon::where('name','=',$request->input('selected-text'))->first();
+        $icon = SportsList::where('id','=',$request->input('name'))->first();
 
         $sport = Sport::create([
             'sport_id' => $request->input('name'),
-            'icon_id' => $icon == null ? "" : $icon->id,
+            'icon_url' =>  $icon->icon,
+            'sport_name' =>  $icon->name,
             'highlight_video' => $request->input('highlight_video'),
             'record' => $request->input('record'),
             'photo' => $fileName == ""? null : 'https://s3-' . env('S3_REGION','') . ".amazonaws.com/" . env('S3_BUCKET','') . $destinationPath . $fileName,
@@ -141,11 +142,12 @@ class SportsController extends Controller
                 ]);
 
                 $roster = Roster::create([
-                    'name' => $sport->name. '_roster',
+                    'name' => $icon->name . ' - ' . $level,
                     'sport_id' => $sport->id,
                     'school_id' => $this->schoolId,
                     'season_id' => $sport->season_id,
-                    'level_id' => $levelsSports->id,
+                    'level_id' => $exist->id,
+                    'sport_name' =>  $icon->name,
                 ]);
 
                 Year::create([
@@ -160,11 +162,12 @@ class SportsController extends Controller
             else{
 
                 $roster = Roster::create([
-                    'name' => $sport->name. '_roster',
+                    'name' => $icon->name . ' - ' . $level,
                     'sport_id' => $sport->id,
                     'school_id' => $this->schoolId,
                     'season_id' => $sport->season_id,
                     'level_id' => $exist->id,
+                    'sport_name' =>  $icon->name,
                 ]);
 
                 Year::create([
@@ -263,7 +266,7 @@ class SportsController extends Controller
         $levels = $request->input('level_id');
         $levelsArray = array();
 
-        $icon = SportIcon::where('name','=',$request->input('selected-text'))->first();
+        $icon = SportsList::where('id','=',$request->input('name'))->first();
 
         Sport::find($id)->update([
             'sport_id' => $request->input('name'),
@@ -374,13 +377,14 @@ class SportsController extends Controller
     public function destroy($id)
     {
         $sport = Sport::find($id);
+        $sport->levels()->detach();
 
         $filesystem = Storage::disk('s3');
         $imagePath = explode(".amazonaws.com/" . env('S3_BUCKET', ''), $sport->photo);
         $filesystem->delete(end($imagePath));
 
         $sport->levels()->detach();
-        
+
 
         foreach ($sport->years as $y){
             $y->delete();

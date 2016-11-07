@@ -90,6 +90,50 @@ class GalleryController extends Controller
         return Redirect::back();
     }
 
+
+    public function storeVideo(Request $request)
+    {
+        $data = Input::all();
+        $rules = array( );
+
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails()) {
+            //setting errors message
+            Session::flash('message', $request->errors()->all());
+
+            // send back to the page with the input data and errors
+            return Redirect::back()->withInput()->withErrors($validator);
+        } else {
+                  $album =         Video::create([
+                                'date' => Carbon::now()->toDateString(),
+                                'title' => $request->input('txtsetvalue'),
+                                'url' =>  $request->input('url'),
+                                'video_cover' =>  $request->input('cover'),
+                            ]);
+
+            //add roster tags
+            if (isset($data['roster_modal_id'])) {
+                $album->rosters()->attach(array_values($data['roster_modal_id']));
+            }
+            //add games tags
+            //add games tags
+            if (isset($data['student_modal_id']))
+            {
+                $album->games()->attach(array_values($data['student_modal_id']));
+            }
+            //add year tags
+            //if (isset($data['year_id'])) {
+              //  $album->years()->attach(array_values($data['year_id']));
+          //  }
+
+            return Redirect::back();
+        }
+    }
+
+
+
+
     public function videoTagsUpdate()
     {
         $file = Input::all();

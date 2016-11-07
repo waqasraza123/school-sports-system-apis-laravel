@@ -160,8 +160,8 @@ class APIController extends Controller
         $schools = School::
             with([
                 'sport_list' => function($q){
-                    $q->select('sports.name as sport_name', 'sports.id as sport_id', 'school_id', 'sport_icon.path')
-                      ->join('sport_icon', 'sports.icon_id', '=', 'sport_icon.id')
+                    $q->select('sports.sport_name as sport_name', 'sports.id as sport_id', 'school_id', 'icon_url as path')
+
                         ->orderBy('sort_order','ASC');;
                 },
 
@@ -306,8 +306,9 @@ class APIController extends Controller
                                 ->get();
                         }
                     ])
-                    ->select('sports.id as sport_id', 'sports.id', 'sports_id',
-                        'sports.record as sport_record', 'season_id', 'sports.photo as sport_photo')
+                    ->select('sports.id as sport_id', 'sports.id', 'sports.name as sport_name',
+                        DB::raw('CONCAT((select count(id) FROM `games` WHERE `school_id` = \'2\' and `roster_id` =\'4\' and `result` = \'w\'), \' - \' ,(select count(id) FROM `games` WHERE `school_id` = \'2\' and `roster_id` =\'4\' and `result` = \'L\')) as sport_record '),
+                        'season_id', 'sports.photo as sport_photo')
                             ->where('school_id', $schoolId)
                             ->where('sports.id', $sportId);
 
@@ -378,8 +379,9 @@ class APIController extends Controller
                         ->get();
                 }
             ])
-                ->select('sports.id as sport_id', 'sports.id', 'sports_id',
-                    'sports.record as sport_record', 'season_id', 'sports.photo as sport_photo')
+                ->select('sports.id as sport_id', 'sports.id', 'sports.name as sport_name',
+                    DB::raw('CONCAT((select count(id) FROM `games` WHERE `school_id` = \'2\' and `roster_id` =\'4\' and `result` = \'w\'), \' - \' ,(select count(id) FROM `games` WHERE `school_id` = \'2\' and `roster_id` =\'4\' and `result` = \'L\')) as sport_record '),
+                     'season_id', 'sports.photo as sport_photo')
                 ->where('school_id', $schoolId)
                 ->where('season_id', $seasonId)
                 ->where('sports.id', $sportId);
@@ -601,8 +603,8 @@ class APIController extends Controller
 
         else{
             $game = Games::select('games.id as game_id',
-                    'game_date',
-                    'game_date as game_time',
+                DB::raw('DATE_FORMAT(game_date,\'%W, %M %d %Y\') as game_date'),
+                    'game_time as game_time',
                     'locations.name as game_location',
                     'locations.address as game_address',
                     'locations.map_url as game_map_url',
@@ -631,7 +633,9 @@ class APIController extends Controller
             if($game) {
 
                 $news = Games::find($gameId)->game_news()->select('news.id as news_id', 'news.title as news_title',
-                        'news.intro as news_teaser', 'news.image as news_photo', 'news_date', 'link as news_url',
+                        'news.intro as news_teaser', 'news.image as news_photo',
+                    DB::raw('DATE_FORMAT(news_date,\'%m/%d/%Y\') as news_date'),
+                    'link as news_url',
                         'news.id')
                         ->get();
 
@@ -645,7 +649,8 @@ class APIController extends Controller
                     ->get();
 
                 $gameVideo = Games::select('videos.id as video_id', 'videos.title as video_title',
-                    'videos.date as video_date', 'videos.url as video_url')
+                    DB::raw('DATE_FORMAT(videos.date,\'%m/%d/%Y\') as video_date'),
+                    'videos.url as video_url')
                     ->join('album_games', 'album_games.games_id', '=', 'games.id')
                     ->join('album', 'album.id', '=', 'album_games.album_id')
                     ->join('videos', 'videos.album_id', '=', 'album.id')
@@ -1067,7 +1072,9 @@ class APIController extends Controller
      */
     public function getNews($schoolId, $newsId){
         $news = News::select('id as news_id', 'title as news_title', 'intro as news_teaser',
-                    'image as news_photo', 'news_date', 'link as news_url', 'credit as news_credit', 'content as news_content')
+                    'image as news_photo',
+            DB::raw('DATE_FORMAT(news_date,\'%m/%d/%Y\') as news_date'),
+            'link as news_url', 'credit as news_credit', 'content as news_content')
                     ->where('school_id', $schoolId)
                     ->where('id', $newsId)
                     ->first();
