@@ -374,8 +374,12 @@ class SportsController extends Controller
     public function destroy($id)
     {
         $sport = Sport::find($id);
-        $sport->levels()->detach();
 
+        $filesystem = Storage::disk('s3');
+        $imagePath = explode(".amazonaws.com/" . env('S3_BUCKET', ''), $sport->photo);
+        $filesystem->delete(end($imagePath));
+
+        $sport->levels()->detach();
         
 
         foreach ($sport->years as $y){

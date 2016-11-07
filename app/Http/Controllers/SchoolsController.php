@@ -6,6 +6,8 @@ use App\Opponent;
 use App\School;
 use App\Social;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 use Session;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -102,99 +104,84 @@ class SchoolsController extends Controller
                 $api = $this->apiKey();
             }
 
-            if (Input::file('school_logo') != null && Input::file('photo') !=null) {
+            $photo = "";
+            $logo = "";
 
-                $destinationPath = 'uploads/schools'; // upload path
-                $extension = Input::file('school_logo')->getClientOriginalExtension(); // getting image extension
-                $extension2 = Input::file('photo')->getClientOriginalExtension(); // getting image extension
+            $json = json_decode(Input::get('image_scale'), true);
+            if (Input::file('photo') != null) {
 
-                $fileName = rand(1111, 9999) . '.' . $extension; // renameing image
-                $fileName2 = rand(1111, 9999) . '.' . $extension2; // renameing image
+                $extension = Input::file('photo')->getClientOriginalExtension();
+                $fileName = rand(1111, 9999) . '.' . $extension;
 
-                Input::file('school_logo')->move($destinationPath, $fileName); // uploading file to given path
-                Input::file('photo')->move($destinationPath, $fileName2); // uploading file to given path
+                $destinationPath = "/uploads/schools/"; // upload path
 
-                $school = School::create(array('name' => $file['name'],
-                    'short_name' => $file['short_name'],
-                    'bio' => $file['bio'],
-                    'adress' => $file['adress'],
-                    'city' => $file['city'],
-                    'state' => $file['state'],
-                    'zip' => $file['zip'],
-                    'phone' => $file['phone'],
-                    'website' => $file['website'],
-                    'school_color'=>$file['school_color'],
-                    'school_color2'=>$file['school_color2'],
-                    'school_color3'=>$file['school_color3'],
-                    'school_tagline'=>$file['school_tagline'],
-                    'app_name'=>$file['app_name'],
-                    'school_email'=>$file['school_email'],
-                    'video'=>$file['video'],
-                    'livestream_url'=>$file['livestream_url'],
-                    'api_key'=> $api,
-                    'school_logo' => asset('uploads/schools/'.$fileName),
-                    'photo' => asset('uploads/schools/'.$fileName2)
-                    ));
+                $img = Image::make(Input::file('photo'));
+                $img->widen((int)($img->width() * $json['scale']));
+                $img->crop((int)$json['w'], (int)$json['h'], (int)$json['x'], (int)$json['y']);
+                $img->encode();
 
+                $filesystem = Storage::disk('s3');
+                $filesystem->put($destinationPath . $fileName, $img->__toString(), 'public');
+                $photo='https://s3-' . env('S3_REGION','') . ".amazonaws.com/" . env('S3_BUCKET','') . $destinationPath . $fileName;
+            }
 
-                //save the social media links to social_links table
-                Social::create(array(
-                    'twitter' => $file['twitter'],
-                    'facebook' => $file['facebook'],
-                    'instagram' => $file['instagram'],
-                    'youtube' => $file['youtube'],
-                    'vimeo' => $file['vimeo'],
-                    'socialLinks_id' => $school->id,
-                    'socialLinks_type' =>'App\School',
-                ));
+            $json1 = json_decode(Input::get('image_scale'), true);
+            if (Input::file('school_logo') != null) {
 
+                $extension1 = Input::file('photo')->getClientOriginalExtension();
+                $fileName1 = rand(1111, 9999) . '.' . $extension1;
 
-                Session::flash('success', 'Created successfully');
-                if($GLOBALS['admin']){
-                    return redirect('/schools');
-                }
-                else{
-                    return redirect('/home');
-                }
-            } else {
-                $school = School::create(array('name' => $file['name'],
-                    'short_name' => $file['short_name'],
-                    'bio' => $file['bio'],
-                    'adress' => $file['adress'],
-                    'city' => $file['city'],
-                    'state' => $file['state'],
-                    'zip' => $file['zip'],
-                    'phone' => $file['phone'],
-                    'website' => $file['website'],
-                    'school_color'=>$file['school_color'],
-                    'school_color2'=>$file['school_color2'],
-                    'school_color3'=>$file['school_color3'],
-                    'school_tagline'=>$file['school_tagline'],
-                    'app_name'=>$file['app_name'],
-                    'school_email'=>$file['school_email'],
-                    'api_key'=>$api,
-                    'video'=>$file['video'],
-                    'livestream_url'=>$file['livestream_url'],
-                ));
+                $destinationPath1 = "/uploads/schools/"; // upload path
 
-                //save the social media links to social_links table
-                Social::create(array(
-                    'twitter' => $file['twitter'],
-                    'facebook' => $file['facebook'],
-                    'instagram' => $file['instagram'],
-                    'youtube' => $file['youtube'],
-                    'vimeo' => $file['vimeo'],
-                    'socialLinks_id' => $school->id,
-                    'socialLinks_type' =>'App\School',
-                ));
+                $img1 = Image::make(Input::file('school_logo'));
+                $img1->widen((int)($img1->width() * $json1['scale']));
+                $img1->crop((int)$json1['w'], (int)$json1['h'], (int)$json1['x'], (int)$json1['y']);
+                $img1->encode();
 
-                Session::flash('success', 'Created successfully');
-                if($GLOBALS['admin']){
-                    return redirect('/schools');
-                }
-                else{
-                    return redirect('/home');
-                }
+                $filesystem1 = Storage::disk('s3');
+                $filesystem1->put($destinationPath1 . $fileName1, $img1->__toString(), 'public');
+                $logo='https://s3-' . env('S3_REGION','') . ".amazonaws.com/" . env('S3_BUCKET','') . $destinationPath1 . $fileName1;
+            }
+
+            $school = School::create(array('name' => $file['name'],
+                'short_name' => $file['short_name'],
+                'bio' => $file['bio'],
+                'adress' => $file['adress'],
+                'city' => $file['city'],
+                'state' => $file['state'],
+                'zip' => $file['zip'],
+                'phone' => $file['phone'],
+                'website' => $file['website'],
+                'school_color'=>$file['school_color'],
+                'school_color2'=>$file['school_color2'],
+                'school_color3'=>$file['school_color3'],
+                'school_tagline'=>$file['school_tagline'],
+                'app_name'=>$file['app_name'],
+                'school_email'=>$file['school_email'],
+                'video'=>$file['video'],
+                'livestream_url'=>$file['livestream_url'],
+                'api_key'=> $api,
+                'school_logo' => $logo,
+                'photo' => $photo
+            ));
+
+            //save the social media links to social_links table
+            Social::create(array(
+                'twitter' => $file['twitter'],
+                'facebook' => $file['facebook'],
+                'instagram' => $file['instagram'],
+                'youtube' => $file['youtube'],
+                'vimeo' => $file['vimeo'],
+                'socialLinks_id' => $school->id,
+                'socialLinks_type' =>'App\School',
+            ));
+
+            Session::flash('success', 'Created successfully');
+            if($GLOBALS['admin']){
+                return redirect('/schools');
+            }
+            else{
+                return redirect('/home');
             }
         }
     }
@@ -233,30 +220,56 @@ class SchoolsController extends Controller
             //get the api key
             $apiKey = School::select('api_key')->where('id', $id)->first();
             $apiKey = $apiKey->api_key;
-            $fileName = "";
-            $fileName2 = "";
 
-            $image = School::find($id);
-            if($image->photo){
-                $fileName2 = $image->photo;
-            }
-            if($image->school_logo){
-                $fileName = $image->school_logo;
+            $school = School::where('id','=', $id)->first();
+            $photo = $school->photo;
+            $logo = $school->school_logo;
+
+            $json = json_decode(Input::get('image_scale'), true);
+            if (Input::file('photo') != null) {
+                //delete old picture
+                $fileName = $school->photo;
+                $filesystem = Storage::disk('s3');
+                $imagePath = explode(".amazonaws.com/" . env('S3_BUCKET',''),$fileName);
+                $filesystem->delete(end($imagePath));
+
+                $extension = Input::file('photo')->getClientOriginalExtension();
+                $fileName = rand(1111, 9999) . '.' . $extension;
+
+                $destinationPath = "/uploads/schools/"; // upload path
+
+                $img = Image::make(Input::file('photo'));
+                $img->widen((int)($img->width() * $json['scale']));
+                $img->crop((int)$json['w'], (int)$json['h'], (int)$json['x'], (int)$json['y']);
+                $img->encode();
+
+                $filesystem = Storage::disk('s3');
+                $filesystem->put($destinationPath . $fileName, $img->__toString(), 'public');
+                $photo='https://s3-' . env('S3_REGION','') . ".amazonaws.com/" . env('S3_BUCKET','') . $destinationPath . $fileName;
             }
 
+            $json1 = json_decode(Input::get('image_scale'), true);
             if (Input::file('school_logo') != null) {
 
-                $destinationPath = 'uploads/schools'; // upload path
-                $extension = Input::file('school_logo')->getClientOriginalExtension(); // getting image extension
-                $fileName = rand(1111, 9999) . '.' . $extension; // renameing image
-                Input::file('school_logo')->move($destinationPath, $fileName); // uploading file to given path
-            }
-            if (Input::file('photo') != null) {
+                //delete old picture
+                $fileName2 = $school->school_logo;
+                $filesystem1 = Storage::disk('s3');
+                $imagePath1 = explode(".amazonaws.com/" . env('S3_BUCKET',''),$fileName2);
+                $filesystem1->delete(end($imagePath1));
 
-                $destinationPath = 'uploads/schools'; // upload path
-                $extension2 = Input::file('photo')->getClientOriginalExtension(); // getting image extension
-                $fileName2 = rand(1111, 9999) . '.' . $extension2; // renameing image
-                Input::file('photo')->move($destinationPath, $fileName2); // uploading file to given path
+                $extension1 = Input::file('photo')->getClientOriginalExtension();
+                $fileName1 = rand(1111, 9999) . '.' . $extension1;
+
+                $destinationPath1 = "/uploads/schools/"; // upload path
+
+                $img1 = Image::make(Input::file('school_logo'));
+                $img1->widen((int)($img1->width() * $json1['scale']));
+                $img1->crop((int)$json1['w'], (int)$json1['h'], (int)$json1['x'], (int)$json1['y']);
+                $img1->encode();
+
+                $filesystem1 = Storage::disk('s3');
+                $filesystem1->put($destinationPath1 . $fileName1, $img1->__toString(), 'public');
+                $logo='https://s3-' . env('S3_REGION','') . ".amazonaws.com/" . env('S3_BUCKET','') . $destinationPath1 . $fileName1;
             }
 
                 $school = School::where('id', '=', $id)->first()->update(array(
@@ -279,8 +292,8 @@ class SchoolsController extends Controller
                     'video'=>$file['video'],
                     'api_key'=>$apiKey,
                     'livestream_url'=>$file['livestream_url'],
-                    'school_logo' => asset('uploads/schools/'.$fileName),
-                    'photo' => asset('uploads/schools/'.$fileName2)));
+                    'school_logo' => $logo,
+                    'photo' => $photo));
 
                 //save the social media links to social_links table
                 Social::where('socialLinks_id', $id)->first()->update(array(
@@ -311,15 +324,25 @@ class SchoolsController extends Controller
      */
     public function destroy($id)
     {
-        $roster = School::findOrFail($id);
+        $school = School::findOrFail($id);
 
-        foreach ($roster->opponents as $op){
+        $fileName = $school->photo;
+        $filesystem = Storage::disk('s3');
+        $imagePath = explode(".amazonaws.com/" . env('S3_BUCKET',''),$fileName);
+        $filesystem->delete(end($imagePath));
+
+        $fileName2 = $school->school_logo;
+        $filesystem1 = Storage::disk('s3');
+        $imagePath1 = explode(".amazonaws.com/" . env('S3_BUCKET',''),$fileName2);
+        $filesystem1->delete(end($imagePath1));
+
+        foreach ($school->opponents as $op){
             $op->delete();
         }
-        foreach ($roster->staff as $op){
+        foreach ($school->staff as $op){
             $op->delete();
         }
-        $roster->delete();
+        $school->delete();
         Session::flash('flash_message_s', 'School successfully deleted!');
         return redirect()->back();
     }
