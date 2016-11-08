@@ -306,7 +306,7 @@ class APIController extends Controller
                                 ->get();
                         }
                     ])
-                    ->select('sports.id as sport_id', 'sports.id', 'sports.name as sport_name',
+                    ->select('sports.id as sport_id', 'sports.id', 'sports.sport_name as sport_name',
                         DB::raw('CONCAT((select count(id) FROM `games` WHERE `school_id` = \'2\' and `roster_id` =\'4\' and `result` = \'w\'), \' - \' ,(select count(id) FROM `games` WHERE `school_id` = \'2\' and `roster_id` =\'4\' and `result` = \'L\')) as sport_record '),
                         'season_id', 'sports.photo as sport_photo')
                             ->where('school_id', $schoolId)
@@ -379,7 +379,7 @@ class APIController extends Controller
                         ->get();
                 }
             ])
-                ->select('sports.id as sport_id', 'sports.id', 'sports.name as sport_name',
+                ->select('sports.id as sport_id', 'sports.id', 'sports.sport_name as sport_name',
                     DB::raw('CONCAT((select count(id) FROM `games` WHERE `school_id` = \'2\' and `roster_id` =\'4\' and `result` = \'w\'), \' - \' ,(select count(id) FROM `games` WHERE `school_id` = \'2\' and `roster_id` =\'4\' and `result` = \'L\')) as sport_record '),
                      'season_id', 'sports.photo as sport_photo')
                 ->where('school_id', $schoolId)
@@ -1356,7 +1356,7 @@ class APIController extends Controller
 
 
             $albumsList = Album::select('album.id as album_id', 'album.name as album_name', 'date as album_date',
-                                'url as album_url', 'sports.name as sport_name')
+                                'url as album_url', 'sports.sport_name as sport_name')
                                 ->join('album_roster', 'album_roster.album_id', '=', 'album.id')
                                 ->join('rosters', 'album_roster.roster_id', '=', 'rosters.id')
                                 ->join('sports', 'rosters.sport_id', '=', 'sports.id')
@@ -1401,7 +1401,7 @@ return response()->json($arr);
         //all are required params
         if($schoolId && $sportId && $albumId){
             $albumsList = Album::select('album.id as album_id', 'album.name as album_name', 'date as album_date',
-                'url as album_url', 'sports.name as sport_name')
+                'url as album_url', 'sports.sport_name as sport_name')
                 ->join('album_roster', 'album_roster.album_id', '=', 'album.id')
                 ->join('rosters', 'album_roster.roster_id', '=', 'rosters.id')
                 ->join('sports', 'rosters.sport_id', '=', 'sports.id')
