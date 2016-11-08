@@ -301,7 +301,7 @@ class APIController extends Controller
             $arr['sport_id'] = $sport->first()->sport_id;
             $arr['sport_name'] = $sport->first()->sport_name;
             $arr['sport_record'] = $sport->first()->sport_record;
-            $arr['sport_photo'] = $sport->first()->icon_url;
+            $arr['sport_photo'] = $sport->sport_photo;
             $arr['latest_news'] = $sport->first()->latest_news;
             $arr['season_list'] = $sport->first()->season_list;
             $arr['sport_levels'] = $sport->sport_levels;
