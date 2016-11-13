@@ -19,6 +19,11 @@
             </div>
         @endif
     </div>
+    <div class="row">
+        <div class="col-md-3">
+            <a href="{{route('school-show-add-users')}}" class="btn btn-primary">Add Users</a>
+        </div>
+    </div>
     <br>
     @if (session()->has('success'))
         <div class="alert alert-success">
@@ -62,7 +67,8 @@
                                     <input type="hidden" value="{{$school->id}}" name="school_id">
                                     <input type="hidden" value="{{$school->name}}" name="school_name">
                                     {!! Form::submit('Login', ['class' => 'btn btn-default btn-sm']) !!}
-                                {!! Form::close() !!}</td>
+                                {!! Form::close() !!}
+                            </td>
                             <td> <a href="{{url('schools/edit', [$school->id])}}"><button type="button" class="btn btn-primary btn-sm edit_school">Edit</button></a></td>
                             <td> {!! Form::open([    'method' => 'DELETE','route' => ['schools.destroy', $school->id]]) !!}{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}{!! Form::close() !!}</td>
                             <td class="id" style="display: none;"  />{{ $school->id}}</td>
