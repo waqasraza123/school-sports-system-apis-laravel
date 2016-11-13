@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->createAdmin();
         $this->addSports();
-        $this->addRoles();
+        //$this->addRoles();
     }
 
     /**
