@@ -17,7 +17,7 @@
 
 <div class="login-form">
 
-	<h1>Register</h1>
+	<h1>Add Users</h1>
 	<form class="form-horizontal" role="form" method="POST" action="/auth/register">
 		<input type="hidden" name="_token" value="{{ csrf_token() }}">
 
@@ -31,7 +31,7 @@
 			<i class="fa fa-envelope-square"></i>
 		</div>
 
-		<div class="form-group">
+		{{--<div class="form-group">
 			<select  class="selectpicker form-control" name="school-id" required>
 				<option selected disabled>Select School</option>
 				@if($schools)
@@ -42,7 +42,7 @@
 					<option>No, school added yet.</option>
 				@endif
 			</select>
-		</div>
+		</div>--}}
 
 		<div class="form-group">
 			<input type="password" class="form-control" name="password" required placeholder="Password">

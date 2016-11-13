@@ -8,6 +8,7 @@ use App\Positions;
 use App\School;
 use App\Season;
 use App\Sponsor;
+use App\SportsList;
 use App\Student;
 use Illuminate\Support\Facades\Input;
 use Session;
@@ -34,7 +35,7 @@ class RostersController extends Controller
         $rosters = Roster::where('school_id', $this->schoolId)->get();
         $levels = LevelSport::where('school_id', $this->schoolId)->get();
 
-        $sportsList = Sport::lists('name', 'id');
+        $sportsList = SportsList::lists('name', 'id');
         $sportsList->prepend('Sport');
         $levelsList = LevelSport::lists('name', 'id');
         $levelsList->prepend('Level');

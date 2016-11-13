@@ -23,8 +23,8 @@ class School extends Model
     /**
      * define relationship with the users
      */
-    public function user(){
-        return $this->belongsTo('App\User');
+    public function users(){
+        return $this->belongsToMany('App\User', 'school_user', 'school_id', 'user_id');
     }
 
     /**

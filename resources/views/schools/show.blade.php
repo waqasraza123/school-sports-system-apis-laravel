@@ -2,15 +2,15 @@
 
 @section('content')
 
-
-
     <h1 style="text-align: center">Schools</h1>
     <div class="row">
-        <div class="col-md-1 col-md-offset-5">
-            <a href="{{url('schools/add')}}">
-                <button type="button" id="add_new_school" class="btn btn-primary btn-sm">Add School</button>
-            </a>
-        </div>
+        @if($editor == false)
+            <div class="col-md-1 col-md-offset-5">
+                <a href="{{url('schools/add')}}">
+                    <button type="button" id="add_new_school" class="btn btn-primary btn-sm">Add School</button>
+                </a>
+            </div>
+        @endif
         @if(Session::get('school_id') != null)
             <div class="col-md-1">
                 {!! Form::open(['route' => 'login-admin']) !!}
@@ -19,95 +19,91 @@
             </div>
         @endif
     </div>
-    <div class="row">
-        <div class="col-md-3">
-            <a href="{{route('school-show-add-users')}}" class="btn btn-primary">Add Users</a>
-        </div>
-    </div>
-    <br>
     @if (session()->has('success'))
-        <div class="alert alert-success">
-            {{Session::get('success')}}
+        <div class="container-fluid">
+            <div class="alert alert-success">
+                {{Session::get('success')}}
+            </div>
+            <br>
         </div>
-        <br>
     @endif
 
-    @if ($schools->isEmpty() )
-        <div class="bs-callout bs-callout-warning">
-            <h4>No Results</h4>
+    @if ($schools->isEmpty())
+        <div class="container-fluid" style="margin-top: 5px">
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">No Results!</h4>
+                <p>This user is not related to any schools</p>
+            </div>
         </div>
     @else
-
-        <div class="panel panel-primary">
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead  style="background-color:#337AB7; color:white">
-                    <tr>
-                        <th> </th>
-                        <th>Name</th>
-                        <th>City</th>
-                        <th>State</th>
-                        <th>API</th>
-                        <th>&nbsp;</th>
-                        <th>&nbsp;</th>
-                        <th>&nbsp;</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-
-                    @foreach($schools as $school)
+        <div class="container-fluid">
+            <div class="panel panel-primary">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead  style="background-color:#337AB7; color:white">
                         <tr>
-                            <td><img src="{{$school->school_logo}}"  height="42"></td>
-                            <td class="jersey">{{ $school->name }}</td>
-                            <td class="first_name">{{ $school->city }}</td>
-                            <td class="position">{{ $school->state}}</td>
-                            <td class="position">{{ $school->api_key}}</td>
-                            <td>
-                                {!! Form::open(['method' => 'POST', 'route' => ['login-school']]) !!}
+                            <th> </th>
+                            <th>Name</th>
+                            <th>City</th>
+                            <th>State</th>
+                            <th>API</th>
+                            <th>&nbsp;</th>
+                            <th>&nbsp;</th>
+                            <th>&nbsp;</th>
+                            <th>&nbsp;</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        @foreach($schools as $school)
+                            <tr>
+                                <td><img src="{{$school->school_logo}}"  height="42"></td>
+                                <td class="jersey">{{ $school->name }}</td>
+                                <td class="first_name">{{ $school->city }}</td>
+                                <td class="position">{{ $school->state}}</td>
+                                <td class="position">{{ $school->api_key}}</td>
+                                <td>
+                                    {!! Form::open(['method' => 'POST', 'route' => ['login-school']]) !!}
                                     <input type="hidden" value="{{$school->id}}" name="school_id">
                                     <input type="hidden" value="{{$school->name}}" name="school_name">
                                     {!! Form::submit('Login', ['class' => 'btn btn-default btn-sm']) !!}
-                                {!! Form::close() !!}
-                            </td>
-                            <td> <a href="{{url('schools/edit', [$school->id])}}"><button type="button" class="btn btn-primary btn-sm edit_school">Edit</button></a></td>
-                            <td> {!! Form::open([    'method' => 'DELETE','route' => ['schools.destroy', $school->id]]) !!}{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}{!! Form::close() !!}</td>
-                            <td class="id" style="display: none;"  />{{ $school->id}}</td>
-                            <td class="name" style="display: none;"  />{{  $school->name}}</td>
-                            <td class="short_name" style="display: none;"  />{{ $school->short_name}}</td>
-                            <td class="mascot_name" style="display: none;"  />{{ $school->mascot_name}}</td>
-                            <td class="athletics_logo" style="display: none;"  />{{asset('uploads/schools/'.$school->school_logo ) }}</td>
-                            <td class="bio" style="display: none;"  />{{ $school->bio}}</td>
-                            <td class="adress" style="display: none;"  />{{  $school->adress}}</td>
-                            <td class="city" style="display: none;"  />{{ $school->city}}</td>
-                            <td class="state" style="display: none;"  />{{ $school->state}}</td>
-                            <td class="zip" style="display: none;"  />{{ $school->zip}}</td>
-                            <td class="phone" style="display: none;"  />{{ $school->phone}}</td>
-                            <td class="website" style="display: none;"  />{{  $school->api_key}}</td>
-                            <td class="twitter" style="display: none;"  />{{ $school->twitter}}</td>
-                            <td class="facebook" style="display: none;"  />{{ $school->facebook}}</td>
-                            <td class="instagram" style="display: none;"  />{{ $school->instagram}}</td>
-                            <td class="youtube" style="display: none;"  />{{ $school->youtube}}</td>
-                            <td class="vimeo" style="display: none;"  />{{ $school->vimeo}}</td>
-                        </tr>
-                    @endforeach
-                    @endif
+                                    {!! Form::close() !!}
+                                </td>
+                                <td>
+                                    @if($editor == false && count($schools))
+                                        <a href="{{route('school-show-add-users', [$school->id])}}" class="btn btn-primary btn-sm">Add Users</a>
+                                    @endif
+                                </td>
+                                <td> <a href="{{url('schools/edit', [$school->id])}}"><button type="button" class="btn btn-primary btn-sm edit_school">Edit</button></a></td>
+                                <td> {!! Form::open([    'method' => 'DELETE','route' => ['schools.destroy', $school->id]]) !!}{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) !!}{!! Form::close() !!}</td>
+                                <td class="id" style="display: none;"  />{{ $school->id}}</td>
+                                <td class="name" style="display: none;"  />{{  $school->name}}</td>
+                                <td class="short_name" style="display: none;"  />{{ $school->short_name}}</td>
+                                <td class="mascot_name" style="display: none;"  />{{ $school->mascot_name}}</td>
+                                <td class="athletics_logo" style="display: none;"  />{{asset('uploads/schools/'.$school->school_logo ) }}</td>
+                                <td class="bio" style="display: none;"  />{{ $school->bio}}</td>
+                                <td class="adress" style="display: none;"  />{{  $school->adress}}</td>
+                                <td class="city" style="display: none;"  />{{ $school->city}}</td>
+                                <td class="state" style="display: none;"  />{{ $school->state}}</td>
+                                <td class="zip" style="display: none;"  />{{ $school->zip}}</td>
+                                <td class="phone" style="display: none;"  />{{ $school->phone}}</td>
+                                <td class="website" style="display: none;"  />{{  $school->api_key}}</td>
+                                <td class="twitter" style="display: none;"  />{{ $school->twitter}}</td>
+                                <td class="facebook" style="display: none;"  />{{ $school->facebook}}</td>
+                                <td class="instagram" style="display: none;"  />{{ $school->instagram}}</td>
+                                <td class="youtube" style="display: none;"  />{{ $school->youtube}}</td>
+                                <td class="vimeo" style="display: none;"  />{{ $school->vimeo}}</td>
+                            </tr>
+                        @endforeach
+                        @endif
 
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.table-responsive -->
             </div>
-            <!-- /.table-responsive -->
         </div>
-        <!-- /.panel-body -->
-        </div>
-        <!-- /.panel -->
-        </div>
-
-        <!-- Modal -->
-        {{--@include('schools.modals.schools_form')--}}
-
-
-
-@stop
+@endsection
 
 @section('footer')
     <script src="/dist/js/sb-schools-2.js"></script>

@@ -192,17 +192,17 @@ class AppServiceProvider extends ServiceProvider
                 [
                     'name' => 'super_admin',
                     'display_name' => 'Super Admin',
-                    'description' => 'Can control all schools'
+                    'description' => 'Can control all schools.'
                 ],
                 [
                     'name' => 'admin',
                     'display_name' => 'Admin',
-                    'description' => 'Can control all schools under him'
+                    'description' => 'Can control all schools under him.'
                 ],
                 [
-                    'name' => 'editor',
-                    'display_name' => 'Editor/Controller',
-                    'description' => 'Can add/edit content to all schools under him'
+                    'name' => 'school_admin',
+                    'display_name' => 'School Admin',
+                    'description' => 'Can add/edit content to all schools under him except settings.'
                 ]
 
             ]);

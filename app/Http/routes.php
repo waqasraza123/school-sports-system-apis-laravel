@@ -84,7 +84,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('/admin/login/schools', ['as' => 'login-school', 'uses' => 'AdminController@loginSchool']);
     Route::post('/admin/login/', ['as' => 'login-admin', 'uses' => 'AdminController@loginAdmin']);
-    Route::get('/admin/school/add-users/form', ['as' => 'school-show-add-users', 'uses' => 'AdminController@showAddUsersToSchoolForm']);
+    Route::get('/admin/school/add-users/{id}', ['as' => 'school-show-add-users', 'uses' => 'AdminController@showAddUsersToSchoolForm']);
     Route::post('/admin/school/add-users', ['as' => 'school-add-users', 'uses' => 'AdminController@addUsersToSchool']);
 });
 
@@ -104,8 +104,8 @@ Route::controllers([
  */
 Route::get('/', 'APIController@handle');
 
-Route::post('test', function(Request $request){
-    return $request->all();
+Route::get('test', function(Request $request){
+    return !true;
     /*return App\Roster::find(13)->students()->get();*/
 });
 

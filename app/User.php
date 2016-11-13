@@ -27,15 +27,15 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    /**
-     * define relationship with the schools
-     */
-    public function school(){
-        return $this->belongsTo('App\School');
-    }
-
     public function roles(){
         return $this->belongsToMany('App\Role', 'role_user', 'user_id', 'role_id')
             ->withPivot('school_id');
+    }
+
+    /**
+     * define relationship with the schools
+     */
+    public function schools(){
+        return $this->belongsToMany('App\School', 'school_user', 'user_id', 'school_id');
     }
 }

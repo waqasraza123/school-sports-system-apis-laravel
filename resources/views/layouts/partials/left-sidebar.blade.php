@@ -14,20 +14,21 @@
         </div><!-- /.user-panel -->
 
         <ul class="sidebar-menu" id="side-menu">
-          @if(Auth::check())
-              @if(Auth::user()->email != 'admin@gmail.com')
-
-              @else
-                  <li>
-                      <a href="/schools"><i class="fa fa-dashboard fa-fw"></i>
-                          Schools</a>
-                  </li>
-              @endif
-          @endif
-          <li>
-              <a href="/home"><i class="fa fa-dashboard fa-fw"></i>
-                  Dashboard</a>
-          </li>
+            @if($superAdmin)
+                <li>
+                    <a href="/schools"><i class="fa fa-dashboard fa-fw"></i>
+                        Schools</a>
+                </li>
+            @elseif($admin)
+                <li>
+                    <a href="{{route('school-show-add-users', [$currentSchool->id])}}"><i class="fa fa-dashboard fa-fw"></i>
+                        Manage Users</a>
+                </li>
+            @endif
+              <li>
+                  <a href="/home"><i class="fa fa-dashboard fa-fw"></i>
+                      Dashboard</a>
+              </li>
             <li>
                 <a href="/settings"><i class="fa fa-comment-o fa-fw"></i>
                     Push Notifications</a>

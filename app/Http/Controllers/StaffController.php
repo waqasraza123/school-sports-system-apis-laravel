@@ -73,7 +73,7 @@ class StaffController extends Controller
      */
     public function index()
     {
-        $school_id = $this->school_id;
+        $school_id = $this->schoolId;
         $staff = Staff::where('school_id', $school_id)->get();
         $year = '2016';
 

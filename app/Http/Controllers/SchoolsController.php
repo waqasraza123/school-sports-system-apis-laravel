@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Opponent;
 use App\School;
 use App\Social;
+use App\User;
 use Illuminate\Http\Request;
 use Session;
 use App\Http\Requests;
@@ -31,18 +32,33 @@ class SchoolsController extends Controller
     public function index()
     {
         $this->checkAdmin();
-        if(!($GLOBALS['admin'])){
+        $editor = false;
+        $schoolId = null;
+
+        /*if(!($GLOBALS['admin'])){
 
             if(Auth::check()){
-                $schoolId = $this->school_id;
+                $schoolId = $this->schoolId;
             }
             $social = Social::where('socialLinks_id', $schoolId)->first();
             $schools = School::where('school_email', '<>', 'admin@gmail.com')->get();
             $userSchool = School::where('id', $schoolId)->first();
             return view('pages.home', compact('schools', 'userSchool', 'social'))->with('success', 'please login as admin to add schools');
+        }*/
+
+        //if user is admin
+        if($GLOBALS['admin']){
+            $schools = School::where('school_email', '<>', 'admin@gmail.com')->get();
+            return view('schools.show', compact('schools', 'editor'));
         }
-        $schools = School::where('school_email', '<>', 'admin@gmail.com')->get();
-        return view('schools.show', compact('schools'));
+
+        $schools = Auth::user()->schools()->get();
+        foreach (Auth::user()->roles as $role){
+            if($role->pivot->school_id == $this->schoolId && $role->name == 'school_admin'){
+                $editor = true;
+            }
+        }
+        return view('schools.show', compact('schools', 'editor'));
     }
 
     /**

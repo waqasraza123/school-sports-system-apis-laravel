@@ -20,21 +20,20 @@ class PagesController extends Controller
 
 	public function home()
     {
-        if(Auth::check()){
-            $schoolId = $this->schoolId;
-        }
-        $social = Social::where('socialLinks_id', $schoolId)->first();
+        $social = Social::where('socialLinks_id', $this->schoolId)->first();
         $schools = School::where('school_email', '<>', 'admin@gmail.com')->get();
-        $userSchool = School::where('id', $schoolId)->first();
+        $userSchool = School::where('id', $this->schoolId)->first();
 
         return view('pages.home', compact('schools', 'userSchool', 'social'));
     }
 
     public function settings()
     {
+        if($this->schoolAdmin){
+            return redirect('/home');
+        }
 
         $school = School::where('id','=', $this->schoolId)->first();
-
         $social = School::where('id','=', $this->schoolId)->first()->social()->first();
 
         return view('pages.settings', compact('school','social'));
