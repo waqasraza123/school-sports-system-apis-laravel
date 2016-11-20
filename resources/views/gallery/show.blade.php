@@ -1,6 +1,16 @@
 @extends('layouts.master')
 <link rel="stylesheet" href="/css/dropzone.css">
 @section('content')
+    <style>
+        .info, .delete
+        {
+            display: none;
+        }
+        .sss:hover .info, .sss:hover .delete
+        {
+            display: flex;
+        }
+    </style>
     <div class="container-fluid">
         <div class="row" style="margin-left: 5%; margin-right: 5%">
             <h1>@if (isset($type->name)){{ $type->name }} @endif Gallery</h1>
@@ -31,19 +41,10 @@
             <div class="col-lg-12" >
                 <h2>IMAGES</h2>
                 @foreach($gallery_images as $photo)
-                    <div class="col-lg-2" style="padding: 20px">
-                        <style>
-                            .info, .delete
-                            {
-                                display: none;
-                            }
-                            .sss:hover .info, .sss:hover .delete
-                            {
-                                display: flex;
-                            }
-                        </style>
-                        <img src="{{$photo->thumb}}" class="img-responsive">
-                        <div class="sss" style="position: relative; background-image: url('{{asset('uploads/gallery/tmb/'.$photo->name ) }}'); background-repeat: no-repeat; background-size: cover; width: 200px;height: 200px;">
+                    <div class="col-lg-2" style="padding: 1.1%">
+
+                        <img src="{{$photo->thumb}}" class="img-responsive sss-image">
+                        <div class="sss" style="position: absolute; left: 0px; top: 0px; background-image: url('{{asset('uploads/gallery/tmb/'.$photo->name ) }}'); background-repeat: no-repeat; background-size: cover; width: 200px;height: 200px;">
                             <div class="info" style="color: white; background: rgba(0,0,0,0.5); height: 200px;">
 
                                 {!! Form::open([    'method' => 'DELETE','route' => ['gallery.destroy', $photo->id]]) !!}
@@ -73,6 +74,7 @@
 @stop
 
 @section('footer')
+
     @include('partials.error-messages.footer-script')
     @include('gallery.partials.footer-script')
 @stop

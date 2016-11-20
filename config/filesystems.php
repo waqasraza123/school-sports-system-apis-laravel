@@ -64,10 +64,10 @@ return [
 
         's3' => [
             'driver' => 's3',
-            'key'    => env('S3_KEY','your-key'),
-            'secret' => env('S3_SECRET','your-secret'),
-            'region' => env('S3_REGION','your-region'),
-            'bucket' => env('S3_BUCKET','your-bucket'),
+            'key'    => 'AKIAIEX2USVMIYJAR3CA',
+            'secret' => 'soy4J2BZAbM3ljxbaw7aYQZjwGwh4VQUEtyQGlaK',
+            'region' => 'us-west-2',
+            'bucket' => 'repitsports',
         ],
 
         'rackspace' => [

@@ -144,7 +144,7 @@ class GalleryController extends Controller
 //    //delete picture (needs to implement to delete the image and thumbnail from the storage of the app)
     public function destroy($id)
     {
-        $gallery = Gallery::findOrFail($id);
+        $gallery = Photo::findOrFail($id);
         $gallery->delete();
         Session::flash('flash_message_s', 'Album successfully deleted!');
         return redirect()->back();

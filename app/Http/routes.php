@@ -54,6 +54,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('videos/add', 'AlbumController@videosAdd');
 //    Route::get('gallery', 'GalleryController@show');
     Route::get('gallery/{id}', 'GalleryController@show');
+    Route::delete('gallery/{id}', ['as' => 'gallery.destroy', 'uses' => 'GalleryController@destroy']);
     Route::resource('gallery', 'GalleryController');
     Route::post('videos/url-upload', ['as' => 'videos.url-upload', 'uses' => 'GalleryController@storeVideo']);
     Route::post('videos/', 'GalleryController@videoTagsUpdate');
