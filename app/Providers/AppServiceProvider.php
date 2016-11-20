@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Providers;
+use App\Role;
 use App\SportsList;
 use Illuminate\Support\ServiceProvider;
 use App\User;
@@ -22,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->createAdmin();
         $this->addSports();
+        //$this->addRoles();
     }
 
     /**
@@ -175,6 +177,35 @@ class AppServiceProvider extends ServiceProvider
                     ['name' => 'Winter', 'created_at' => $now, 'updated_at' => $now],
                 ]);
             }
+        }
+    }
+
+    /**
+     * add user roles to db
+     */
+    public function addRoles(){
+
+        $role = Role::all();
+
+        if(!$role->first()){
+            $role = Role::insert([
+                [
+                    'name' => 'super_admin',
+                    'display_name' => 'Super Admin',
+                    'description' => 'Can control all schools'
+                ],
+                [
+                    'name' => 'admin',
+                    'display_name' => 'Admin',
+                    'description' => 'Can control all schools under him'
+                ],
+                [
+                    'name' => 'editor',
+                    'display_name' => 'Editor/Controller',
+                    'description' => 'Can add/edit content to all schools under him'
+                ]
+
+            ]);
         }
     }
 }
