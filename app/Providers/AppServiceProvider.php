@@ -37,112 +37,115 @@ class AppServiceProvider extends ServiceProvider
     }
 
     public function addSports(){
-        $sportsList = SportsList::all();
 
-        //if table is empty insert the sports list
-        if(!count($sportsList)){
-            $data = SportsList::insert([
-                [
-                    'name' => 'Baseball',
-                    'order_by' => 1,
-                    'icon' => 'url'
-                ],
-                [
-                    'name' => 'Boy\'s Basketball',
-                    'order_by' => 2,
-                    'icon' => 'url'
-                ],
-                [
-                    'name' => 'Girl’s Basketball',
-                    'order_by' => 3,
-                    'icon' => 'url'
-                ],
-                [
-                    'name' => 'Cheer',
-                    'order_by' => 4,
-                    'icon' => 'url'
-                ],
-                [
-                    'name' => 'Cross Country',
-                    'order_by' => 5,
-                    'icon' => 'url'
-                ],
-                [
-                    'name' => 'Football',
-                    'order_by' => 6,
-                    'icon' => 'url'
-                ],
-                [
-                    'name' => 'Golf',
-                    'order_by' => 7,
-                    'icon' => 'url'
-                ],
-                [
-                    'name' => 'Boy’s Lacrosse',
-                    'order_by' => 8,
-                    'icon' => 'url'
-                ],
-                [
-                    'name' => 'Girl’s Lacrosse',
-                    'order_by' => 9,
-                    'icon' => 'url'
-                ],
-                [
-                    'name' => 'Boy’s Soccer',
-                    'order_by' => 10,
-                    'icon' => 'url'
-                ],
-                [
-                    'name' => 'Girl’s Soccer',
-                    'order_by' => 11,
-                    'icon' => 'url'
-                ],
-                [
-                    'name' => 'Softball',
-                    'order_by' => 12,
-                    'icon' => 'url'
-                ],
-                [
-                    'name' => 'Swimming',
-                    'order_by' => 13,
-                    'icon' => 'url'
-                ],
-                [
-                    'name' => 'Girl’s Tennis',
-                    'order_by' => 14,
-                    'icon' => 'url'
-                ],
-                [
-                    'name' => 'Boy’s Tennis',
-                    'order_by' => 15,
-                    'icon' => 'url'
-                ],
-                [
-                    'name' => 'Track & Field',
-                    'order_by' => 16,
-                    'icon' => 'url'
-                ],
-                [
-                    'name' => 'Boy’s Volleyball',
-                    'order_by' => 17,
-                    'icon' => 'url'
-                ],
-                [
-                    'name' => 'Girl’s Volleyball',
-                    'order_by' => 18,
-                    'icon' => 'url'
-                ],
-                [
-                    'name' => 'Boys Water Polo',
-                    'order_by' => 19,
-                    'icon' => 'url'
-                ],
-                [
-                    'name' => 'Girl’s Water Polo',
-                    'order_by' =>20,
-                    'icon' => 'url'
-                ]
-            ]);
+        if(Schema::hasTable('roles')){
+            $sportsList = SportsList::all();
+
+            //if table is empty insert the sports list
+            if(!count($sportsList)){
+                $data = SportsList::insert([
+                    [
+                        'name' => 'Baseball',
+                        'order_by' => 1,
+                        'icon' => 'url'
+                    ],
+                    [
+                        'name' => 'Boy\'s Basketball',
+                        'order_by' => 2,
+                        'icon' => 'url'
+                    ],
+                    [
+                        'name' => 'Girl’s Basketball',
+                        'order_by' => 3,
+                        'icon' => 'url'
+                    ],
+                    [
+                        'name' => 'Cheer',
+                        'order_by' => 4,
+                        'icon' => 'url'
+                    ],
+                    [
+                        'name' => 'Cross Country',
+                        'order_by' => 5,
+                        'icon' => 'url'
+                    ],
+                    [
+                        'name' => 'Football',
+                        'order_by' => 6,
+                        'icon' => 'url'
+                    ],
+                    [
+                        'name' => 'Golf',
+                        'order_by' => 7,
+                        'icon' => 'url'
+                    ],
+                    [
+                        'name' => 'Boy’s Lacrosse',
+                        'order_by' => 8,
+                        'icon' => 'url'
+                    ],
+                    [
+                        'name' => 'Girl’s Lacrosse',
+                        'order_by' => 9,
+                        'icon' => 'url'
+                    ],
+                    [
+                        'name' => 'Boy’s Soccer',
+                        'order_by' => 10,
+                        'icon' => 'url'
+                    ],
+                    [
+                        'name' => 'Girl’s Soccer',
+                        'order_by' => 11,
+                        'icon' => 'url'
+                    ],
+                    [
+                        'name' => 'Softball',
+                        'order_by' => 12,
+                        'icon' => 'url'
+                    ],
+                    [
+                        'name' => 'Swimming',
+                        'order_by' => 13,
+                        'icon' => 'url'
+                    ],
+                    [
+                        'name' => 'Girl’s Tennis',
+                        'order_by' => 14,
+                        'icon' => 'url'
+                    ],
+                    [
+                        'name' => 'Boy’s Tennis',
+                        'order_by' => 15,
+                        'icon' => 'url'
+                    ],
+                    [
+                        'name' => 'Track & Field',
+                        'order_by' => 16,
+                        'icon' => 'url'
+                    ],
+                    [
+                        'name' => 'Boy’s Volleyball',
+                        'order_by' => 17,
+                        'icon' => 'url'
+                    ],
+                    [
+                        'name' => 'Girl’s Volleyball',
+                        'order_by' => 18,
+                        'icon' => 'url'
+                    ],
+                    [
+                        'name' => 'Boys Water Polo',
+                        'order_by' => 19,
+                        'icon' => 'url'
+                    ],
+                    [
+                        'name' => 'Girl’s Water Polo',
+                        'order_by' =>20,
+                        'icon' => 'url'
+                    ]
+                ]);
+            }
         }
     }
 
@@ -185,27 +188,29 @@ class AppServiceProvider extends ServiceProvider
      */
     public function addRoles(){
 
-        $role = Role::all();
+        if(Schema::hasTable('roles')){
+            $role = Role::all();
 
-        if(!$role->first()){
-            $role = Role::insert([
-                [
-                    'name' => 'super_admin',
-                    'display_name' => 'Super Admin',
-                    'description' => 'Can control all schools.'
-                ],
-                [
-                    'name' => 'admin',
-                    'display_name' => 'Admin',
-                    'description' => 'Can control all schools under him.'
-                ],
-                [
-                    'name' => 'school_admin',
-                    'display_name' => 'School Admin',
-                    'description' => 'Can add/edit content to all schools under him except settings.'
-                ]
+            if(!$role->first()){
+                $role = Role::insert([
+                    [
+                        'name' => 'super_admin',
+                        'display_name' => 'Super Admin',
+                        'description' => 'Can control all schools.'
+                    ],
+                    [
+                        'name' => 'admin',
+                        'display_name' => 'Admin',
+                        'description' => 'Can control all schools under him.'
+                    ],
+                    [
+                        'name' => 'school_admin',
+                        'display_name' => 'School Admin',
+                        'description' => 'Can add/edit content to all schools under him except settings.'
+                    ]
 
-            ]);
+                ]);
+            }
         }
     }
 }
